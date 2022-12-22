@@ -9,8 +9,9 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import TextField from '@mui/material/TextField';
 import * as React from 'react';
+import { useNavigate} from "react-router-dom";
 
-const LoginForm = ()=>{
+const LoginForm = () => {
 
     const [showPassword, setShowPassword] = React.useState(false);
 
@@ -19,6 +20,11 @@ const LoginForm = ()=>{
     const handleMouseDownPassword = (event) => {
       event.preventDefault();
     };
+
+    let navigate = useNavigate();
+    const onLoginButtonClick = () =>{
+        navigate('/main');
+    }
 
     return(
         <div className="login-form-container">
@@ -58,7 +64,7 @@ const LoginForm = ()=>{
                         </FormControl>
                 </div>
                 <div className="login-box__footer">
-                    <Button variant="contained" sx={{minWidth:'250px',height:'40px'}}>Войти</Button>
+                    <Button variant="contained" sx={{minWidth:'250px',height:'40px'}} onClick={()=>onLoginButtonClick()}>Войти</Button>
                 </div>
             </div>
         </div>
