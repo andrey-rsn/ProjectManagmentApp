@@ -1,0 +1,12 @@
+.action-list{
+    height: 100%;
+    position: relative;
+    &__element{
+        &:last-child{
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    }
+    
+}

@@ -6,48 +6,103 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
-import InboxIcon from '@mui/icons-material/Inbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
+import ArticleIcon from '@mui/icons-material/Article';
+import DescriptionIcon from '@mui/icons-material/Description';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import DuoIcon from '@mui/icons-material/Duo';
+import SettingsIcon from '@mui/icons-material/Settings';
 import './ActionList.css'
 
 const ActionList = () =>{
     return (
-        <Box sx={{ width: '100%', maxWidth: 360, backgroundColor:'rgb(190, 196, 181)',height:'100vh' }}>
-          <nav aria-label="main mailbox folders">
-            <List>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <InboxIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Inbox" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <DraftsIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Drafts" />
-                </ListItemButton>
-              </ListItem>
+        <Box sx={{ width: '100%', maxWidth: 300, backgroundColor:'rgb(190, 196, 181)',height:'100vh', padding:'0' }}>
+            <List className='action-list'>
+              <div className='action-list__element'>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <ArticleIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Название проекта" />
+                  </ListItemButton>
+                </ListItem>
+                <Divider />
+              </div>
+              <div className='action-list__element'>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <AccessTimeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Учёт времени работы" />
+                  </ListItemButton>
+                </ListItem>
+              </div>
+              <div className='action-list__element'>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <TaskAltIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Задачи" />
+                  </ListItemButton>
+                </ListItem>
+              </div>
+              <div className='action-list__element'>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <DescriptionIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Документация" />
+                  </ListItemButton>
+                </ListItem>
+              </div>
+              <div className='action-list__element'>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <SummarizeIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Отчёты" />
+                  </ListItemButton>
+                </ListItem>
+              </div>
+              <div className='action-list__element'>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <AssessmentIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Аналитика работы" />
+                  </ListItemButton>
+                </ListItem>
+              </div>
+              <div className='action-list__element'>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <DuoIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Видеоконференции" />
+                  </ListItemButton>
+                </ListItem>
+              </div>
+              <div className='action-list__element'>
+                <Divider />
+                <ListItem disablePadding >
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <SettingsIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Параметры проекта" />
+                  </ListItemButton>
+                </ListItem>
+              </div>
             </List>
-          </nav>
-          <Divider />
-          <nav aria-label="secondary mailbox folders">
-            <List>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemText primary="Trash" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton component="a" href="#simple-list">
-                  <ListItemText primary="Spam" />
-                </ListItemButton>
-              </ListItem>
-            </List>
-          </nav>
         </Box>
       );
 }
