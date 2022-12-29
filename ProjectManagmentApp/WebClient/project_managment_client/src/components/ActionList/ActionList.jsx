@@ -14,97 +14,37 @@ import SummarizeIcon from '@mui/icons-material/Summarize';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import DuoIcon from '@mui/icons-material/Duo';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { NavLink } from "react-router-dom";
 import './ActionList.css'
+import ActionItem from '../ActionItem/ActionItem';
 
-const ActionList = () =>{
-    return (
-        <Box sx={{ width: '100%', maxWidth: 300, backgroundColor:'rgb(190, 196, 181)',height:'100vh', padding:'0' }}>
-            <List className='action-list'>
-              <div className='action-list__element'>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <ArticleIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Название проекта" />
-                  </ListItemButton>
-                </ListItem>
-                <Divider />
-              </div>
-              <div className='action-list__element'>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <AccessTimeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Учёт времени работы" />
-                  </ListItemButton>
-                </ListItem>
-              </div>
-              <div className='action-list__element'>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <TaskAltIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Задачи" />
-                  </ListItemButton>
-                </ListItem>
-              </div>
-              <div className='action-list__element'>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <DescriptionIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Документация" />
-                  </ListItemButton>
-                </ListItem>
-              </div>
-              <div className='action-list__element'>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <SummarizeIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Отчёты" />
-                  </ListItemButton>
-                </ListItem>
-              </div>
-              <div className='action-list__element'>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <AssessmentIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Аналитика работы" />
-                  </ListItemButton>
-                </ListItem>
-              </div>
-              <div className='action-list__element'>
-                <ListItem disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <DuoIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Видеоконференции" />
-                  </ListItemButton>
-                </ListItem>
-              </div>
-              <div className='action-list__element'>
-                <Divider />
-                <ListItem disablePadding >
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <SettingsIcon/>
-                    </ListItemIcon>
-                    <ListItemText primary="Параметры проекта" />
-                  </ListItemButton>
-                </ListItem>
-              </div>
-            </List>
-        </Box>
-      );
+const ActionList = () => {
+
+  const LinkStyle = (isActive) => {
+    return {
+      color: 'inherit',
+      textDecoration: 'none',
+      backgroundColor: (isActive ? 'rgb(107, 153, 123)' : undefined)
+    }
+  }
+
+  return (
+    <Box sx={{ width: '100%', maxWidth: 300, backgroundColor: 'rgb(190, 196, 181)', height: '100vh', padding: '0' }}>
+      <List className='action-list'>
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Название проекта" linkTo="." image={<ArticleIcon />}
+          listItemStyle={{ backgroundColor: 'rgb(148, 148, 148)' }}
+        />
+        <Divider sx={{ backgroundColor: 'black', height: '0.2px' }} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Учёт времени работы" linkTo="/main/workTime" image={<AccessTimeIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Задачи" linkTo="/main/tasks" image={<TaskAltIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Документация" linkTo="/main/documents" image={<DescriptionIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Отчёты" linkTo="/main/reports" image={<SummarizeIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Аналитика работы" linkTo="/main/analytics" image={<AssessmentIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Видеоконференции" linkTo="/main/conferences" image={<DuoIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Параметры проекта" linkTo="/main/projectSettings" image={<SettingsIcon />} isHeaderDivider={true} />
+      </List>
+    </Box>
+  );
 }
 
 export default ActionList;
