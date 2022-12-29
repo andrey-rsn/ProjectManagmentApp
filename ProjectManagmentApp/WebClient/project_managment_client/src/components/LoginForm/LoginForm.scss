@@ -8,18 +8,27 @@
 .login-box{
     background-color: rgb(202, 202, 202);
     width: 360px;
-    height: 270px;
+    height: 280px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
         &__footer{
             margin-bottom: 15px;
         }
+        &__form{
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+        }
 }
 
-.box-middle{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.input-field{
+    margin-bottom: 60px;
+    height: 25px;
 }
+
+.login-box-container{
+    width: 80%;
+}
+

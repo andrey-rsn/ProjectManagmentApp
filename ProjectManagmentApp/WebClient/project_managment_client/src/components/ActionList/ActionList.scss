@@ -1,6 +1,8 @@
 .action-list{
     height: 100%;
     position: relative;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
     &__element{
         &:last-child{
             position: absolute;
