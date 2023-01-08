@@ -16,9 +16,13 @@ namespace PMA_IdentityService.Controllers
     public class IdentityController : ControllerBase
     {
         // POST api/v1/identity/login
-        [HttpPost("/login")]
+        [HttpPost]
+        [Route("/login")]
         public async Task<ActionResult<string>> Login(UserViewModel userModel)
         {
+            //TODO
+            //AuthService.Login
+            //AuthService.CreateToken
             var claims = new List<Claim> { new Claim(ClaimTypes.Name, userModel.UserName) };
             var jwt = new JwtSecurityToken(
                 issuer: AuthOptions.ISSUER,
@@ -34,13 +38,29 @@ namespace PMA_IdentityService.Controllers
             });
         }
 
-        [Authorize]
-        [HttpGet("/test")]
-        public async Task<string> Test()
+        // POST api/v1/identity/login
+        [HttpPost]
+        [Route("/register")]
+        public async Task<ActionResult<string>> Register(UserViewModel userModel)
         {
-            await Task.Delay(1000);
-            return "ok";
+            //TODO
+            //AuthService.Register
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, userModel.UserName) };
+            var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.ISSUER,
+                claims: claims,
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)),  // действие токена истекает через 2 минуты
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            return Ok(new
+            {
+                access_token = encodedJwt,
+                User = userModel.UserName
+            });
         }
+
+
 
     }
 }
