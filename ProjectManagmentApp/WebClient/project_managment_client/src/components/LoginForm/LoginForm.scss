@@ -1,0 +1,34 @@
+.login-form-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.login-box{
+    background-color: rgb(202, 202, 202);
+    width: 360px;
+    height: 280px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+        &__footer{
+            margin-bottom: 15px;
+        }
+        &__form{
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+        }
+}
+
+.input-field{
+    margin-bottom: 60px;
+    height: 25px;
+}
+
+.login-box-container{
+    width: 80%;
+}
+
