@@ -60,7 +60,5 @@ namespace PMA_IdentityService.Controllers
             });
         }
 
-
-
     }
 }
