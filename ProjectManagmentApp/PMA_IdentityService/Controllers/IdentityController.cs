@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using PMA_IdentityService.Models.DTOs;
 using PMA_IdentityService.Models.ViewModels;
 using PMA_IdentityService.Services;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text.Json;
+
 
 namespace PMA_IdentityService.Controllers
 {
