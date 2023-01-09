@@ -6,7 +6,7 @@ using PMA_IdentityService.Models.DTOs;
 
 namespace PMA_IdentityService.Repositories
 {
-    public class UserRepository : IBaseRepository<UserDTO>
+    public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;

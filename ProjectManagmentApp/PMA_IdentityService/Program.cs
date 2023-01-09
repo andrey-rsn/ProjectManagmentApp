@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PMA_IdentityService.Data;
 using PMA_IdentityService.Models;
+using PMA_IdentityService.Models.DTOs;
+using PMA_IdentityService.Repositories;
 using PMA_IdentityService.Services;
 
 
@@ -18,8 +20,11 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddAuthorization();
 
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(Configuration.GetConnectionString("UsersDatabase")));
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

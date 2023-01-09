@@ -7,7 +7,7 @@ namespace PMA_IdentityService.Data
     public class ApplicationDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
-        public ApplicationDbContext()
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)                                                         
         {
             Database.EnsureCreated();
         }

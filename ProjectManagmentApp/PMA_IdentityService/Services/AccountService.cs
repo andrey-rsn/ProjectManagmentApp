@@ -9,11 +9,11 @@ namespace PMA_IdentityService.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
 
         private readonly byte[] _passwordKey;
 
-        public AccountService(UserRepository userRepository, IOptions<SecretKeys> PasswordKeys)
+        public AccountService(IUserRepository userRepository, IOptions<SecretKeys> PasswordKeys)
         {
             _userRepository = userRepository;
             _passwordKey = Encoding.ASCII.GetBytes(PasswordKeys.Value.localKey); 
