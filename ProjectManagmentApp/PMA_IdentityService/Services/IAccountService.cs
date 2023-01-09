@@ -6,6 +6,5 @@ namespace PMA_IdentityService.Services
     {
         Task<int> Login(string Login, string Password);
         Task<bool> Register(UserDTO UserInfo);
-
     }
 }

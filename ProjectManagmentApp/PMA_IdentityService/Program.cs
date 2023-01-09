@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PMA_IdentityService.Data;
+using PMA_IdentityService.Models;
 using PMA_IdentityService.Services;
 
 
@@ -9,12 +10,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 var Configuration = builder.Configuration;
 
+Configuration.AddJsonFile("SecretKeys.json");
+
+builder.Services.Configure<SecretKeys>(Configuration);
+
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddAuthorization();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(Configuration.GetConnectionString("UsersDatabase")));
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -34,6 +40,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
         };
     });
+
+builder.Services.AddSingleton<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddControllers();
 

@@ -1,6 +1,9 @@
-﻿using PMA_IdentityService.Models;
+﻿using Microsoft.Extensions.Options;
+using PMA_IdentityService.Models;
 using PMA_IdentityService.Models.DTOs;
 using PMA_IdentityService.Repositories;
+using System;
+using System.Text;
 
 namespace PMA_IdentityService.Services
 {
@@ -8,14 +11,17 @@ namespace PMA_IdentityService.Services
     {
         private readonly UserRepository _userRepository;
 
-        public AccountService(UserRepository userRepository)
+        private readonly byte[] _passwordKey;
+
+        public AccountService(UserRepository userRepository, IOptions<SecretKeys> PasswordKeys)
         {
             _userRepository = userRepository;
+            _passwordKey = Encoding.ASCII.GetBytes(PasswordKeys.Value.localKey); 
         }
 
         public async Task<int> Login(string Login, string Password)
         {
-            var PasswordHash = HashService.Encrypt(Password, new byte[] { 1, 2, 3 });
+            var PasswordHash = HashService.Encrypt(Password, _passwordKey);
 
             var User = await _userRepository.GetByLoginInfo(Login, PasswordHash);
 
@@ -29,7 +35,7 @@ namespace PMA_IdentityService.Services
 
         public async Task<bool> Register(UserDTO UserInfo)
         {
-            UserInfo.Password = HashService.Encrypt(UserInfo.Password, new byte[] { 1, 2, 3 });
+            UserInfo.Password = HashService.Encrypt(UserInfo.Password, _passwordKey);
 
             var IsAlreadyExists = (await Login(UserInfo.Email, UserInfo.Password) == -1);
 
