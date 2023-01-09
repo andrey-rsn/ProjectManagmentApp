@@ -1,25 +1,36 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using PMA_IdentityService.Data;
 using PMA_IdentityService.Models;
+using PMA_IdentityService.Models.DTOs;
 
 namespace PMA_IdentityService.Repositories
 {
-    public class UserRepository : IBaseRepository<User>
+    public class UserRepository : IBaseRepository<UserDTO>
     {
         private readonly ApplicationDbContext _dbContext;
-        public UserRepository(ApplicationDbContext dbContext)
+        private readonly IMapper _mapper;
+
+        public UserRepository(ApplicationDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
-        public async Task Add(User Entity)
+        public async Task Add(UserDTO Entity)
         {
-            _dbContext.Users.Add(Entity);
+            var User = _mapper.Map<User>(Entity);
+
+            _dbContext.Users.Add(User);
+
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task AddRange(IEnumerable<User> Entity)
+        public async Task AddRange(IEnumerable<UserDTO> Entity)
         {
-            _dbContext.Users.AddRange(Entity);
+            var Users = _mapper.Map<IEnumerable<User>>(Entity);
+
+            _dbContext.Users.AddRange(Users);
+
             await _dbContext.SaveChangesAsync();
         }
 
@@ -34,21 +45,34 @@ namespace PMA_IdentityService.Repositories
             }
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<UserDTO>> GetAll()
         {
-            return await _dbContext.Users.ToListAsync();
+            var Users = await _dbContext.Users.ToListAsync();
+
+            return _mapper.Map<IEnumerable<UserDTO>>(Users);
         }
 
-        public async Task<User> GetById(int Id)
+        public async Task<UserDTO> GetById(int Id)
         {
-            return await _dbContext.Users.FindAsync(Id);
+            var User = await _dbContext.Users.FindAsync(Id);
+
+            return _mapper.Map<UserDTO>(User);
         }
 
-        public async Task Update(User Entity)
+        public async Task Update(UserDTO Entity)
         {
-            _dbContext.Update(Entity);
+            var User = _mapper.Map<User>(Entity);
+
+            _dbContext.Update(User);
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<UserDTO> GetByLoginInfo(string Login, string PasswordHash)
+        {
+            var User = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Email == Login&& x.Password == PasswordHash);
+
+            return _mapper.Map<UserDTO>(User);
         }
     }
 }

@@ -1,14 +1,18 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using PMA_IdentityService.Data;
 using PMA_IdentityService.Services;
-using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
 var Configuration = builder.Configuration;
+
+builder.Services.AddAutoMapper(typeof(Program));
+
 builder.Services.AddAuthorization();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(Configuration.GetConnectionString("UsersDatabase")));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -32,7 +36,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
