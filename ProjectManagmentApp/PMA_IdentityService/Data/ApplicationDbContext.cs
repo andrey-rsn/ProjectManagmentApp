@@ -18,6 +18,7 @@ namespace PMA_IdentityService.Data
         
             modelBuilder.Entity<User>().HasData(new User
             {
+                User_Id = 1,
                 FirstName="Andrey",
                 SecondName="Korovay",
                 Patronymic="Alexcandrovich",
