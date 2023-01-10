@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PMA_IdentityService.Models.ViewModels;
 using PMA_IdentityService.Services;
 
@@ -8,6 +9,7 @@ namespace PMA_IdentityService.Controllers
 {
     [Route("api/v1/userInfo")]
     [ApiController]
+    [Authorize]
     public class UserInfoController : ControllerBase
     {
         private readonly IUserInfoService _userInfoService;
