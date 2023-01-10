@@ -4,6 +4,6 @@ namespace PMA_IdentityService.Repositories
 {
     public interface IUserRepository : IBaseRepository<UserDTO>
     {
-        Task<UserDTO> GetByLoginInfo(string Login, string PasswordHash);
+        Task<UserDTO> GetByLogin(string Login);
     }
 }

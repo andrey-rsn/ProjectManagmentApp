@@ -6,6 +6,7 @@ namespace PMA_IdentityService.Models.DTOs
     {
         public int User_Id { get; set; }
         public string Email { get; set; }
+        public string Login { get; set; }
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }

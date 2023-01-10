@@ -68,9 +68,9 @@ namespace PMA_IdentityService.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<UserDTO> GetByLoginInfo(string Login, string PasswordHash)
+        public async Task<UserDTO> GetByLogin(string Login)
         {
-            var User = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Email == Login&& x.Password == PasswordHash);
+            var User = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Email == Login);
 
             return _mapper.Map<UserDTO>(User);
         }

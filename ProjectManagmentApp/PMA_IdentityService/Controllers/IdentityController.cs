@@ -39,7 +39,7 @@ namespace PMA_IdentityService.Controllers
             return Ok(new
             {
                 access_token = Token,
-                user = UserModel.UserName,
+                user_name = UserModel.UserName,
                 user_Id = UserId
             });
         }

@@ -11,33 +11,37 @@ namespace PMA_IdentityService.Services
     {
         private readonly IUserRepository _userRepository;
 
-        private readonly byte[] _passwordKey;
+        private readonly string _passwordKey;
 
         public AccountService(IUserRepository userRepository, IOptions<SecretKeys> PasswordKeys)
         {
             _userRepository = userRepository;
-            _passwordKey = Encoding.ASCII.GetBytes(PasswordKeys.Value.localKey); 
+            _passwordKey = PasswordKeys.Value.localKey; 
         }
 
         public async Task<int> Login(string Login, string Password)
         {
-            var PasswordHash = HashService.Encrypt(Password, _passwordKey);
+            var User = await _userRepository.GetByLogin(Login);
 
-            var User = await _userRepository.GetByLoginInfo(Login, PasswordHash);
-
-            if(User == null)
+            if (User != null)
             {
-                return -1;
+                var DecryptPassword = HashService.Decrypt(User.Password, _passwordKey);
+
+                if (string.Equals(DecryptPassword, Password))
+                {
+                    return User.User_Id;
+                }
+
             }
 
-            return User.User_Id;
+            return -1;
         }
 
         public async Task<bool> Register(UserDTO UserInfo)
         {
             UserInfo.Password = HashService.Encrypt(UserInfo.Password, _passwordKey);
 
-            var IsAlreadyExists = (await Login(UserInfo.Email, UserInfo.Password) == -1);
+            var IsAlreadyExists = (await Login(UserInfo.Email, UserInfo.Password) != -1);
 
             if(!IsAlreadyExists)
             {

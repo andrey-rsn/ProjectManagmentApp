@@ -9,6 +9,8 @@ namespace PMA_IdentityService.Models
         [Required]
         public string Email { get; set; }
         [Required]
+        public string Login { get; set; }
+        [Required]
         public string Password { get; set; }
         [Required]
         public string FirstName { get; set; }
@@ -18,6 +20,7 @@ namespace PMA_IdentityService.Models
         public string Patronymic { get; set; }
         [Required]
         public string Role { get; set; }
-
+        [Required]
+        public int User_Positions_Id { get; set; }
     }
 }

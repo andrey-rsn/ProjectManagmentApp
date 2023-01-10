@@ -1,35 +1,39 @@
-﻿using System.Security.Cryptography;
+﻿using System.Reflection.Emit;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace PMA_IdentityService.Services
 {
     public static class HashService
     {
-        public static string Encrypt(string text, byte[] key)
+        public static string Encrypt(string text, string key)
         {
-            using Aes aes = Aes.Create();
-            aes.Key = key;
-            using MemoryStream ms = new();
-            ms.Write(aes.IV);
-            using (CryptoStream cs = new(ms, aes.CreateEncryptor(), CryptoStreamMode.Write, true))
+            byte[] data = UTF8Encoding.UTF8.GetBytes(text);
+            using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
             {
-                cs.Write(Encoding.UTF8.GetBytes(text));
+                byte[] keys = md5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+                using (TripleDESCryptoServiceProvider tripleDes = new TripleDESCryptoServiceProvider() { Key = keys, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
+                {
+                    ICryptoTransform transform = tripleDes.CreateEncryptor();
+                    byte[] results = transform.TransformFinalBlock(data, 0, data.Length);
+                    return Convert.ToBase64String(results);
+                }
             }
-            return Convert.ToBase64String(ms.ToArray());
         }
 
-        public static string Decrypt(string base64, byte[] key)
+        public static string Decrypt(string text, string key)
         {
-            using MemoryStream ms = new(Convert.FromBase64String(base64));
-            byte[] iv = new byte[16];
-            ms.Read(iv);
-            using Aes aes = Aes.Create();
-            aes.Key = key;
-            aes.IV = iv;
-            using CryptoStream cs = new(ms, aes.CreateDecryptor(), CryptoStreamMode.Read, true);
-            using MemoryStream output = new();
-            cs.CopyTo(output);
-            return Encoding.UTF8.GetString(output.ToArray());
+            byte[] data = Convert.FromBase64String(text);
+            using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+            {
+                byte[] keys = md5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+                using (TripleDESCryptoServiceProvider tripleDes = new TripleDESCryptoServiceProvider() { Key = keys, Mode = CipherMode.ECB, Padding = PaddingMode.PKCS7 })
+                {
+                    ICryptoTransform transform = tripleDes.CreateDecryptor();
+                    byte[] results = transform.TransformFinalBlock(data, 0, data.Length);
+                    return UTF8Encoding.UTF8.GetString(results);
+                }
+            }
         }
     }
 }
