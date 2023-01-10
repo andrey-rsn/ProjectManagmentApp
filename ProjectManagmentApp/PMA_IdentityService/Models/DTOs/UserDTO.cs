@@ -12,5 +12,7 @@ namespace PMA_IdentityService.Models.DTOs
         public string SecondName { get; set; }
         public string Patronymic { get; set; }
         public string Role { get; set; }
+        public int Position_Id { get; set; }
     }
 }
+

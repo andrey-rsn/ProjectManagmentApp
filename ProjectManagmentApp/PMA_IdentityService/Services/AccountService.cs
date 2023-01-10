@@ -41,7 +41,7 @@ namespace PMA_IdentityService.Services
         {
             UserInfo.Password = HashService.Encrypt(UserInfo.Password, _passwordKey);
 
-            var IsAlreadyExists = (await Login(UserInfo.Email, UserInfo.Password) != -1);
+            var IsAlreadyExists = (await Login(UserInfo.Login, UserInfo.Password) != -1);
 
             if(!IsAlreadyExists)
             {

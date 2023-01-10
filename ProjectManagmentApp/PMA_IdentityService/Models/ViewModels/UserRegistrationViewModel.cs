@@ -9,5 +9,6 @@
         public string SecondName { get; set; }
         public string Patronymic { get; set; }
         public string Role { get; set; }
+        public int PositionId { get; set; }
     }
 }

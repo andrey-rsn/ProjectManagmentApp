@@ -55,7 +55,7 @@ namespace PMA_IdentityService.Controllers
 
             if (Result)
             {
-                return Ok("User created");
+                return Ok($"User {User.Login} was succesfully created");
             }
 
             return BadRequest("Some error occured during registration process");

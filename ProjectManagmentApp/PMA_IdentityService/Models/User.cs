@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PMA_IdentityService.Models
 {
@@ -21,6 +22,7 @@ namespace PMA_IdentityService.Models
         [Required]
         public string Role { get; set; }
         [Required]
-        public int User_Positions_Id { get; set; }
+        [ForeignKey(nameof(Position))]
+        public int Position_Id { get; set; }
     }
 }

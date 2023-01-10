@@ -70,7 +70,7 @@ namespace PMA_IdentityService.Repositories
 
         public async Task<UserDTO> GetByLogin(string Login)
         {
-            var User = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Email == Login);
+            var User = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Login == Login);
 
             return _mapper.Map<UserDTO>(User);
         }

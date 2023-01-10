@@ -11,8 +11,8 @@ using PMA_IdentityService.Data;
 namespace PMA_IdentityService.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230109191707_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230110154844_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,6 +22,40 @@ namespace PMA_IdentityService.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("PMA_IdentityService.Models.Position", b =>
+                {
+                    b.Property<int>("Position_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Position_Id"));
+
+                    b.Property<string>("PositionName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Position_Id");
+
+                    b.ToTable("Positions");
+
+                    b.HasData(
+                        new
+                        {
+                            Position_Id = 1,
+                            PositionName = "Проектный менеджер"
+                        },
+                        new
+                        {
+                            Position_Id = 2,
+                            PositionName = "Разработчик"
+                        },
+                        new
+                        {
+                            Position_Id = 3,
+                            PositionName = "Тестировщик"
+                        });
+                });
 
             modelBuilder.Entity("PMA_IdentityService.Models.User", b =>
                 {
@@ -39,6 +73,10 @@ namespace PMA_IdentityService.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("text");
@@ -46,6 +84,9 @@ namespace PMA_IdentityService.Migrations
                     b.Property<string>("Patronymic")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("Position_Id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -65,8 +106,10 @@ namespace PMA_IdentityService.Migrations
                             User_Id = 1,
                             Email = "korowai98.ag@gmail.com",
                             FirstName = "Andrey",
-                            Password = "admin",
+                            Login = "Admin",
+                            Password = "cfJ6Op1ILJk=",
                             Patronymic = "Alexcandrovich",
+                            Position_Id = 1,
                             Role = "PM",
                             SecondName = "Korovay"
                         });
