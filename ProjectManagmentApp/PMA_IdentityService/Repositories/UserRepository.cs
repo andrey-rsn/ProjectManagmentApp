@@ -41,7 +41,7 @@ namespace PMA_IdentityService.Repositories
             if(User != null)
             {
                 _dbContext.Users.Remove(User); 
-                _dbContext.SaveChanges();    
+                await _dbContext.SaveChangesAsync();    
             }
         }
 

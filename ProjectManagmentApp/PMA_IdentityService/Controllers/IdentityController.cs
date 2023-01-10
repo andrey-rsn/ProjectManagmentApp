@@ -24,7 +24,7 @@ namespace PMA_IdentityService.Controllers
 
         // POST api/v1/identity/login
         [HttpPost]
-        [Route("/login")]
+        [Route("login")]
         public async Task<ActionResult<string>> Login(UserViewModel UserModel)
         {
             var UserId = await _accountService.Login(UserModel.UserName, UserModel.Password);
@@ -46,7 +46,7 @@ namespace PMA_IdentityService.Controllers
 
         // POST api/v1/identity/register
         [HttpPost]
-        [Route("/register")]
+        [Route("register")]
         public async Task<ActionResult<string>> Register(UserRegistrationViewModel UserModel)
         {
             var User = _mapper.Map<UserDTO>(UserModel);

@@ -10,7 +10,9 @@ namespace PMA_IdentityService.Services.Mapper
         public MapConfig() 
         {
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<UserDTO, UserInfoViewModel>().ReverseMap();
             CreateMap<UserRegistrationViewModel,UserDTO>().ReverseMap();
+            CreateMap<Position, PositionDTO>().ReverseMap();
         }
     }
 }
