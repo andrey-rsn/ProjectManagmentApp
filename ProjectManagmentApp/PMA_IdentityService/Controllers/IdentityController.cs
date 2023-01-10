@@ -44,9 +44,9 @@ namespace PMA_IdentityService.Controllers
             });
         }
 
-        // POST api/v1/identity/register
+        // POST api/v1/identity/registration
         [HttpPost]
-        [Route("register")]
+        [Route("registration")]
         public async Task<ActionResult<string>> Register(UserRegistrationViewModel UserModel)
         {
             var User = _mapper.Map<UserDTO>(UserModel);
