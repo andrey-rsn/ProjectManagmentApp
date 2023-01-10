@@ -19,7 +19,7 @@ namespace PMA_IdentityService.Controllers
             _userInfoService = userInfoService;
         }
 
-        // GET: api/userInfo/{User_Id}
+        // GET: api/v1/userInfo/{User_Id}
         [HttpGet("{User_Id}")]
         public async Task<ActionResult<UserInfoViewModel>> GetUserInfo(int User_Id)
         {
