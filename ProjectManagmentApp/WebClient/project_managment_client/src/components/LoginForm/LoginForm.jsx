@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useEffect , useState} from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { useNavigate} from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../../features/auth/authSlice';
+import { useLoginMutation } from '../../features/auth/authApiSlice';
 import './LoginForm.css';
 
 const validationSchema = yup.object({
-  email: yup
+  login: yup
     .string('Введите логин')
-    .email('Логин некорректен')
     .required('Поле обязательно для заполенения'),
   password: yup
     .string('Введите пароль')
@@ -17,10 +19,12 @@ const validationSchema = yup.object({
 });
 
 const LoginForm = () => {
+const [user, setUser] = useState('');
+const [loginFunc, { isLoading }] = useLoginMutation()
 
   const formik = useFormik({
     initialValues: {
-      email: '',
+      login: '',
       password: '',
     },
     validationSchema: validationSchema,
@@ -31,10 +35,22 @@ const LoginForm = () => {
 
   let navigate = useNavigate();
 
-  const onFormSubmit = (values) =>{
-    console.log(values);
-    navigate('/main');
+  const onFormSubmit = async (values) =>{
+    const {login, password} = values;
+    try {
+      const userData = await loginFunc({login, password}).unwrap();
+      console.log(userData);
+      dispatchEvent(setCredentials({...userData,user}));
+      navigate('/main');
+      console.log(values);
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  useEffect(() => {
+
+  })
 
   return (
     <div className='login-form-container'>
@@ -44,13 +60,13 @@ const LoginForm = () => {
           <div className='form__login-field input-field'>
             <TextField
               fullWidth
-              id="email"
-              name="email"
+              id="login"
+              name="login"
               label="Логин"
-              value={formik.values.email}
+              value={formik.values.login}
               onChange={formik.handleChange}
-              error={formik.touched.email && Boolean(formik.errors.email)}
-              helperText={formik.touched.email && formik.errors.email}
+              error={formik.touched.login && Boolean(formik.errors.login)}
+              helperText={formik.touched.login && formik.errors.login}
               sx={{ height: '100% !important' }}
             />
           </div>
