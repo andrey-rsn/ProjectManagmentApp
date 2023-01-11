@@ -27,19 +27,19 @@ namespace PMA_IdentityService.Controllers
         [Route("login")]
         public async Task<ActionResult<string>> Login(UserViewModel UserModel)
         {
-            var UserId = await _accountService.Login(UserModel.UserName, UserModel.Password);
+            var UserId = await _accountService.Login(UserModel.Login, UserModel.Password);
 
             if(UserId == -1)
             {
                 return NotFound();
             }
 
-            var Token = _authService.CreateToken(UserModel.UserName);
+            var Token = _authService.CreateToken(UserModel.Login);
 
             return Ok(new
             {
                 access_token = Token,
-                user_name = UserModel.UserName,
+                user_name = UserModel.Login,
                 user_Id = UserId
             });
         }
