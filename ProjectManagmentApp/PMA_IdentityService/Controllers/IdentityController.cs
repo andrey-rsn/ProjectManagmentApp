@@ -34,14 +34,9 @@ namespace PMA_IdentityService.Controllers
                 return NotFound();
             }
 
-            var Token = _authService.CreateToken(UserModel.Login);
+            var Result = await _authService.CreateLoginRequest(UserModel.Login, UserId);
 
-            return Ok(new
-            {
-                access_token = Token,
-                user_name = UserModel.Login,
-                user_Id = UserId
-            });
+            return Ok(Result);
         }
 
         // POST api/v1/identity/registration
@@ -59,6 +54,21 @@ namespace PMA_IdentityService.Controllers
             }
 
             return BadRequest("Some error occured during registration process");
+        }
+
+        // POST api/v1/identity/refresh
+        [HttpPost]
+        [Route("refresh")]
+        public async Task<ActionResult<LoginResponseViewModel>> RefreshToken(string RefreshToken)
+        {
+            var Result = await _authService.RefreshTokens(RefreshToken);
+
+            if (string.IsNullOrEmpty(Result.refresh_token))
+            {
+                return Unauthorized();
+            }
+
+            return Ok(Result);
         }
 
     }
