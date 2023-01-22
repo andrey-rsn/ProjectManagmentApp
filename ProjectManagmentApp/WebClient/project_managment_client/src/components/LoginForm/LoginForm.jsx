@@ -21,6 +21,7 @@ const validationSchema = yup.object({
 const LoginForm = () => {
 
     const [user, setUser] = useState('');
+    const [authError,setAuthError] = useState();
     const [loginFunc, { isLoading }] = useLoginMutation();
     const dispatch = useDispatch();
 
@@ -40,11 +41,13 @@ const LoginForm = () => {
     const onFormSubmit = async (values) => {
         const { login, password } = values;
         try {
-            const userData = await loginFunc({ login, password }).unwrap();
-            console.log(userData);
+            const userData = await loginFunc({ login, password }).unwrap().then(value=> console.log(value));
             dispatch(setCredentials({ ...userData, user }));
             navigate('/main');
         } catch (error) {
+            if(error.status == 404){
+                setAuthError('Неверный логин или пароль');
+            }
             console.log(error);
         }
     }
@@ -62,7 +65,7 @@ const LoginForm = () => {
                             label="Логин"
                             value={formik.values.login}
                             onChange={formik.handleChange}
-                            error={formik.touched.login && Boolean(formik.errors.login)}
+                            error={formik.touched.login && Boolean(formik.errors.login) || Boolean(authError)}
                             helperText={formik.touched.login && formik.errors.login}
                             sx={{ height: '100% !important' }}
                         />
@@ -76,8 +79,8 @@ const LoginForm = () => {
                             type="password"
                             value={formik.values.password}
                             onChange={formik.handleChange}
-                            error={formik.touched.password && Boolean(formik.errors.password)}
-                            helperText={formik.touched.password && formik.errors.password}
+                            error={formik.touched.password && Boolean(formik.errors.password) || Boolean(authError)}
+                            helperText={formik.touched.password && formik.errors.password || authError}
                             sx={{ height: '100% !important' }}
                         />
                     </div>

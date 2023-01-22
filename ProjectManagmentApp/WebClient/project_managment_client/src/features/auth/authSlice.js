@@ -11,7 +11,7 @@ const authSlice = createSlice({
             const { user_name, access_token, refresh_token ,user_id } = action.payload;
 
             let expires = new Date();
-            expires.setTime(expires.getTime() + (15 * 1000));
+            expires.setTime(expires.getTime() + (15 * 1000000));
 
             cookies.set('access_token', access_token, expires);
             cookies.set('refresh_token', refresh_token, expires);
