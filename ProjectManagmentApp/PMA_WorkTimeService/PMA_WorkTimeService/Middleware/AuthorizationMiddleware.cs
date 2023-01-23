@@ -19,35 +19,38 @@ namespace PMA_WorkTimeService.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            var hasAuthorizeAttribute = context.Features.Get<IEndpointFeature>().Endpoint.Metadata
-                .Any(m => m is AuthorizeAttribute);
 
-            if(hasAuthorizeAttribute)
+            if(context.Request.Headers.TryGetValue("Authorization", out var Token))
             {
-                if(context.Request.Headers.TryGetValue("Authorization", out var Token))
-                {
-                    var StatusCode = await ProcessAuthRequest(Token);
+                var StatusCode = await ProcessAuthRequest(Token);
 
-                    context.Response.StatusCode = StatusCode;
+                if(StatusCode == 200)
+                {
+                    await _next(context);
                 }
                 else
                 {
-                    context.Response.StatusCode = 401;
+                    context.Response.StatusCode = StatusCode;
+
+                    await context.Response.StartAsync();
                 }
+            }
+            else
+            {
+                context.Response.StatusCode = 401;
 
                 await context.Response.StartAsync();
             }
 
-            await _next(context);
         }
 
         private async Task<int> ProcessAuthRequest(string Token)
         {
             var request = new HttpRequestMessage(
-                    HttpMethod.Get,
-                    _httpClient.BaseAddress + "/api/v1/identity/validation");
+                    HttpMethod.Post,
+                    _httpClient.BaseAddress + "api/v1/identity/validation");
 
-            request.Headers.Add("AuthoriAtion", Convert.ToString(Token));
+            request.Headers.Add("Authorization", Convert.ToString(Token));
 
             var response = await _httpClient.SendAsync(request);
 
