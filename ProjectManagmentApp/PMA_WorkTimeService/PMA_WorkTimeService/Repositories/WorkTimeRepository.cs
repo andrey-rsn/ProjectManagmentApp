@@ -61,6 +61,13 @@ namespace PMA_WorkTimeService.Repositories
             return _mapper.Map<UserWorkTimeDTO>(WorkTime);
         }
 
+        public async Task<UserWorkTimeDTO> GetByUserId(int UserId)
+        {
+            var WorkTime = await _dbContext.UsersWorkTime.LastOrDefaultAsync(x=>x.UserId == UserId);
+
+            return _mapper.Map<UserWorkTimeDTO>(WorkTime);
+        }
+
         public async Task Update(UserWorkTimeDTO entity)
         {
             var WorkTime = await _dbContext.UsersWorkTime.FirstOrDefaultAsync(x=>x.UserWorkTimeId == entity.UserWorkTimeId);

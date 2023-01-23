@@ -9,6 +9,8 @@ namespace PMA_WorkTimeService.Services.Mapper
         public MapConfig()
         {
             CreateMap<UserWorkTime, UserWorkTimeDTO>().ReverseMap();
+
+            CreateMap<UserWorkTimeViewModel, UserWorkTimeDTO>().ReverseMap();
         }
     }
 }
