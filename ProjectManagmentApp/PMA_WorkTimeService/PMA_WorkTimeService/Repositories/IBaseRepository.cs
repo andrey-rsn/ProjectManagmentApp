@@ -2,7 +2,7 @@
 {
     public interface IBaseRepository<T>
     {
-        Task<IEnumerable<T>> GetAll();
+        Task<IEnumerable<T>> GetAll(int limit);
         Task<T> GetById(int id);
         Task Add(T entity);
         Task AddRange(IEnumerable<T> entity);

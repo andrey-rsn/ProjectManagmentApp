@@ -47,9 +47,9 @@ namespace PMA_WorkTimeService.Repositories
             }
         }
 
-        public async Task<IEnumerable<UserWorkTimeDTO>> GetAll()
+        public async Task<IEnumerable<UserWorkTimeDTO>> GetAll(int limit = 1000)
         {
-            var WorkTimeList = await _dbContext.UsersWorkTime.AsNoTracking().ToListAsync();
+            var WorkTimeList = await _dbContext.UsersWorkTime.AsNoTracking().OrderByDescending(x=>x.UserWorkTimeId).Take(limit).ToListAsync();
 
             return _mapper.Map<IEnumerable<UserWorkTimeDTO>>(WorkTimeList);
         }

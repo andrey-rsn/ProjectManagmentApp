@@ -5,7 +5,7 @@ using PMA_WorkTimeService.Repositories;
 
 namespace PMA_WorkTimeService.Services
 {
-    public class WorkTimeService
+    public class WorkTimeService : IWorkTimeService
     {
         private readonly IWorkTimeRepository _workTimeRepository;
 
@@ -56,6 +56,18 @@ namespace PMA_WorkTimeService.Services
                 throw new Exception("User is not found");
             }
 
+        }
+
+        public async Task<IEnumerable<UserWorkTimeDTO>> GetAllUserWorkTimeInfo(int UserId)
+        {
+            var UsersWorkTime = await _workTimeRepository.GetAll(1000);
+
+            if(UsersWorkTime != null)
+            {
+                return UsersWorkTime;
+            }
+            throw new Exception("User is not found");
+            
         }
     }
 }
