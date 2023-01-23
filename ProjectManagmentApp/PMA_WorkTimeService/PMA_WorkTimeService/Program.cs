@@ -1,13 +1,18 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using PMA_WorkTimeService.Data;
 using PMA_WorkTimeService.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+var Configuration = builder.Configuration;
 
-// Add services to the container.
-
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(Configuration.GetConnectionString("UsersDatabase")));
 builder.Services.AddHttpClient("authClient", c =>
 {
     c.BaseAddress = new Uri("http://localhost:5069");
