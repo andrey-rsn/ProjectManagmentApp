@@ -12,87 +12,95 @@ import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../features/auth/authSlice';
 
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
 
 const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 'auto',
+    },
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
+    color: 'inherit',
+    '& .MuiInputBase-input': {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        width: '12ch',
+        '&:focus': {
+          width: '20ch',
+        },
       },
     },
-  },
 }));
 
 
 
 const Header = () => {
+    const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const dispatch = useDispatch();
 
-const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
 
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
 
-const handleOpenUserMenu = (event) => {
-  setAnchorElUser(event.currentTarget);
-};
-
-const handleCloseUserMenu = () => {
-  setAnchorElUser(null);
-};
+    const onUserMenuParameterClick = (e) => {
+        switch (e.target.innerHTML) {
+          case 'Logout': dispatch(logOut());
+        }
+    }
 
   return (
     <Box >
       <AppBar position="static">
-        <Toolbar sx={{flexDirection:'row',justifyContent:'start'}}>
+        <Toolbar sx={{ flexDirection: 'row', justifyContent: 'start' }}>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, textAlign: 'left', marginRight:'auto',maxWidth:'200px' }}
+            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, textAlign: 'left', marginRight: 'auto', maxWidth: '200px' }}
           >
             Project Managment
           </Typography>
-          <Search sx={{marginLeft:'0 !important',margin:'0 auto',minWidth:'400px !important'}}>
+          <Search sx={{ marginLeft: '0 !important', margin: '0 auto', minWidth: '400px !important' }}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Поиск..."
               inputProps={{ 'aria-label': 'search' }}
-              sx={{textAlign:'left'}}
+              sx={{ textAlign: 'left' }}
             />
           </Search>
           <Box sx={{ flexGrow: 0 }}>
@@ -119,7 +127,7 @@ const handleCloseUserMenu = () => {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign="center" onClick={(e) => onUserMenuParameterClick(e)}>{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>

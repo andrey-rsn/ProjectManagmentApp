@@ -5,6 +5,7 @@ import MainPage from './pages/MainPage/MainPage';
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import {DefaultPage} from './pages/DefaultPage/DefaultPage';
+import RequireAuth from './features/auth/requireAuth';
 
 const App = () => {
 
@@ -12,8 +13,13 @@ const App = () => {
     <div className="App">
         <Routes>
           <Route path="/" element={<DefaultPage/>}/>
+
           <Route path="/login" element={<LoginPage/>}/>
-          <Route path="/main/*" element={<MainPage/>}/>
+
+          <Route element = {< RequireAuth />}>
+            <Route path="/main/*" element={<MainPage/>}/>
+          </Route>
+
         </Routes>
     </div>
   );

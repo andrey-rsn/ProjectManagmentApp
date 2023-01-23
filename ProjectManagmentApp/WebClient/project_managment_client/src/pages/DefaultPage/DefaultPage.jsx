@@ -1,13 +1,15 @@
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectCurrentToken } from "../../features/auth/authSlice";
 
 export const DefaultPage = () =>{
-
     let navigate = useNavigate();
+    const token = useSelector(selectCurrentToken);
 
     useEffect(() =>{
-        navigate('/login');
+        let url = token ? '/main' : '/login';
+        navigate(url);
     });
 
     return (
