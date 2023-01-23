@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PMA_IdentityService.Models.DTOs;
 using PMA_IdentityService.Models.ViewModels;
@@ -69,6 +70,15 @@ namespace PMA_IdentityService.Controllers
             }
 
             return Ok(Result);
+        }
+
+        // POST api/v1/identity/validation
+        [HttpPost]
+        [Authorize]
+        [Route("validation")]
+        public async Task<ActionResult> ValidateToken()
+        {
+            return Ok();
         }
 
     }
