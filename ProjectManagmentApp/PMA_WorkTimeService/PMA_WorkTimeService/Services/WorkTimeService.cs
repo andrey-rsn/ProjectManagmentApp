@@ -16,6 +16,10 @@ namespace PMA_WorkTimeService.Services
 
         public async Task StartWork(int UserId)
         {
+            if(UserId <= 0)
+            {
+                throw new Exception("UserId is not valid");
+            }
             var WorkTime = new UserWorkTimeDTO 
             { 
                 UserId = UserId,
@@ -34,7 +38,7 @@ namespace PMA_WorkTimeService.Services
             {
                 WorkTime.EndTime = DateTime.UtcNow;
 
-                await _workTimeRepository.Add(WorkTime);
+                await _workTimeRepository.Update(WorkTime);
             }
             else
             {

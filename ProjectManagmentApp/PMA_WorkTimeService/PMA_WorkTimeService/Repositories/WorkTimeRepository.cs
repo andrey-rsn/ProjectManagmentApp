@@ -49,7 +49,7 @@ namespace PMA_WorkTimeService.Repositories
 
         public async Task<IEnumerable<UserWorkTimeDTO>> GetAll(int limit = 1000)
         {
-            var WorkTimeList = await _dbContext.UsersWorkTime.AsNoTracking().OrderByDescending(x=>x.UserWorkTimeId).Take(limit).ToListAsync();
+            var WorkTimeList = await _dbContext.UsersWorkTime.AsNoTracking().OrderBy(x=>x.UserWorkTimeId).Take(limit).ToListAsync();
 
             return _mapper.Map<IEnumerable<UserWorkTimeDTO>>(WorkTimeList);
         }
@@ -63,14 +63,15 @@ namespace PMA_WorkTimeService.Repositories
 
         public async Task<UserWorkTimeDTO> GetByUserId(int UserId)
         {
-            var WorkTime = await _dbContext.UsersWorkTime.LastOrDefaultAsync(x=>x.UserId == UserId);
+            var WorkTime = await _dbContext.UsersWorkTime.AsNoTracking().OrderBy(x=>x.UserWorkTimeId).LastOrDefaultAsync(x=>x.UserId == UserId);
 
             return _mapper.Map<UserWorkTimeDTO>(WorkTime);
         }
 
         public async Task Update(UserWorkTimeDTO entity)
         {
-            var WorkTime = await _dbContext.UsersWorkTime.FirstOrDefaultAsync(x=>x.UserWorkTimeId == entity.UserWorkTimeId);
+            //var WorkTime = await _dbContext.UsersWorkTime.FirstOrDefaultAsync(x=>x.UserWorkTimeId == entity.UserWorkTimeId);
+            var WorkTime = _mapper.Map<UserWorkTime>(entity); 
 
             _dbContext.Update(WorkTime);
 

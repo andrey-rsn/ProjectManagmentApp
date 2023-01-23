@@ -20,7 +20,7 @@ namespace PMA_WorkTimeService.Controllers
             _mapper = mapper;
         }
 
-        // POST api/v1/workTime/start
+        // POST api/v1/workTime/start?UserId = {UserId}
         [HttpPost]
         [Route("start")]
         public async Task<ActionResult> StartWork(int UserId)
@@ -38,7 +38,7 @@ namespace PMA_WorkTimeService.Controllers
             
         }
 
-        // POST api/v1/workTime/end
+        // POST api/v1/workTime/end?UserId = {UserId}
         [HttpPost]
         [Route("end")]
         public async Task<ActionResult> EndWork(int UserId)
