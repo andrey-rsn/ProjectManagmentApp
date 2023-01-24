@@ -18,16 +18,24 @@ const WorkTimePage = () => {
 		<div className='work-time-page'>
 			<div className='work-time-form'>
 				<div className='work-time-form__header'>
-					<CircularProgress variant = {isActive ? "indeterminate" : "determinate"} value = {100} />
+					<CircularProgress variant={isActive ? "indeterminate" : "determinate"} value={100} />
 				</div>
 				<div className='work-time-form__middle middle'>
 					<div className='middle__time-start'>
-						<p>Время начала работы</p>
-						<p>20:20</p>
+						<div className='left-wrapper'>
+							<p>Время начала работы</p>
+						</div>
+						<div className='right-wrapper'>
+							<p>20:20</p>
+						</div>
 					</div>
 					<div className='middle__time-end'>
-						<p>Время завершения работы</p>
-						<p>22:20</p>
+						<div className='left-wrapper'>
+							<p>Время завершения работы</p>
+						</div>
+						<div className='right-wrapper'>
+							<p>22:20</p>
+						</div>
 					</div>
 				</div>
 				<div className='work-time-form__bottom'>
