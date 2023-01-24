@@ -1,3 +1,31 @@
 .work-time-page{
     width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.work-time-form{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+        &__header{
+            display: flex;
+            justify-content: center;
+        }
+        &__middle{
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+}
+
+.middle{
+    &__time-start{
+        display: flex;
+        flex-direction: row;
+    }
+    &__time-end{
+        display: flex;
+        flex-direction: row;
+    }
 }
