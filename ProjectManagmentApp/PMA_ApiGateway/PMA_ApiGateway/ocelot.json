@@ -1,0 +1,112 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/v1/identity/login",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5069
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/identity/login"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/identity/registration",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5069
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/identity/registration"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/identity/refresh",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5069
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/identity/refresh"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/identity/validation",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5069
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/identity/validation"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/userInfo/{User_Id}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5069
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/userInfo/{User_Id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/workTime/start?UserId={UserId}",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/workTime/start?UserId={UserId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/workTime/end?UserId={UserId}",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/workTime/end?UserId={UserId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/workTime/{UserId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/workTime/{UserId}"
+    }
+
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:1000"
+  }
+}
