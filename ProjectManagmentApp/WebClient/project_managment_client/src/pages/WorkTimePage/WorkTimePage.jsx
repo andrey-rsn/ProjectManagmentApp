@@ -1,38 +1,49 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import LinearProgress from '@mui/material/LinearProgress';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Button from '@mui/material/Button';
+import { useState } from 'react';
 import './WorkTimePage.css';
 
-function LinearProgressWithLabel(props) {
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Box sx={{ width: '40%', mr: 1 }}>
-        <LinearProgress sx={{height:'10px',borderRadius:'4px'}} variant="determinate" {...props} />
-      </Box>
-      <Box sx={{ minWidth: 35 }}>
-        <Typography variant="body2" color="text.secondary">{`${Math.round(
-          props.value,
-        )}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
 
 
 const WorkTimePage = () => {
 
+	const [isActive, setIsActive] = useState(false);
 
-    return (
-        <div className='work-time-page'>
-            <Box sx={{ width: '100%' }}>
-                <LinearProgressWithLabel value={40} />
-            </Box>
-            <p>Время начала работы</p>
-            <p>Время завершения работы</p>
-        </div>
-    )
+	const onBtnToggle = () => {
+		setIsActive(!isActive);
+	}
+
+	return (
+		<div className='work-time-page'>
+			<div className='work-time-form'>
+				<div className='work-time-form__header'>
+					<CircularProgress variant={isActive ? "indeterminate" : "determinate"} value={100} />
+				</div>
+				<div className='work-time-form__middle middle'>
+					<div className='middle__time-start'>
+						<div className='left-wrapper'>
+							<p>Время начала работы</p>
+						</div>
+						<div className='right-wrapper'>
+							<p>20:20</p>
+						</div>
+					</div>
+					<div className='middle__time-end'>
+						<div className='left-wrapper'>
+							<p>Время завершения работы</p>
+						</div>
+						<div className='right-wrapper'>
+							<p>22:20</p>
+						</div>
+					</div>
+				</div>
+				<div className='work-time-form__bottom'>
+					<Button variant="contained" color={isActive ? 'error' : 'success'} onClick={onBtnToggle}>{isActive ? 'Завершить работу' : 'Начать работу'}</Button>
+				</div>
+			</div>
+		</div>
+	)
 }
 
 export default WorkTimePage;

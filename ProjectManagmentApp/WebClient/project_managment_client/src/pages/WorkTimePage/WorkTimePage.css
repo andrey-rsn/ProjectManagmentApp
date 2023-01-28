@@ -1,3 +1,56 @@
 .work-time-page {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.work-time-form {
+  min-width: 400px;
+  height: 210px;
+  padding: 10px;
+  background-color: aliceblue;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.work-time-form__header {
+  display: flex;
+  justify-content: center;
+}
+.work-time-form__middle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.work-time-form :not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.middle {
+  width: 100%;
+}
+.middle__time-start {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  text-align: left;
+}
+.middle__time-end {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  text-align: left;
+}
+
+.right-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+.left-wrapper {
+  width: 100%;
+  display: flex;
+  text-align: left;
 }/*# sourceMappingURL=WorkTimePage.css.map */

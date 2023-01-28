@@ -1,3 +1,56 @@
 .work-time-page{
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.work-time-form{
+    min-width: 400px;
+    height: 210px;
+    padding: 10px;
+    background-color: aliceblue;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+        &__header{
+            display: flex;
+            justify-content: center;
+        }
+        &__middle{
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        :not(:last-child){
+            margin-bottom: 5px;
+        }
+}
+
+.middle{
+    width: 100%;
+    &__time-start{
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        text-align: left;
+    }
+    &__time-end{
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        text-align: left;
+    }
+}
+
+.right-wrapper{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
+.left-wrapper{
+    width: 100%;
+    display: flex;
+    text-align: left;
 }
