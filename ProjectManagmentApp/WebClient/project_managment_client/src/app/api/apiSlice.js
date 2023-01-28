@@ -3,7 +3,7 @@ import { setCredentials,logOut } from '../../features/auth/authSlice';
 
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:5069',
+    baseUrl: 'http://localhost:1000',
     setCredentials: 'include',
     prepareHeaders: (headers, {getState}) => {
         const token = getState().auth.token
@@ -19,7 +19,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) =>{
     if(result?.error?.originalStatus === 403){
         console.log('sending refresh token');
 
-        const refreshResult = await baseQuery('/api/v1/identity/refresh', api, extraOptions);
+        const refreshResult = await baseQuery('/api/identity/refresh', api, extraOptions);
 
         if(refreshResult?.data) {
             const user = api.getState().auth.user;
