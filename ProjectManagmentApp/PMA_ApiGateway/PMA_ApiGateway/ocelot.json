@@ -27,7 +27,7 @@
       "DownstreamPathTemplate": "/api/v1/identity/registration"
     },
     {
-      "UpstreamPathTemplate": "/api/v1/identity/refresh",
+      "UpstreamPathTemplate": "/api/v1/identity/refresh?RefreshToken={RefreshToken}",
       "UpstreamHttpMethod": [ "Post" ],
 
       "DownstreamScheme": "http",
@@ -37,7 +37,7 @@
           "Port": 5069
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/identity/refresh"
+      "DownstreamPathTemplate": "/api/v1/identity/refresh?RefreshToken={RefreshToken}"
     },
     {
       "UpstreamPathTemplate": "/api/v1/identity/validation",

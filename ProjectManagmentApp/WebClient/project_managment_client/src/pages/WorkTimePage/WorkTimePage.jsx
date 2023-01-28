@@ -3,22 +3,39 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 import './WorkTimePage.css';
+import { useStartWorkMutation } from '../../features/workTimeApi/workTimeApiSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {startWork, endWork} from '../../features/workTimeApi/workTimeSlice';
+import { selectCurrentUserId } from '../../features/auth/authSlice';
 
 
 
 const WorkTimePage = () => {
 
-	const [isActive, setIsActive] = useState(false);
+    const [startWorkFetch,{isLoading}] = useStartWorkMutation();
 
-	const onBtnToggle = () => {
-		setIsActive(!isActive);
+    const {startTime, endTime, isStarted} = useSelector(state => state.workTime);
+    const user_id = useSelector(selectCurrentUserId);
+
+    const dispatch = useDispatch();
+
+	const onBtnToggle = async () => {
+        const data = new Date().toLocaleString();
+		if(isStarted){
+            dispatch(endWork({endTime: data}));
+            console.log("endWork");
+            console.log(isStarted);
+        } else {
+            const result = await startWorkFetch(user_id).unwrap().then(value => dispatch(startWork({startTime:data})));
+        }
 	}
 
+    
 	return (
 		<div className='work-time-page'>
 			<div className='work-time-form'>
 				<div className='work-time-form__header'>
-					<CircularProgress variant={isActive ? "indeterminate" : "determinate"} value={100} />
+					<CircularProgress variant={isStarted ? "indeterminate" : "determinate"} value={100} />
 				</div>
 				<div className='work-time-form__middle middle'>
 					<div className='middle__time-start'>
@@ -26,7 +43,7 @@ const WorkTimePage = () => {
 							<p>Время начала работы</p>
 						</div>
 						<div className='right-wrapper'>
-							<p>20:20</p>
+							<p>{startTime}</p>
 						</div>
 					</div>
 					<div className='middle__time-end'>
@@ -34,12 +51,12 @@ const WorkTimePage = () => {
 							<p>Время завершения работы</p>
 						</div>
 						<div className='right-wrapper'>
-							<p>22:20</p>
+							<p>{endTime}</p>
 						</div>
 					</div>
 				</div>
 				<div className='work-time-form__bottom'>
-					<Button variant="contained" color={isActive ? 'error' : 'success'} onClick={onBtnToggle}>{isActive ? 'Завершить работу' : 'Начать работу'}</Button>
+					<Button variant="contained" color={isStarted ? 'error' : 'success'} onClick={onBtnToggle} disabled = {isLoading}>{isStarted ? 'Завершить работу' : 'Начать работу'}</Button>
 				</div>
 			</div>
 		</div>

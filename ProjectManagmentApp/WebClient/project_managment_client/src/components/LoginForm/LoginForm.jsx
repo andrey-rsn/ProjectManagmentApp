@@ -41,9 +41,11 @@ const LoginForm = () => {
     const onFormSubmit = async (values) => {
         const { login, password } = values;
         try {
-            const userData = await loginFunc({ login, password }).unwrap().then(value=> console.log(value));
-            dispatch(setCredentials({ ...userData, user }));
-            navigate('/main');
+                await loginFunc({ login, password }).unwrap().then(value=> {
+                dispatch(setCredentials(value));
+                navigate('/main');
+            });
+
         } catch (error) {
             if(error.status == 404){
                 setAuthError('Неверный логин или пароль');
