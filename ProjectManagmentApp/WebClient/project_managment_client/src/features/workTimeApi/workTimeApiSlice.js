@@ -16,10 +16,18 @@ export const workTimeApiSlice = apiSlice.injectEndpoints({
             })
         }),
 
+        lastWorkTimeInfo: builder.query({
+            query: (user_id) => ({
+                url: `/api/v1/workTime/last/${user_id}`,
+                method: 'GET'
+            })
+        })
+
     })
 })
 
 export const {
     useStartWorkMutation,
-    useEndWorkMutation
+    useEndWorkMutation,
+    useLazyLastWorkTimeInfoQuery
 } = workTimeApiSlice

@@ -21,6 +21,11 @@ const authSlice = createSlice({
             let expires = new Date();
             expires.setTime(expires.getTime() + (15 * 1000000));
 
+            cookies.remove('access_token');
+            cookies.remove('refresh_token');
+            localStorage.removeItem('user_id');
+            localStorage.removeItem('user_name');
+
             cookies.set('access_token', access_token, expires);
             cookies.set('refresh_token', refresh_token, expires);
             localStorage.setItem('user_id',user_id);

@@ -12,20 +12,28 @@ export const workTimeSlice = createSlice({
     reducers:{
         startWork: (state,action) => {
             const {startTime} = action.payload;
-            console.log(action.payload);
+
             state.startTime = startTime;
+            state.endTime = null;
             state.isStarted = true;
         },
         endWork: (state,action) => {
             const {endTime} = action.payload;
-            console.log(action.payload);
+
             state.endTime = endTime;
             state.isStarted = false;
+        },
+        updateInfo: (state,action) => {
+            const {startTime, endTime, isStarted} = action.payload;
+
+            state.startTime = startTime;
+            state.endTime = endTime;
+            state.isStarted = isStarted;
         }
     }      
 })
 
 
-export const {startWork, endWork} = workTimeSlice.actions;
+export const {startWork, endWork, updateInfo} = workTimeSlice.actions;
 
 export default workTimeSlice.reducer;
