@@ -23,13 +23,15 @@ namespace PMA_WorkTimeService.Controllers
         // POST api/v1/workTime/start?UserId = {UserId}
         [HttpPost]
         [Route("start")]
-        public async Task<ActionResult> StartWork(int UserId)
+        public async Task<ActionResult<UserWorkTimeViewModel>> StartWork(int UserId)
         {
             try
             {
-                await _workTimeService.StartWork(UserId);
+                var UserWorkTime = await _workTimeService.StartWork(UserId);
 
-                return Ok();
+                var Result = _mapper.Map<UserWorkTimeViewModel>(UserWorkTime);
+
+                return Ok(Result);
             }
             catch(Exception ex)
             {
@@ -41,13 +43,15 @@ namespace PMA_WorkTimeService.Controllers
         // POST api/v1/workTime/end?UserId = {UserId}
         [HttpPost]
         [Route("end")]
-        public async Task<ActionResult> EndWork(int UserId)
+        public async Task<ActionResult<UserWorkTimeViewModel>> EndWork(int UserId)
         {
             try
             {
-                await _workTimeService.EndWork(UserId);
+                var UserWorkTime = await _workTimeService.EndWork(UserId);
 
-                return Ok();
+                var Result = _mapper.Map<UserWorkTimeViewModel>(UserWorkTime);
+
+                return Ok(Result);
             }
             catch (Exception ex)
             {

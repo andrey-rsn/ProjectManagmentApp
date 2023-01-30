@@ -14,7 +14,7 @@ namespace PMA_WorkTimeService.Services
             _workTimeRepository = workTimeRepository;
         }
 
-        public async Task StartWork(int UserId)
+        public async Task<UserWorkTimeDTO> StartWork(int UserId)
         {
             if(UserId <= 0)
             {
@@ -28,11 +28,13 @@ namespace PMA_WorkTimeService.Services
             };
 
             await _workTimeRepository.Add(WorkTime);
+
+            return await _workTimeRepository.GetByUserId(UserId);
         }
 
-        public async Task EndWork(int UserId)
+        public async Task<UserWorkTimeDTO> EndWork(int UserId)
         {
-            var WorkTime = await _workTimeRepository.GetByUserId(UserId);
+            var WorkTime = await _workTimeRepository.GetByFilter(x=> x.UserId == UserId && x.StartTime != null);
 
             if(WorkTime != null) 
             {
@@ -45,6 +47,7 @@ namespace PMA_WorkTimeService.Services
                 throw new Exception("User is not found");
             }
 
+            return await _workTimeRepository.GetByUserId(UserId);
         }
 
         public async Task<UserWorkTimeDTO> GetUserWorkTimeInfo(int UserId)

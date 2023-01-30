@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PMA_WorkTimeService.Data;
 using PMA_WorkTimeService.Models;
 using PMA_WorkTimeService.Models.DTOs;
+using System.Linq.Expressions;
 
 namespace PMA_WorkTimeService.Repositories
 {
@@ -67,10 +68,15 @@ namespace PMA_WorkTimeService.Repositories
 
             return _mapper.Map<UserWorkTimeDTO>(WorkTime);
         }
+        public async Task<UserWorkTimeDTO> GetByFilter(Expression<Func<UserWorkTime,bool>> filter)
+        {
+            var WorkTime = await _dbContext.UsersWorkTime.AsNoTracking().OrderBy(x => x.UserWorkTimeId).LastOrDefaultAsync(filter);
+
+            return _mapper.Map<UserWorkTimeDTO>(WorkTime);
+        }
 
         public async Task Update(UserWorkTimeDTO entity)
         {
-            //var WorkTime = await _dbContext.UsersWorkTime.FirstOrDefaultAsync(x=>x.UserWorkTimeId == entity.UserWorkTimeId);
             var WorkTime = _mapper.Map<UserWorkTime>(entity); 
 
             _dbContext.Update(WorkTime);

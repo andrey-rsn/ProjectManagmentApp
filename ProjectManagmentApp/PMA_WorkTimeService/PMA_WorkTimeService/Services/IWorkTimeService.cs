@@ -4,9 +4,9 @@ namespace PMA_WorkTimeService.Services
 {
     public interface IWorkTimeService
     {
-        Task StartWork(int UserId);
+        Task<UserWorkTimeDTO> StartWork(int UserId);
 
-        Task EndWork(int UserId);
+        Task<UserWorkTimeDTO> EndWork(int UserId);
 
         Task<UserWorkTimeDTO> GetUserWorkTimeInfo(int UserId);
 
