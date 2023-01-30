@@ -59,9 +59,9 @@ namespace PMA_WorkTimeService.Controllers
             }
         }
 
-        // GET api/v1/workTime
-        [HttpGet("{UserId}")]
-        public async Task<ActionResult<UserWorkTimeViewModel>> GetAllWorkTimeInfo(int UserId)
+        // GET api/v1/workTime/all/{UserId}
+        [HttpGet("all/{UserId}")]
+        public async Task<ActionResult<IEnumerable<UserWorkTimeViewModel>>> GetAllWorkTimeInfo(int UserId)
         {
             try
             {
@@ -73,7 +73,22 @@ namespace PMA_WorkTimeService.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
 
+        // GET api/v1/workTime/last/{UserId}
+        [HttpGet("last/{UserId}")]
+        public async Task<ActionResult<UserWorkTimeViewModel>> GetLastWorkTimeInfo(int UserId)
+        {
+            try
+            {
+                var LastUserWorkTimeInfo = await _workTimeService.GetUserWorkTimeInfo(UserId);
+
+                return Ok(_mapper.Map<UserWorkTimeViewModel>(LastUserWorkTimeInfo));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }

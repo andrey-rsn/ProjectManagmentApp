@@ -92,7 +92,7 @@
       "DownstreamPathTemplate": "/api/v1/workTime/end?UserId={UserId}"
     },
     {
-      "UpstreamPathTemplate": "/api/v1/workTime/{UserId}",
+      "UpstreamPathTemplate": "/api/v1/workTime/all/{UserId}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -102,7 +102,20 @@
           "Port": 7001
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/workTime/{UserId}"
+      "DownstreamPathTemplate": "/api/v1/workTime/all/{UserId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/workTime/last/{UserId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/workTime/last/{UserId}"
     }
 
   ],
