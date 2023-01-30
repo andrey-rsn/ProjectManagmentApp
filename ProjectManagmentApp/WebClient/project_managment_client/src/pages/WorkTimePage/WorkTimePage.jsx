@@ -15,31 +15,31 @@ import { formatTime } from '../../helpers/timeHelper/timeHelper';
 const WorkTimePage = () => {
 
     const user_id = useSelector(selectCurrentUserId);
-    const [lastWorkTimeInfoFetch,{isLoading}] = useLazyLastWorkTimeInfoQuery();
+    const [lastWorkTimeInfoFetch, { isLoading, error }] = useLazyLastWorkTimeInfoQuery();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        async function updateData(){
+        async function updateData() {
             await lastWorkTimeInfoFetch(user_id).unwrap().then(value => {
-            const workTimeInfo = formatWorkTimeInfo(value);
-            dispatch(updateInfo(workTimeInfo));
-            });
+                const workTimeInfo = formatWorkTimeInfo(value);
+                dispatch(updateInfo(workTimeInfo));
+            }).catch(err => console.log(err));
         }
         updateData();
     }, []);
 
     const formatWorkTimeInfo = (worktimeInfo) => {
-        const {startTime, endTime} = worktimeInfo;
+        const { startTime, endTime } = worktimeInfo;
 
-        return{
+        return {
             ...worktimeInfo,
             startTime: formatTime(startTime),
             endTime: formatTime(endTime)
         }
     }
 
-    const content = (isLoading
-        ? <Skeleton sx={{ bgcolor: 'gray',borderRadius: '10px' }} variant="rectangular" width={400} height={210} />
+    const content = (isLoading || error
+        ? <Skeleton sx={{ bgcolor: 'gray', borderRadius: '10px' }} variant="rectangular" width={400} height={210} />
         : <WorkTimeForm />)
 
     return (
