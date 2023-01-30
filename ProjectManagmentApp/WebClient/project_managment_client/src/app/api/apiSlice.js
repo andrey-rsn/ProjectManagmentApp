@@ -1,30 +1,37 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import { setCredentials,logOut } from '../../features/auth/authSlice';
+import Cookies from 'universal-cookie';
 
+const cookies = new Cookies();
 
 const baseQuery = fetchBaseQuery({
     baseUrl: 'http://localhost:1000',
     setCredentials: 'include',
     prepareHeaders: (headers, {getState}) => {
-        const token = getState().auth.token
+
+        const token = cookies.get('access_token');
+
         if(token){
             headers.set('Authorization', `Bearer ${token}`);
         }
+
         return headers;
     }
 })
 
 const baseQueryWithReauth = async (args, api, extraOptions) =>{
+
     let result = await baseQuery(args, api, extraOptions);
-    if(result?.error?.originalStatus === 403){
+
+    if(result?.error?.status === 401){
         console.log('sending refresh token');
+        const refreshToken = cookies.get('refresh_token');
+        const refreshResult = await baseQuery({url:`/api/v1/identity/refresh?RefreshToken=${refreshToken}`, method:'POST'}, api, {method:"POST"});
 
-        const refreshResult = await baseQuery('/api/identity/refresh', api, extraOptions);
-
+        console.log(refreshResult);
         if(refreshResult?.data) {
-            const user = api.getState().auth.user;
 
-            api.dispatch(setCredentials(...refreshResult.data, user));
+            api.dispatch(setCredentials(refreshResult.data));
 
             result = await baseQuery(args, api, extraOptions);
         } else {
