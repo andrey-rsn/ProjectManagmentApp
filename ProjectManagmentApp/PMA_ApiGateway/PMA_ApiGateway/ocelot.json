@@ -116,6 +116,19 @@
         }
       ],
       "DownstreamPathTemplate": "/api/v1/workTime/last/{UserId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/workTime/{UserId}",
+      "UpstreamHttpMethod": [ "Put", "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/workTime/{UserId}"
     }
 
   ],
