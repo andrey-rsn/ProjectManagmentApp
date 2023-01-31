@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PMA_WorkTimeService.Models;
+using PMA_WorkTimeService.Models.DTOs;
 using PMA_WorkTimeService.Services;
+using System.Net;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PMA_WorkTimeService.Controllers
 {
@@ -23,13 +24,17 @@ namespace PMA_WorkTimeService.Controllers
         // POST api/v1/workTime/start?UserId = {UserId}
         [HttpPost]
         [Route("start")]
-        public async Task<ActionResult> StartWork(int UserId)
+        [ProducesResponseType(typeof(UserWorkTimeViewModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<UserWorkTimeViewModel>> StartWork(int UserId)
         {
             try
             {
-                await _workTimeService.StartWork(UserId);
+                var UserWorkTime = await _workTimeService.StartWork(UserId);
 
-                return Ok();
+                var Result = _mapper.Map<UserWorkTimeViewModel>(UserWorkTime);
+
+                return Ok(Result);
             }
             catch(Exception ex)
             {
@@ -41,13 +46,17 @@ namespace PMA_WorkTimeService.Controllers
         // POST api/v1/workTime/end?UserId = {UserId}
         [HttpPost]
         [Route("end")]
-        public async Task<ActionResult> EndWork(int UserId)
+        [ProducesResponseType(typeof(UserWorkTimeViewModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<UserWorkTimeViewModel>> EndWork(int UserId)
         {
             try
             {
-                await _workTimeService.EndWork(UserId);
+                var UserWorkTime = await _workTimeService.EndWork(UserId);
 
-                return Ok();
+                var Result = _mapper.Map<UserWorkTimeViewModel>(UserWorkTime);
+
+                return Ok(Result);
             }
             catch (Exception ex)
             {
@@ -55,9 +64,11 @@ namespace PMA_WorkTimeService.Controllers
             }
         }
 
-        // GET api/v1/workTime
-        [HttpGet("{UserId}")]
-        public async Task<ActionResult<UserWorkTimeViewModel>> GetAllWorkTimeInfo(int UserId)
+        // GET api/v1/workTime/all/{UserId}
+        [HttpGet("all/{UserId}")]
+        [ProducesResponseType(typeof(IEnumerable< UserWorkTimeViewModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<IEnumerable<UserWorkTimeViewModel>>> GetAllWorkTimeInfo(int UserId)
         {
             try
             {
@@ -69,7 +80,60 @@ namespace PMA_WorkTimeService.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
 
+        // GET api/v1/workTime/last/{UserId}
+        [HttpGet("last/{UserId}")]
+        [ProducesResponseType(typeof(UserWorkTimeViewModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<UserWorkTimeViewModel>> GetLastWorkTimeInfo(int UserId)
+        {
+            try
+            {
+                var LastUserWorkTimeInfo = await _workTimeService.GetUserWorkTimeInfo(UserId);
+
+                return Ok(_mapper.Map<UserWorkTimeViewModel>(LastUserWorkTimeInfo));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // PUT api/v1/workTime/{UserId}
+        [HttpPut("{UserId}")]
+        [ProducesResponseType(typeof(UserWorkTimeViewModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<UserWorkTimeViewModel>> UpdateWorkTimeInfo(UserWorkTimeDTO userWorkTime)
+        {
+            try
+            {
+                var UserWorkTimeInfo = await _workTimeService.UpdateUserWorkTimeInfo(userWorkTime);
+
+                return Ok(_mapper.Map<UserWorkTimeViewModel>(UserWorkTimeInfo));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // DELETE api/v1/workTime/{UserId}
+        [HttpDelete("{UserId}")]
+        [ProducesResponseType(typeof(UserWorkTimeViewModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<UserWorkTimeViewModel>> DeleteWorkTimeInfo(int WorkTimeInfoId)
+        {
+            try
+            {
+                await _workTimeService.DeleteUserWorkTimeInfo(WorkTimeInfoId);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }
