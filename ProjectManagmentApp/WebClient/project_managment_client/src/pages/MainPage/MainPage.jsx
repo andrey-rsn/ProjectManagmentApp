@@ -4,6 +4,7 @@ import ActionList from '../../components/ActionList/ActionList';
 import Header from '../../components/Header/Header';
 import './MainPage.css';
 import ProjectInfoPage from "../ProjectInfoPage/ProjectInfoPage";
+import TasksPage from "../TasksPage/TasksPage";
 
 
 const MainPage = () => {
@@ -19,6 +20,7 @@ const MainPage = () => {
                 <Routes>
                     <Route path="/" element={<ProjectInfoPage />} />
                     <Route path="/workTime" element={<WorkTimePage />} />
+                    <Route path="/tasks" element={<TasksPage />} />
                 </Routes>
             </div>
         </div >

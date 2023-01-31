@@ -1,0 +1,28 @@
+.tasks-form {
+  padding: 0px 15px 0px 15px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.tasks-form__header {
+  text-align: left;
+}
+.tasks-form__filters {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.tasks-form__filters :not(:last-child) {
+  margin-right: 10px;
+}
+.tasks-form__data-table {
+  display: flex;
+  flex-grow: 1;
+  height: auto;
+  padding-bottom: 10px;
+}
+
+.header__text {
+  font-size: 150%;
+}/*# sourceMappingURL=TasksForm.css.map */
