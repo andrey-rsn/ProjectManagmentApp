@@ -12,5 +12,9 @@ namespace PMA_WorkTimeService.Services
 
         Task<IEnumerable<UserWorkTimeDTO>> GetAllUserWorkTimeInfo(int UserId);
 
+        Task<UserWorkTimeDTO> UpdateUserWorkTimeInfo(UserWorkTimeDTO UserWorkTimeInfo);
+
+        Task DeleteUserWorkTimeInfo(int WorkTimeInfoId);
+
     }
 }
