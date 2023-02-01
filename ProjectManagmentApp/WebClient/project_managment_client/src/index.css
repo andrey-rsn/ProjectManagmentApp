@@ -5,10 +5,22 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+#root{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+html{
+    height: 100%;
 }

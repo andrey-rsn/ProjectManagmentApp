@@ -121,7 +121,7 @@ const TasksForm = () => {
                         columns={columns}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
-                        /* checkboxSelection */
+                        checkboxSelection
                         disableSelectionOnClick
                         experimentalFeatures={{ newEditingApi: true }}
                     />

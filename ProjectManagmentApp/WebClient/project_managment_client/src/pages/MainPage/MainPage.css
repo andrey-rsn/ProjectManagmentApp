@@ -1,4 +1,11 @@
+.main-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .main-page__content {
   display: flex;
   flex-direction: row;
+  flex-grow: 1;
+  height: auto;
 }/*# sourceMappingURL=MainPage.css.map */
