@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import TaskCardForm from "../../components/TaskCardForm/TaskCardFrom";
+import './TaskCardPage.css';
 
 
 const TaskCardPage = (props) => {
