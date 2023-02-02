@@ -22,7 +22,7 @@ const TaskCardForm = (props) => {
 
     const taskInfo = useSelector(state => state.tasks.data.find(value => value.id == taskId));
 
-    const {id, name} = taskInfo;
+    const {id, name, assignedTo, priority, statusId, description} = taskInfo;
 
     const dispatch = useDispatch();
 
@@ -36,7 +36,7 @@ const TaskCardForm = (props) => {
                 <div className="header__additional-info additional-info">
                     <div className='additional-info__name'>
                         <AccountBoxIcon sx={{ height: '100%', color: 'gray', marginRight: '5px' }} />
-                        <p>Коровай Андрей Александрович</p>
+                        <p>{assignedTo}</p>
                     </div>
                     <div className='additional-info__comments'>
                         <ForumIcon sx={{ marginRight: '5px', height: '100%', color: 'blue' }} />
@@ -53,11 +53,11 @@ const TaskCardForm = (props) => {
                     <div className='secondary-info__state'>
                         <p>Состояние:</p>
                         <CircleIcon color='disabled' sx={{ fontSize: '1.2em', height: '100%', marginRight: '0px !important' }} />
-                        <SelectSmall />
+                        <SelectSmall statusId={statusId}/>
                     </div>
                     <div className='secondary-info__priority'>
                         <p>Приоритет:</p>
-                        <p>2</p>
+                        <p>{priority}</p>
                     </div>
                 </div>
                 <div className='right-side'>
@@ -75,7 +75,7 @@ const TaskCardForm = (props) => {
                         id="filled-multiline-static"
                         multiline
                         rows={8}
-                        defaultValue="Описание задачи"
+                        defaultValue={description ?? "Введите описание задачи"}
                         variant="filled"
                         sx={{width: '70%'}}
                     />
@@ -96,11 +96,12 @@ const TaskCardForm = (props) => {
     )
 }
 
-function SelectSmall() {
-    const [age, setAge] = React.useState('');
+const SelectSmall= (props) => {
+
+    const {statusId} = props;
 
     const handleChange = (event) => {
-        setAge(event.target.value);
+        
     };
 
     return (
@@ -109,13 +110,13 @@ function SelectSmall() {
             <Select
                 labelId="demo-select-small"
                 id="demo-select-small"
-                value={10}
+                value={statusId}
                 onChange={handleChange}
             >
-                <MenuItem value={10}>Новая</MenuItem>
-                <MenuItem value={20}>В работе</MenuItem>
-                <MenuItem value={40}>Выполнена</MenuItem>
-                <MenuItem value={50}>Завершена</MenuItem>
+                <MenuItem value={1}>Новая</MenuItem>
+                <MenuItem value={2}>В работе</MenuItem>
+                <MenuItem value={3}>Выполнена</MenuItem>
+                <MenuItem value={4}>Завершена</MenuItem>
             </Select>
         </FormControl>
     );

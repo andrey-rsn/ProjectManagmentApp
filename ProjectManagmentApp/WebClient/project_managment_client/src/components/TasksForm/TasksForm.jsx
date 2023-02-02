@@ -12,6 +12,7 @@ import Divider from '@mui/material/Divider';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateData } from '../../features/tasksApi/tasksSlice';
+import { useNavigate } from 'react-router-dom';
 import './TasksForm.css';
 
 
@@ -100,6 +101,8 @@ const TasksForm = () => {
 
     const tasks = useSelector(state => state.tasks.data);
 
+    let navigate = useNavigate();
+
     const onRowsDelete = () => {
         console.dir(selectedRows);
         if(selectedRows?.length > 0){
@@ -110,6 +113,12 @@ const TasksForm = () => {
             })
             console.log(newTasks);
             dispatch(updateData({data: newTasks}));
+        }
+    }
+
+    const rowClickHandle = (e) => {
+        if(e.id){
+            navigate(`/main/tasks/${e.id}`);
         }
     }
 
@@ -139,6 +148,7 @@ const TasksForm = () => {
                         disableSelectionOnClick
                         experimentalFeatures={{ newEditingApi: true }}
                         onSelectionModelChange={e => setSelectedRows(e)}
+                        onRowClick={e => rowClickHandle(e)}
                     />
                 </Box>
             </div>
