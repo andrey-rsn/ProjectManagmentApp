@@ -21,8 +21,8 @@ const authSlice = createSlice({
             let expires = new Date();
             expires.setTime(expires.getTime() + (15 * 1000000));
 
-            cookies.remove('access_token');
-            cookies.remove('refresh_token');
+            cookies.remove('access_token', { path: '/' });
+            cookies.remove('refresh_token', { path: '/' });
             localStorage.removeItem('user_id');
             localStorage.removeItem('user_name');
 
@@ -34,8 +34,8 @@ const authSlice = createSlice({
         logOut: (state,action) => {
             state.user_id = null;
             state.user_name = null;
-            cookies.remove('access_token');
-            cookies.remove('refresh_token');
+            cookies.remove('access_token', { path: '/' });
+            cookies.remove('refresh_token', { path: '/' });
             localStorage.removeItem('user_id');
             localStorage.removeItem('user_name');
         }

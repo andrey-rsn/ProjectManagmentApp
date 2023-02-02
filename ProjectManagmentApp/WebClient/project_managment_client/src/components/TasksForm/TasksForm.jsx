@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -9,6 +10,8 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Divider from '@mui/material/Divider';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateData } from '../../features/tasksApi/tasksSlice';
 import './TasksForm.css';
 
 
@@ -75,29 +78,40 @@ const columns = [
         editable: false,
     },
     {
-        field: 'fullName',
+        field: 'assignedTo',
         headerName: 'Назначено на',
-        description: 'This column has a value getter and is not sortable.',
-        sortable: false,
         width: 160,
-        valueGetter: (params) =>
-            `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+        editable: false
     },
-];
-
-const rows = [
-    { id: 1, name: 'Snow', status: 'Jon', changeDate: 35 },
-    { id: 2, name: 'Lannister', status: 'Cersei', changeDate: 42 },
-    { id: 3, name: 'Lannister', status: 'Jaime', changeDate: 45 },
-    { id: 4, name: 'Stark', status: 'Arya', changeDate: 16 },
-    { id: 5, name: 'Targaryen', status: 'Daenerys', changeDate: null },
-    { id: 6, name: 'Melisandre', status: null, changeDate: 150 },
-    { id: 7, name: 'Clifford', status: 'Ferrara', changeDate: 44 },
-    { id: 8, name: 'Frances', status: 'Rossini', changeDate: 36 },
-    { id: 9, name: 'Roxie', status: 'Harvey', changeDate: 65 },
+    {
+        field: 'assignedUserId',
+        headerName: 'Идентификатор назначенного пользователя',
+        width: 160,
+        editable: false,
+        hide: true
+    }
 ];
 
 const TasksForm = () => {
+
+    const [selectedRows, setSelectedRows] = useState([]);
+
+    const dispatch = useDispatch();
+
+    const tasks = useSelector(state => state.tasks.data);
+
+    const onRowsDelete = () => {
+        console.dir(selectedRows);
+        if(selectedRows?.length > 0){
+            let newTasks = tasks;
+
+            selectedRows.forEach((id) => {
+                newTasks = newTasks.filter(value => value.id != id);
+            })
+            console.log(newTasks);
+            dispatch(updateData({data: newTasks}));
+        }
+    }
 
     return (
         <div className='tasks-form'>
@@ -108,22 +122,23 @@ const TasksForm = () => {
                 <CustomizedMenus />
                 <Divider orientation="vertical" flexItem />
                 <div>
-                    <Button size="small" sx={{color: 'black'}}><AddIcon />Создать задачу</Button>
+                    <Button size="small" sx={{ color: 'black' }}><AddIcon />Создать задачу</Button>
                 </div>
                 <div>
-                    <Button size="small" sx={{color: 'black'}}><DeleteIcon />Удалить выбранные</Button>
+                    <Button size="small" sx={{ color: 'black' }} onClick={onRowsDelete}><DeleteIcon />Удалить выбранные</Button>
                 </div>
             </div>
             <div className='tasks-form__data-table'>
                 <Box sx={{ height: 'auto', width: '100%' }}>
                     <DataGrid
-                        rows={rows}
+                        rows={tasks}
                         columns={columns}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         checkboxSelection
                         disableSelectionOnClick
                         experimentalFeatures={{ newEditingApi: true }}
+                        onSelectionModelChange={e => setSelectedRows(e)}
                     />
                 </Box>
             </div>

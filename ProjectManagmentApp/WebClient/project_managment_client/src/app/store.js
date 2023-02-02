@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "./api/apiSlice";
 import authReducer from '../features/auth/authSlice';
 import workTimeReducer from '../features/workTimeApi/workTimeSlice';
+import tasksReducer from '../features/tasksApi/tasksSlice';
 import { workTimeApiSlice } from "../features/workTimeApi/workTimeApiSlice";
 
 
@@ -10,7 +11,8 @@ export const store = configureStore({
         [apiSlice.reducerPath]: apiSlice.reducer,
         auth: authReducer,
         [workTimeApiSlice.reducerPath]: workTimeApiSlice.reducer,
-        workTime: workTimeReducer
+        workTime: workTimeReducer,
+        tasks: tasksReducer
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware().concat(apiSlice.middleware),
