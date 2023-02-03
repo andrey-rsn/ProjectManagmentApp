@@ -117,6 +117,10 @@
   width: 100%;
   margin-bottom: 20px;
 }
+.comments__list {
+  width: 70%;
+  margin-bottom: 10px;
+}
 .comments__list > :not(:last-child) {
   margin-bottom: 15px;
 }

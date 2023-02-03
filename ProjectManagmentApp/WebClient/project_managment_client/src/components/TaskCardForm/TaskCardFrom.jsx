@@ -24,9 +24,32 @@ const TaskCardForm = (props) => {
 
     const taskInfo = useSelector(state => state.tasks.data.find(value => value.id == taskId));
 
-    const { id, name, assignedTo, priority, statusId, description } = taskInfo;
+    const [taskInfoLocal, setTaskInfoLocal] = React.useState(taskInfo);
+
+    const { id, name, assignedTo, priority, statusId, description, comments, changedBy, changeDate } = taskInfoLocal;
 
     const dispatch = useDispatch();
+
+    const CommentsElements = React.useMemo(() => {
+        return comments.map((value, index) => <CommentElement key={index} name={value.name} img={value.img} creationDate={value.creationDate} text={value.text} />)
+    });
+
+    const handleStatusChange = (e) => {
+        setTaskInfoLocal({
+            ...taskInfoLocal,
+            statusId: e.target.value
+        })
+    }
+
+    const statusColor = React.useMemo(() => {
+        switch(taskInfoLocal.statusId){
+            case 1: return 'disabled';
+            case 2: return 'info';
+            case 3: return 'warning';
+            case 4: return 'success';
+            default: return 'disabled'
+        }
+    },[taskInfoLocal.statusId]);
 
     return (
         <div className="task-card-form">
@@ -46,13 +69,26 @@ const TaskCardForm = (props) => {
                     </div>
                 </div>
             </div>
-            <Divider sx={{ backgroundColor: 'grey' }} />
+            <Divider sx={{ backgroundColor: 'grey', marginRight: '-1%', marginLeft: '-1%' }} />
             <div className="task-card-form__secondary-info secondary-info">
                 <div className='left-side'>
                     <div className='secondary-info__state'>
                         <p>Состояние:</p>
-                        <CircleIcon color='disabled' sx={{ fontSize: '1.2em', height: '100%', marginRight: '0px !important' }} />
-                        <SelectSmall statusId={statusId} />
+                        <CircleIcon color={statusColor} sx={{ fontSize: '1.2em', height: '100%', marginRight: '0px !important' }} />
+                        <FormControl sx={{ m: 1, minWidth: 160, lineHeight: '50%' }} size="small">
+                            <InputLabel id="demo-select-small"></InputLabel>
+                            <Select
+                                labelId="demo-select-small"
+                                id="demo-select-small"
+                                value={statusId}
+                                onChange={handleStatusChange}
+                            >
+                                <MenuItem value={1}>Новая</MenuItem>
+                                <MenuItem value={2}>В работе</MenuItem>
+                                <MenuItem value={3}>Выполнена</MenuItem>
+                                <MenuItem value={4}>Завершена</MenuItem>
+                            </Select>
+                        </FormControl>
                     </div>
                     <div className='secondary-info__priority'>
                         <p>Приоритет:</p>
@@ -62,11 +98,11 @@ const TaskCardForm = (props) => {
                 <div className='right-side'>
                     <div className='secondary-info__updated-by'>
                         <p>Кем обновлено:</p>
-                        <p>Admin admin admin 20.10.2023</p>
+                        <p>{changedBy} {changeDate}</p>
                     </div>
                 </div>
             </div>
-            <Divider sx={{ backgroundColor: 'grey' }} />
+            <Divider sx={{ backgroundColor: 'grey', marginRight: '-1%', marginLeft: '-1%' }} variant='fullWidth' />
             <div className="task-card-form__main-info main-info">
                 <div className='main-info__description'>
                     <p>Описание</p>
@@ -75,9 +111,10 @@ const TaskCardForm = (props) => {
                         multiline
                         rows={8}
                         defaultValue=""
-                        placeholder ="Введите описание задачи"
+                        placeholder="Введите описание задачи"
                         variant="filled"
                         sx={{ width: '70%' }}
+                        value={description}
                     />
                 </div>
                 <div className='main-info__comments comments'>
@@ -94,9 +131,7 @@ const TaskCardForm = (props) => {
                         />
                     </div>
                     <div className='comments__list'>
-                        <CommentElement />
-                        <CommentElement />
-                        <CommentElement />
+                        {CommentsElements}
                     </div>
                 </div>
             </div>
@@ -104,31 +139,6 @@ const TaskCardForm = (props) => {
     )
 }
 
-const SelectSmall = (props) => {
-
-    const { statusId } = props;
-
-    const handleChange = (event) => {
-
-    };
-
-    return (
-        <FormControl sx={{ m: 1, minWidth: 160, lineHeight: '50%' }} size="small">
-            <InputLabel id="demo-select-small"></InputLabel>
-            <Select
-                labelId="demo-select-small"
-                id="demo-select-small"
-                value={statusId}
-                onChange={handleChange}
-            >
-                <MenuItem value={1}>Новая</MenuItem>
-                <MenuItem value={2}>В работе</MenuItem>
-                <MenuItem value={3}>Выполнена</MenuItem>
-                <MenuItem value={4}>Завершена</MenuItem>
-            </Select>
-        </FormControl>
-    );
-}
 
 
 

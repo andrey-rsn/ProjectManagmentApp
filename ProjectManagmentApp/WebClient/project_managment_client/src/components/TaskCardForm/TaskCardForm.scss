@@ -136,6 +136,8 @@
         margin-bottom: 20px;
     }
     &__list{
+        width: 70%;
+        margin-bottom: 10px;
         >:not(:last-child){
             margin-bottom: 15px;
         }

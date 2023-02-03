@@ -1,7 +1,6 @@
 .comment-element {
     display: flex;
     flex-direction: row;
-    width: 70%;
 
     &__img {
         margin-right: 10px;
@@ -29,6 +28,7 @@
         align-items: center;
         justify-content: flex-start;
         text-align: left;
+        overflow-wrap: anywhere;
         &>p {
             margin: 0;
         }
