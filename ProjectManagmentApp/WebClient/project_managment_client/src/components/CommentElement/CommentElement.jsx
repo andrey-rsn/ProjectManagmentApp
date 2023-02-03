@@ -3,11 +3,12 @@ import './CommentElement.css';
 
 const CommentElement = (props) => {
     const {img, name, creationDate, text} = props;
+    /* console.log(img); */
 
     return (
         <div className='comment-element'>
             <div className='comment-element__img'>
-                <Avatar alt={name} src={img} />
+                <Avatar alt="A" src="" />
             </div>
             <div className='comment-element__comment-info comment-info'>
                 <div className='comment-info__comment-header comment-header'>

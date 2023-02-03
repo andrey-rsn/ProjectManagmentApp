@@ -15,6 +15,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import CommentElement from '../CommentElement/CommentElement';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { updateElement } from '../../features/tasksApi/tasksSlice';
+import { selectCurrentUserName } from '../../features/auth/authSlice';
 
 
 const TaskCardForm = (props) => {
@@ -24,15 +26,21 @@ const TaskCardForm = (props) => {
 
     const taskInfo = useSelector(state => state.tasks.data.find(value => value.id == taskId));
 
+    const userName = useSelector(selectCurrentUserName);
+
     const [taskInfoLocal, setTaskInfoLocal] = React.useState(taskInfo);
 
-    const { id, name, assignedTo, priority, statusId, description, comments, changedBy, changeDate } = taskInfoLocal;
+    const [commentText, setCommentText] = React.useState("");
+
+    const { id, img, name, assignedTo, priority, statusId, description, comments, changedBy, changeDate } = taskInfoLocal;
 
     const dispatch = useDispatch();
 
     const CommentsElements = React.useMemo(() => {
-        return comments.map((value, index) => <CommentElement key={index} name={value.name} img={value.img} creationDate={value.creationDate} text={value.text} />)
-    });
+        if (comments?.length > 0) {
+            return comments.map((value, index) => <CommentElement key={index} name={value.author} img={value.img} creationDate={value.creationDate} text={value.text} />)
+        }
+    }, [comments]);
 
     const handleStatusChange = (e) => {
         setTaskInfoLocal({
@@ -41,15 +49,49 @@ const TaskCardForm = (props) => {
         })
     }
 
+    const onTaskInfoSave = () => {
+        if (commentText) {
+            const commentInfo = {
+                img: img, author: userName, creationDate: new Date().toLocaleDateString(), text: commentText
+            }
+
+            if (taskInfoLocal.comments?.length > 0) {
+                setTaskInfoLocal({
+                    ...taskInfoLocal,
+                    comments: [...taskInfoLocal.comments, commentInfo]
+                })
+            }else{
+                setTaskInfoLocal({
+                    ...taskInfoLocal,
+                    comments: [commentInfo]
+                })
+            }
+
+        }
+
+        dispatch(updateElement(taskInfoLocal));
+
+        setCommentText("");
+    };
+
+    const commentTextChangeHandle = (e) => {
+        setCommentText(e.target.value);
+    }
+
+    const descriptionChangeHandle = (e) => {
+        console.log(e.target.value);
+        setTaskInfoLocal({ ...taskInfoLocal, description: e.target.value });
+    }
+
     const statusColor = React.useMemo(() => {
-        switch(taskInfoLocal.statusId){
+        switch (taskInfoLocal.statusId) {
             case 1: return 'disabled';
             case 2: return 'info';
             case 3: return 'warning';
             case 4: return 'success';
             default: return 'disabled'
         }
-    },[taskInfoLocal.statusId]);
+    }, [taskInfoLocal.statusId]);
 
     return (
         <div className="task-card-form">
@@ -64,7 +106,7 @@ const TaskCardForm = (props) => {
                         <p>{assignedTo}</p>
                     </div>
                     <div className='additional-info__tools'>
-                        <Button size="small" sx={{ color: 'black' }}><SaveIcon sx={{ height: '100%' }} />Сохранить</Button>
+                        <Button size="small" sx={{ color: 'black' }}><SaveIcon sx={{ height: '100%' }} onClick={onTaskInfoSave} />Сохранить</Button>
                         <Button size="small" sx={{ color: 'black' }}><RefreshIcon sx={{ height: '100%' }} />Обновить</Button>
                     </div>
                 </div>
@@ -110,11 +152,11 @@ const TaskCardForm = (props) => {
                         id="filled-multiline-static"
                         multiline
                         rows={8}
-                        defaultValue=""
                         placeholder="Введите описание задачи"
                         variant="filled"
                         sx={{ width: '70%' }}
-                        value={description}
+                        defaultValue={description}
+                        onChange={descriptionChangeHandle}
                     />
                 </div>
                 <div className='main-info__comments comments'>
@@ -124,10 +166,10 @@ const TaskCardForm = (props) => {
                             id="filled-multiline-static"
                             multiline
                             rows={1}
-                            defaultValue=""
                             placeholder="Введите текст комментария"
                             variant="filled"
                             sx={{ width: '70%' }}
+                            onChange={commentTextChangeHandle}
                         />
                     </div>
                     <div className='comments__list'>
