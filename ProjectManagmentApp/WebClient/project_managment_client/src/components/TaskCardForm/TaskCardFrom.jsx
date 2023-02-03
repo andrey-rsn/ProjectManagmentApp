@@ -13,6 +13,8 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
+import CommentElement from '../CommentElement/CommentElement';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 
 const TaskCardForm = (props) => {
@@ -22,7 +24,7 @@ const TaskCardForm = (props) => {
 
     const taskInfo = useSelector(state => state.tasks.data.find(value => value.id == taskId));
 
-    const {id, name, assignedTo, priority, statusId, description} = taskInfo;
+    const { id, name, assignedTo, priority, statusId, description } = taskInfo;
 
     const dispatch = useDispatch();
 
@@ -38,12 +40,9 @@ const TaskCardForm = (props) => {
                         <AccountBoxIcon sx={{ height: '100%', color: 'gray', marginRight: '5px' }} />
                         <p>{assignedTo}</p>
                     </div>
-                    <div className='additional-info__comments'>
-                        <ForumIcon sx={{ marginRight: '5px', height: '100%', color: 'blue' }} />
-                        <p>Комменатриев: 0</p>
-                    </div>
                     <div className='additional-info__tools'>
                         <Button size="small" sx={{ color: 'black' }}><SaveIcon sx={{ height: '100%' }} />Сохранить</Button>
+                        <Button size="small" sx={{ color: 'black' }}><RefreshIcon sx={{ height: '100%' }} />Обновить</Button>
                     </div>
                 </div>
             </div>
@@ -53,7 +52,7 @@ const TaskCardForm = (props) => {
                     <div className='secondary-info__state'>
                         <p>Состояние:</p>
                         <CircleIcon color='disabled' sx={{ fontSize: '1.2em', height: '100%', marginRight: '0px !important' }} />
-                        <SelectSmall statusId={statusId}/>
+                        <SelectSmall statusId={statusId} />
                     </div>
                     <div className='secondary-info__priority'>
                         <p>Приоритет:</p>
@@ -75,33 +74,42 @@ const TaskCardForm = (props) => {
                         id="filled-multiline-static"
                         multiline
                         rows={8}
-                        defaultValue={description ?? "Введите описание задачи"}
+                        defaultValue=""
+                        placeholder ="Введите описание задачи"
                         variant="filled"
-                        sx={{width: '70%'}}
+                        sx={{ width: '70%' }}
                     />
                 </div>
-                <div className='main-info__comments'>
-                    <p>Комментарии</p>
-                    <TextField
-                        id="filled-multiline-static"
-                        multiline
-                        rows={1}
-                        defaultValue="Введите текст комментария..."
-                        variant="filled"
-                        sx={{width: '70%'}}
-                    />
+                <div className='main-info__comments comments'>
+                    <div className='comments__input'>
+                        <p>Комментарии</p>
+                        <TextField
+                            id="filled-multiline-static"
+                            multiline
+                            rows={1}
+                            defaultValue=""
+                            placeholder="Введите текст комментария"
+                            variant="filled"
+                            sx={{ width: '70%' }}
+                        />
+                    </div>
+                    <div className='comments__list'>
+                        <CommentElement />
+                        <CommentElement />
+                        <CommentElement />
+                    </div>
                 </div>
             </div>
         </div>
     )
 }
 
-const SelectSmall= (props) => {
+const SelectSmall = (props) => {
 
-    const {statusId} = props;
+    const { statusId } = props;
 
     const handleChange = (event) => {
-        
+
     };
 
     return (
@@ -121,5 +129,7 @@ const SelectSmall= (props) => {
         </FormControl>
     );
 }
+
+
 
 export default TaskCardForm;

@@ -1,5 +1,6 @@
 .task-card-form {
-    
+    width: 98%;
+    margin: 0 auto;
     &__header {
         display: flex;
         flex-direction: column;
@@ -10,7 +11,6 @@
         flex-direction: row;
         justify-content: space-between;
         width: 100%;
-        background-color: rgb(221, 222, 223);
         padding-top: 5px;
     }
     &__main-info{
@@ -24,14 +24,12 @@
     &__main-info {
         display: flex;
         flex-direction: row;
-        padding: 0px 15px 0px 15px;
     }
 
     &__additional-info {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        padding: 0px 15px 0px 15px;
     }
 }
 
@@ -118,6 +116,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
+        
     }
     &__comments{
         display: flex;
@@ -127,14 +126,28 @@
     
 }
 
+.comments{
+    &__input{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    &__list{
+        >:not(:last-child){
+            margin-bottom: 15px;
+        }
+    }
+}
+
 .left-side{
     display: flex;
     flex-direction: column;
-    padding-left: 15px;
 }
 .right-side{
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding-right: 15px;
 }
