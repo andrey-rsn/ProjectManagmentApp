@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using PMA_WorkTimeService.Data;
 using PMA_WorkTimeService.Middleware;
 using PMA_WorkTimeService.Repositories;
@@ -16,7 +14,7 @@ builder.Services.AddScoped<IWorkTimeRepository,WorkTimeRepository>();
 builder.Services.AddScoped<IWorkTimeService, WorkTimeService>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(Configuration.GetConnectionString("UsersDatabase")));
+    options.UseNpgsql(Configuration.GetConnectionString("WorkTimeDatabase")));
 builder.Services.AddHttpClient("authClient", c =>
 {
     c.BaseAddress = new Uri("http://localhost:5069");

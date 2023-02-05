@@ -1,0 +1,77 @@
+version: '3.4'
+
+services:
+  pma_tasksservice:
+    container_name: pma_tasksservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=Server=task-service-db;Port=5432;Database=TaskServiceDb;User Id=admin;Password=admin"
+    ports:
+      - "8000:80"
+
+  pma_apigateway:
+    container_name: pma_apigateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "1000:80"
+
+
+  pma_identityservice:
+    container_name: pma_identityservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "UsersDatabase:ConnectionString=Server=identity-service-db;Port=5432;Database=IdentityServiceDb;User Id=admin;Password=admin"
+    ports:
+      - "8002:80"
+
+
+  pma_worktimeservice:
+    container_name: pma_worktimeservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "WorktimeDatabase:ConnectionString=Server=work-time-service-db;Port=5432;Database=WorkTimeServiceDb;User Id=admin;Password=admin"
+    ports:
+      - "8003:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+
+  task-service-db:
+    container_name: task-service-db
+    environment: 
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=TaskServiceDb
+    restart: always
+    ports:
+        - "9000:5432"
+    volumes:
+        - postgres_data:/var/lib/postgresql/data/
+
+
+  identity-service-db:
+    container_name: identity-service-db
+    environment: 
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=IdentityServiceDb
+    restart: always
+    ports:
+        - "9002:5432"
+    volumes:
+        - postgres_data:/var/lib/postgresql/data/
+
+  work-time-service-db:
+    container_name: work-time-service-db
+    environment: 
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=WorkTimeServiceDb
+    restart: always
+    ports:
+        - "9003:5432"
+    volumes:
+        - postgres_data:/var/lib/postgresql/data/
