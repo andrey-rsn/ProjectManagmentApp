@@ -169,6 +169,7 @@ const TaskCardForm = (props) => {
                             placeholder="Введите текст комментария"
                             variant="filled"
                             sx={{ width: '70%' }}
+                            defaultValue=''
                             onChange={commentTextChangeHandle}
                         />
                     </div>
