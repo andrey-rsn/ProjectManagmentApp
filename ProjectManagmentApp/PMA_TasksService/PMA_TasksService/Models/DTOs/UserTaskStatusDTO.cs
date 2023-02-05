@@ -1,13 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PMA_TasksService.Models
+namespace PMA_TasksService.Models.DTOs
 {
-    public class UserTaskStatus
+    public class UserTaskStatusDTO
     {
-        [Key]
         public int userTaskStatusId { get; set; }
 
-        [Required]
         public string statusName { get; set; }
     }
 }

@@ -1,18 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PMA_TasksService.Models
+namespace PMA_TasksService.Models.DTOs
 {
-    public class TaskComments
+    public class TaskCommentsDTO
     {
-        [Key]
         public int taskCommentsId { get; set; }
 
-        [Required]
         public int taskId { get; set; }
 
-        [Required]
         public int commentId { get; set; }
-
-
     }
 }

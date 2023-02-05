@@ -1,16 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PMA_TasksService.Models
+namespace PMA_TasksService.Models.DTOs
 {
-    public class Comment
+    public class CommentDTO
     {
-        [Key]
         public int commentId { get; set; }
 
-        [Required]
         public int authorId { get; set; }
 
-        [Required]
         public DateTime creationDate { get; set; }
 
         public string? commentText { get; set; }

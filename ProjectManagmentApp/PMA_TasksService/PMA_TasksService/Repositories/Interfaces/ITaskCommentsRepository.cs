@@ -3,7 +3,7 @@ using PMA_TasksService.Models.DTOs;
 
 namespace PMA_TasksService.Repositories.Interfaces
 {
-    public interface IUserTaskRepository : IBaseAsyncRepository<UserTaskDTO,UserTask>
+    public interface ITaskCommentsRepository : IBaseAsyncRepository<TaskCommentsDTO, TaskComments>
     {
     }
 }
