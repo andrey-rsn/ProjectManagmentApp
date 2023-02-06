@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "pma_identityservice",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
+      "serviceActions": {
+        "identity-service-db": "StartWithoutDebugging",
+        "pma_apigateway": "StartDebugging",
+        "pma_identityservice": "StartDebugging",
+        "pma_tasksservice": "StartDebugging",
+        "pma_worktimeservice": "StartDebugging",
+        "task-service-db": "StartWithoutDebugging",
+        "work-time-service-db": "StartWithoutDebugging"
+      }
+    }
+  }
+}

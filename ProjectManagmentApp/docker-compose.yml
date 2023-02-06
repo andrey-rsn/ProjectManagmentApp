@@ -37,5 +37,7 @@ services:
     image: postgres
 
 volumes:
-  postgres_data:
+  task-service-db_data:
+  identity-service-db_data:
+  work-time-service-db_data:
   

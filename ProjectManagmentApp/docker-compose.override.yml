@@ -21,7 +21,7 @@ services:
     container_name: pma_identityservice
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "UsersDatabase:ConnectionString=Server=identity-service-db;Port=5432;Database=IdentityServiceDb;User Id=admin;Password=admin"
+      - "ConnectionStrings:UsersDatabase=Server=identity-service-db;Port=5432;Database=IdentityServiceDb;User Id=admin;Password=admin"
     ports:
       - "8002:80"
 
@@ -49,7 +49,7 @@ services:
     ports:
         - "9000:5432"
     volumes:
-        - postgres_data:/var/lib/postgresql/data/
+        - task-service-db_data:/var/lib/postgresql/data/
 
 
   identity-service-db:
@@ -62,7 +62,7 @@ services:
     ports:
         - "9002:5432"
     volumes:
-        - postgres_data:/var/lib/postgresql/data/
+        - identity-service-db_data:/var/lib/postgresql/data/
 
   work-time-service-db:
     container_name: work-time-service-db
@@ -74,4 +74,4 @@ services:
     ports:
         - "9003:5432"
     volumes:
-        - postgres_data:/var/lib/postgresql/data/
+        - work-time-service-db_data:/var/lib/postgresql/data/
