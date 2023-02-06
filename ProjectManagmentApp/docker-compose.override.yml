@@ -8,6 +8,8 @@ services:
       - "DatabaseSettings:ConnectionString=Server=task-service-db;Port=5432;Database=TaskServiceDb;User Id=admin;Password=admin"
     ports:
       - "8000:80"
+    depends_on:
+      - task-service-db
 
   pma_apigateway:
     container_name: pma_apigateway
@@ -24,6 +26,8 @@ services:
       - "ConnectionStrings:UsersDatabase=Server=identity-service-db;Port=5432;Database=IdentityServiceDb;User Id=admin;Password=admin"
     ports:
       - "8002:80"
+    depends_on:
+      - identity-service-db
 
 
   pma_worktimeservice:
@@ -31,12 +35,15 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - "WorktimeDatabase:ConnectionString=Server=work-time-service-db;Port=5432;Database=WorkTimeServiceDb;User Id=admin;Password=admin"
+      - "ConnectionStrings:WorktimeDatabase=Server=work-time-service-db;Port=5432;Database=WorkTimeServiceDb;User Id=admin;Password=admin"
+      - "ConnectionStrings:IdentityService=http://pma_identityservice:80"
     ports:
       - "8003:80"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - work-time-service-db
 
 
   task-service-db:

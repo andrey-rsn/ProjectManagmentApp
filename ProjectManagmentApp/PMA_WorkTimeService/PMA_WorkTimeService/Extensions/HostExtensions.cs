@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace PMA_IdentityService.Extensions
+namespace PMA_WorkTimeService.Extensions
 {
     public static class HostExtensions
     {
