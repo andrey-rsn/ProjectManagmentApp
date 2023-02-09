@@ -17,9 +17,9 @@ namespace PMA_TasksService.Repositories
             _mapper = mapper;
         }
 
-        public async Task<IReadOnlyList<T>> GetAllAsync()
+        public async Task<IReadOnlyList<T>> GetAllAsync(int limit = 100)
         {
-            var Entities = await _dbContext.Set<U>().ToListAsync();
+            var Entities = await _dbContext.Set<U>().Take(limit).ToListAsync();
 
             return _mapper.Map<IReadOnlyList<T>>(Entities);
         }
@@ -43,6 +43,7 @@ namespace PMA_TasksService.Repositories
 
             if (predicate != null) query = query.Where(predicate);
 
+
             if (orderBy != null)
             {
                 Entities = await orderBy(query).ToListAsync();
@@ -53,11 +54,12 @@ namespace PMA_TasksService.Repositories
                 Entities = await query.ToListAsync();
             }
 
+
             return _mapper.Map<IReadOnlyList<T>>(Entities);
             
         }
 
-        public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<U, bool>> predicate = null, Func<IQueryable<U>, IOrderedQueryable<U>> orderBy = null, List<Expression<Func<U, object>>> includes = null, bool disableTracking = true)
+        public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<U, bool>> predicate = null, Func<IQueryable<U>, IOrderedQueryable<U>> orderBy = null, List<Expression<Func<U, object>>> includes = null, bool disableTracking = true, int limit = 100)
         {
             IQueryable<U> query = _dbContext.Set<U>();
 
@@ -68,6 +70,8 @@ namespace PMA_TasksService.Repositories
             if (includes != null) query = includes.Aggregate(query, (current, include) => current.Include(include));
 
             if (predicate != null) query = query.Where(predicate);
+
+            query.Take(limit);
 
             if (orderBy != null)
             {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using PMA_TasksService.Models.DTOs;
+using PMA_TasksService.Services.UserTask;
+using System.Net;
 
 namespace PMA_TasksService.Controllers
 {
@@ -8,36 +9,99 @@ namespace PMA_TasksService.Controllers
     [ApiController]
     public class UserTaskController : ControllerBase
     {
-        // GET: api/<UserTaskController>
+        private readonly IUserTaskService _userTaskService;
+
+        public UserTaskController(IUserTaskService userTaskService)
+        {
+            _userTaskService = userTaskService;
+        }
+
+        // GET: api/v1/userTask?limit={limit}
         [HttpGet]
-        public IEnumerable<string> Get()
+        [ProducesResponseType(typeof(IEnumerable<UserTaskDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<IEnumerable<UserTaskDTO>>> GetAll(int limit)
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var userTasks = await _userTaskService.GetAll(limit);
+
+                return Ok(userTasks);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // GET api/<UserTaskController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/v1/userTask?userId={userId}&limit={limit}
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<UserTaskDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<IEnumerable<UserTaskDTO>>> GetAllAssignedToUser(int userId, int limit)
         {
-            return "value";
+            try
+            {
+                var userTasks = await _userTaskService.GetAllByUserId(userId, limit);
+
+                return Ok(userTasks);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
-        // POST api/<UserTaskController>
+        // GET api/v1/userTask
+        [HttpGet("{userTaskId}")]
+        [ProducesResponseType(typeof(UserTaskDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<UserTaskDTO>> GetByUserTaskId(int userTaskId)
+        {
+            try
+            {
+                var userTask = await _userTaskService.GetById(userTaskId);
+
+                return Ok(userTask);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        // POST api/v1/userTask
         [HttpPost]
-        public void Post([FromBody] string value)
+        [ProducesResponseType(typeof(UserTaskDTO), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<UserTaskDTO>> Add([FromBody] UserTaskDTO userTask)
         {
+            return Ok(await _userTaskService.Add(userTask));
         }
 
-        // PUT api/<UserTaskController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/v1/userTask
+        [HttpPut]
+        [ProducesResponseType(typeof(UserTaskDTO), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<UserTaskDTO>> Update([FromBody] UserTaskDTO userTask)
         {
+            return Ok(await _userTaskService.Update(userTask));
         }
 
-        // DELETE api/<UserTaskController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // DELETE api/v1/userTask/{userTaskId}
+        [HttpDelete("{userTaskId}")]
+        [ProducesResponseType(typeof(UserTaskDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<UserTaskDTO>> Delete(int userTaskId)
         {
+            try
+            {
+                var deletedUserTask = await _userTaskService.Delete(userTaskId);
+
+                return Ok(deletedUserTask);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
