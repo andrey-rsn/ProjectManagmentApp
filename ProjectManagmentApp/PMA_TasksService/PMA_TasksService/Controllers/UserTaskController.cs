@@ -16,8 +16,8 @@ namespace PMA_TasksService.Controllers
             _userTaskService = userTaskService;
         }
 
-        // GET: api/v1/userTask?limit={limit}
-        [HttpGet]
+        // GET: api/v1/userTask/all?limit={limit}
+        [HttpGet("all")]
         [ProducesResponseType(typeof(IEnumerable<UserTaskDTO>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<IEnumerable<UserTaskDTO>>> GetAll(int limit)
@@ -34,8 +34,8 @@ namespace PMA_TasksService.Controllers
             }
         }
 
-        // GET api/v1/userTask?userId={userId}&limit={limit}
-        [HttpGet]
+        // GET api/v1/userTask/assignedTo?userId={userId}&limit={limit}
+        [HttpGet("assignedTo")]
         [ProducesResponseType(typeof(IEnumerable<UserTaskDTO>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<IEnumerable<UserTaskDTO>>> GetAllAssignedToUser(int userId, int limit)
