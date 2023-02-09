@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PMA_TasksService.Models.DTOs;
-using PMA_TasksService.Services.UserTask;
+using PMA_TasksService.Services.UserTaskServices;
 using System.Net;
 
 namespace PMA_TasksService.Controllers

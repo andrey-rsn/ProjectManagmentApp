@@ -1,6 +1,6 @@
 ﻿using PMA_TasksService.Models.DTOs;
 
-namespace PMA_TasksService.Services.UserTask
+namespace PMA_TasksService.Services.UserTaskServices
 {
     public interface IUserTaskService
     {

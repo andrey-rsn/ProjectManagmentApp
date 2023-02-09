@@ -1,7 +1,7 @@
 ﻿using PMA_TasksService.Models.DTOs;
 using PMA_TasksService.Repositories.Interfaces;
 
-namespace PMA_TasksService.Services.UserTask
+namespace PMA_TasksService.Services.UserTaskServices
 {
     public class UserTaskService : IUserTaskService
     {
