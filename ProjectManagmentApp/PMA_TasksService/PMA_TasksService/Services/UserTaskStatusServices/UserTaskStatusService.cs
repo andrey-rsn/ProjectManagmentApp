@@ -6,10 +6,12 @@ namespace PMA_TasksService.Services.UserTaskStatusServices
     public class UserTaskStatusService : IUserTaskStatusService
     {
         private readonly IUserTaskStatusRepository _userTaskStatusRepository;
+        private readonly IUserTaskStatusCache _userTaskStatusCache;
 
-        public UserTaskStatusService(IUserTaskStatusRepository userTaskStatusRepository)
+        public UserTaskStatusService(IUserTaskStatusRepository userTaskStatusRepository, IUserTaskStatusCache userTaskStatusCache)
         {
             _userTaskStatusRepository = userTaskStatusRepository;
+            _userTaskStatusCache = userTaskStatusCache;
         }
 
         public async Task<UserTaskStatusDTO> Add(UserTaskStatusDTO entity)
@@ -34,7 +36,7 @@ namespace PMA_TasksService.Services.UserTaskStatusServices
 
         public async Task<IEnumerable<UserTaskStatusDTO>> GetAll(int limit = 100)
         {
-            var userTaskStatuses = await _userTaskStatusRepository.GetAllAsync(limit);
+            var userTaskStatuses = await _userTaskStatusCache.GetEntities(limit);
 
             if(userTaskStatuses.Any())
             {
@@ -46,7 +48,7 @@ namespace PMA_TasksService.Services.UserTaskStatusServices
 
         public async Task<UserTaskStatusDTO> GetById(int entityId)
         {
-            var userTaskStatus = await _userTaskStatusRepository.GetByIdAsync(entityId);
+            var userTaskStatus = (await _userTaskStatusCache.GetEntities()).FirstOrDefault(obj => obj.userTaskStatusId == entityId);
 
             if(userTaskStatus != null)
             {
