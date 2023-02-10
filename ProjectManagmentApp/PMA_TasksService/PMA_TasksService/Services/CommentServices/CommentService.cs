@@ -57,5 +57,17 @@ namespace PMA_TasksService.Services.CommentServices
         {
             return await _commentRepository.UpdateAsync(entity);
         }
+
+        public async Task<IEnumerable<CommentDTO>> GetByAuthorId(int authorId)
+        {
+            var comments = await _commentRepository.GetAsync(obj => obj.authorId== authorId);
+
+            if (comments.Any())
+            {
+                return comments;
+            }
+
+            throw new Exception("Данные не найдены");
+        }
     }
 }
