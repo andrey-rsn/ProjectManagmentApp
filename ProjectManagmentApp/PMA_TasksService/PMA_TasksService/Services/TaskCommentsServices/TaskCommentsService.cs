@@ -57,5 +57,17 @@ namespace PMA_TasksService.Services.TaskCommentsServices
         {
             return await _taskCommentsRepository.UpdateAsync(entity);
         }
+
+        public async Task<IEnumerable<TaskCommentsDTO>> GetByTaskId(int taskId)
+        {
+            var taskComment = await _taskCommentsRepository.GetAsync(obj => obj.taskId == taskId);
+
+            if (taskComment != null)
+            {
+                return taskComment;
+            }
+
+            throw new Exception("Данные отсутсвуют");
+        }
     }
 }

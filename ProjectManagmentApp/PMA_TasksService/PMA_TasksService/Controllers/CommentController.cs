@@ -79,8 +79,8 @@ namespace PMA_TasksService.Controllers
             return Ok(await _commentService.Add(comment));
         }
 
-        // PUT api/v1/comments/{id}
-        [HttpPut("{id}")]
+        // PUT api/v1/comments
+        [HttpPut]
         [ProducesResponseType(typeof(CommentDTO), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<CommentDTO>> Update([FromBody] CommentDTO comment)
         {
