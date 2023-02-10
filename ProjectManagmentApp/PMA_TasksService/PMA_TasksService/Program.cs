@@ -4,7 +4,10 @@ using PMA_TasksService.Extensions;
 using PMA_TasksService.Middleware;
 using PMA_TasksService.Repositories;
 using PMA_TasksService.Repositories.Interfaces;
+using PMA_TasksService.Services.CommentServices;
+using PMA_TasksService.Services.TaskCommentsServices;
 using PMA_TasksService.Services.UserTaskServices;
+using PMA_TasksService.Services.UserTaskStatusServices;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
@@ -18,6 +21,9 @@ builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ITaskCommentsRepository, TaskCommentsRepository>();
 builder.Services.AddScoped<IUserTaskStatusRepository, UserTaskStatusRepository>();
 builder.Services.AddScoped<IUserTaskService,UserTaskService>();
+builder.Services.AddScoped<ICommentService,CommentService>();
+builder.Services.AddScoped<ITaskCommentsService,TaskCommentsService>();
+builder.Services.AddScoped<IUserTaskStatusService,UserTaskStatusService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient("authClient", c =>
