@@ -2,19 +2,8 @@
 
 namespace PMA_TasksService.Services.UserTaskServices
 {
-    public interface IUserTaskService
+    public interface IUserTaskService : IBaseManagerService<UserTaskDTO>
     {
-        Task<UserTaskDTO> GetById(int id);
-
-        Task<IEnumerable<UserTaskDTO>> GetAll(int limit = 100);
-
-        Task<UserTaskDTO> Update(UserTaskDTO userTask);
-
-        Task<UserTaskDTO> Delete(int userTaskId);
-
         Task<IEnumerable<UserTaskDTO>> GetAllByUserId(int userId, int limit = 100);
-
-        Task<UserTaskDTO> Add(UserTaskDTO userTask);
-
     }
 }
