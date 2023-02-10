@@ -19,7 +19,7 @@ namespace PMA_TasksService.Controllers
         // GET: api/v1/userTask/all?limit={limit}
         [HttpGet("all")]
         [ProducesResponseType(typeof(IEnumerable<UserTaskDTO>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NoContent)]
         public async Task<ActionResult<IEnumerable<UserTaskDTO>>> GetAll(int limit)
         {
             try
@@ -28,16 +28,16 @@ namespace PMA_TasksService.Controllers
 
                 return Ok(userTasks);
             }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
+            catch 
+            { 
+                return NoContent(); 
             }
         }
 
         // GET api/v1/userTask/assignedTo?userId={userId}&limit={limit}
         [HttpGet("assignedTo")]
         [ProducesResponseType(typeof(IEnumerable<UserTaskDTO>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NoContent)]
         public async Task<ActionResult<IEnumerable<UserTaskDTO>>> GetAllAssignedToUser(int userId, int limit)
         {
             try
@@ -46,16 +46,16 @@ namespace PMA_TasksService.Controllers
 
                 return Ok(userTasks);
             }
-            catch (Exception ex)
+            catch
             {
-                return NotFound(ex.Message);
+                return NoContent();
             }
         }
 
         // GET api/v1/userTask
         [HttpGet("{userTaskId}")]
         [ProducesResponseType(typeof(UserTaskDTO), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NoContent)]
         public async Task<ActionResult<UserTaskDTO>> GetByUserTaskId(int userTaskId)
         {
             try
@@ -64,9 +64,9 @@ namespace PMA_TasksService.Controllers
 
                 return Ok(userTask);
             }
-            catch (Exception ex)
+            catch 
             {
-                return NotFound(ex.Message);
+                return NoContent();
             }
         }
 
