@@ -20,7 +20,7 @@ builder.Services.AddScoped<IUserTaskRepository, UserTaskRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ITaskCommentsRepository, TaskCommentsRepository>();
 builder.Services.AddScoped<IUserTaskStatusRepository, UserTaskStatusRepository>();
-builder.Services.AddSingleton<IUserTaskStatusCache, UserTaskStatusCache>();
+builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IUserTaskService,UserTaskService>();
 builder.Services.AddScoped<ICommentService,CommentService>();
 builder.Services.AddScoped<ITaskCommentsService,TaskCommentsService>();

@@ -1,4 +1,5 @@
-﻿using PMA_TasksService.Models.DTOs;
+﻿using Microsoft.Extensions.Caching.Memory;
+using PMA_TasksService.Models.DTOs;
 using PMA_TasksService.Repositories.Interfaces;
 
 namespace PMA_TasksService.Services.UserTaskStatusServices
@@ -6,12 +7,13 @@ namespace PMA_TasksService.Services.UserTaskStatusServices
     public class UserTaskStatusService : IUserTaskStatusService
     {
         private readonly IUserTaskStatusRepository _userTaskStatusRepository;
-        private readonly IUserTaskStatusCache _userTaskStatusCache;
+        private readonly IMemoryCache _cache;
+        private const string USER_TASK_STATUSES_CAHCE_KEY = "user-task-statuses"; 
 
-        public UserTaskStatusService(IUserTaskStatusRepository userTaskStatusRepository, IUserTaskStatusCache userTaskStatusCache)
+        public UserTaskStatusService(IUserTaskStatusRepository userTaskStatusRepository, IMemoryCache cache)
         {
             _userTaskStatusRepository = userTaskStatusRepository;
-            _userTaskStatusCache = userTaskStatusCache;
+            _cache = cache;
         }
 
         public async Task<UserTaskStatusDTO> Add(UserTaskStatusDTO entity)
@@ -36,23 +38,52 @@ namespace PMA_TasksService.Services.UserTaskStatusServices
 
         public async Task<IEnumerable<UserTaskStatusDTO>> GetAll(int limit = 100)
         {
-            var userTaskStatuses = await _userTaskStatusCache.GetEntities(limit);
+            _cache.TryGetValue(USER_TASK_STATUSES_CAHCE_KEY,out IEnumerable<UserTaskStatusDTO> entities);
 
-            if(userTaskStatuses.Any())
+            if (!entities.Any())
             {
-                return userTaskStatuses;
+                var userTaskStatuses = await _userTaskStatusRepository.GetAllAsync(limit);
+
+                if(userTaskStatuses.Any())
+                {
+                    _cache.Set(USER_TASK_STATUSES_CAHCE_KEY,userTaskStatuses);
+                    return userTaskStatuses;
+                }
+
+                throw new Exception("Данные отсутсвуют");
             }
 
-            throw new Exception("Данные отсутсвуют");
+            return entities;
         }
 
         public async Task<UserTaskStatusDTO> GetById(int entityId)
         {
-            var userTaskStatus = (await _userTaskStatusCache.GetEntities()).FirstOrDefault(obj => obj.userTaskStatusId == entityId);
+            _cache.TryGetValue(USER_TASK_STATUSES_CAHCE_KEY, out IEnumerable<UserTaskStatusDTO> entities);
 
-            if(userTaskStatus != null)
+            if (entities.Any())
             {
-                return userTaskStatus;
+                var userTaskStatus = entities.FirstOrDefault(obj => obj.userTaskStatusId == entityId);
+
+                if(userTaskStatus != null)
+                {
+                    return userTaskStatus;
+                }
+            }
+            else
+            {
+                var userTaskStatuses = await _userTaskStatusRepository.GetAllAsync(100);
+
+                if (userTaskStatuses.Any())
+                {
+                    _cache.Set(USER_TASK_STATUSES_CAHCE_KEY,userTaskStatuses);
+
+                    var userTaskStatus = userTaskStatuses.FirstOrDefault(obj => obj.userTaskStatusId == entityId);
+
+                    if(userTaskStatus != null)
+                    {
+                        return userTaskStatus;
+                    }
+                }
             }
 
             throw new Exception("Объект не найден");
