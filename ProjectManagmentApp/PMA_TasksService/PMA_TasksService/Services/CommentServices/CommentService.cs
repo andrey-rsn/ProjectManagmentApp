@@ -69,5 +69,15 @@ namespace PMA_TasksService.Services.CommentServices
 
             throw new Exception("Данные не найдены");
         }
+
+        public async Task<IEnumerable<CommentDTO>> GetByTaskId(int taskId)
+        {
+            return await _commentRepository.GetAsync(obj => obj.associatedTaskId == taskId);
+        }
+
+        public async Task AddRange(IEnumerable<CommentDTO> comments)
+        {
+            await _commentRepository.AddRangeAsync(comments);
+        }
     }
 }

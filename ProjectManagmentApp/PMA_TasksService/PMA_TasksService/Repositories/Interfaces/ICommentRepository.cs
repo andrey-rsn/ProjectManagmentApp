@@ -5,5 +5,6 @@ namespace PMA_TasksService.Repositories.Interfaces
 {
     public interface ICommentRepository : IBaseAsyncRepository<CommentDTO, Comment>
     {
+        Task AddRangeAsync(IEnumerable<CommentDTO> comments);
     }
 }

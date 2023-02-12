@@ -9,8 +9,19 @@ namespace PMA_TasksService.Repositories
 {
     public class CommentRepository : BaseAsyncRepository<CommentDTO, Comment>, ICommentRepository
     {
+        private readonly ApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
         public CommentRepository(ApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
+            _dbContext = dbContext;
+            _mapper = mapper;
+        }
+
+        public async Task AddRangeAsync(IEnumerable<CommentDTO> comments)
+        {
+            var commentsModels = _mapper.Map<IEnumerable<Comment>>(comments);
+
+            await _dbContext.Comments.AddRangeAsync(commentsModels);
         }
     }
 }

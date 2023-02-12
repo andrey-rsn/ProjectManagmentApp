@@ -14,5 +14,8 @@ namespace PMA_TasksService.Models
         public DateTime creationDate { get; set; }
 
         public string? commentText { get; set; }
+
+        [Required]
+        public int associatedTaskId { get; set; }
     }
 }

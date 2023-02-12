@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PMA_SagaService.Models;
+using System.Collections;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,12 +10,24 @@ namespace PMA_SagaService.Controllers
     [ApiController]
     public class UserTaskController : ControllerBase
     {
-        // GET: api/<UserTaskController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly HttpClient _httpClient;
+
+        public UserTaskController(IHttpClientFactory httpClientFactory)
         {
-            return new string[] { "value1", "value2" };
+            _httpClient = httpClientFactory.CreateClient("tasksService");
         }
+
+        //// GET: api/v1/userTask/all?limit={limit}
+        //[HttpGet("all")]
+        //public async Task<ActionResult<IEnumerable<UserTaskViewModel>>>GetAll(int limit = 100)
+        //{
+        //    var request = new HttpRequestMessage(
+        //            HttpMethod.Post,
+        //            _httpClient.BaseAddress + $"api/v1/userTask/all?limit={limit}");
+        //
+        //    var response = await _httpClient.SendAsync(request);
+        //
+        //}
 
         // GET api/<UserTaskController>/5
         [HttpGet("{id}")]
