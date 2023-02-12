@@ -1,12 +1,21 @@
-var builder = WebApplication.CreateBuilder(args);
 
+
+using PMA_SagaService.Middleware;
+
+var builder = WebApplication.CreateBuilder(args);
+var Configuration = builder.Configuration;
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
+builder.Services.AddHttpClient("tasksServiceClient", c =>
+{
+    c.BaseAddress = new Uri(Configuration.GetConnectionString("TasksService"));
+});
+
 
 var app = builder.Build();
 
@@ -19,7 +28,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
-app.UseAuthorization();
+app.UseAuthorizationMiddleware();
 
 app.MapControllers();
 
