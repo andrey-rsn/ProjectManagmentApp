@@ -36,8 +36,15 @@ services:
   work-time-service-db:
     image: postgres
 
+  pma_sagaservice:
+    image: ${DOCKER_REGISTRY-}pmasagaservice
+    build:
+      context: .
+      dockerfile: PMA_Saga/PMA_SagaService/Dockerfile
+
 volumes:
   task-service-db_data:
   identity-service-db_data:
   work-time-service-db_data:
   
+

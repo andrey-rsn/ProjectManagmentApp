@@ -82,3 +82,16 @@ services:
         - "9003:5432"
     volumes:
         - work-time-service-db_data:/var/lib/postgresql/data/
+
+  pma_sagaservice:
+    container_name: pma_sagaservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:IdentityService=http://pma_identityservice:80"
+      - "ConnectionStrings:TasksService=http://pma_tasksservice:80"
+    ports:
+      - "8004:80"
+    depends_on:
+      - pma_identityservice
+      - pma_tasksservice
+
