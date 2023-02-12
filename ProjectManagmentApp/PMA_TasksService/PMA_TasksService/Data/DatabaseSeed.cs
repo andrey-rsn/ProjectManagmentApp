@@ -115,7 +115,8 @@ namespace PMA_TasksService.Data
                     changeDate= DateTime.UtcNow,
                     description="Тестовая задача, протестировать задачу.",
                     priority=2,
-                    taskName="Тестовая задача"
+                    taskName="Тестовая задача",
+                    changedByUserId= 1
                 }
             };
         }

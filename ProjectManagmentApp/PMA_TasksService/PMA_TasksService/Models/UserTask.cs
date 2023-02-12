@@ -25,6 +25,8 @@ namespace PMA_TasksService.Models
 
         public string? description { get; set; }
 
+        public int changedByUserId { get; set; }
+
 
     }
 }

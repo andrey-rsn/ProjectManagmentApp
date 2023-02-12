@@ -18,5 +18,7 @@ namespace PMA_TasksService.Models.DTOs
         public int? priority { get; set; }
 
         public string? description { get; set; }
+
+        public int changedByUserId { get; set; }
     }
 }
