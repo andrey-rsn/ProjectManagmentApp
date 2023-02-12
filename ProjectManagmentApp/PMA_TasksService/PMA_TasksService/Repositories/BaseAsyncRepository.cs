@@ -95,9 +95,9 @@ namespace PMA_TasksService.Repositories
         public async Task<T> AddAsync(T entity)
         {
             var entityModel = _mapper.Map<U>(entity);
-            _dbContext.Set<U>().Add(entityModel);
+            var addedEntity = _dbContext.Set<U>().Add(entityModel);
             await _dbContext.SaveChangesAsync();
-            return entity;
+            return _mapper.Map<T>(addedEntity.Entity); 
         }
 
         public async Task<T> UpdateAsync(T entity)

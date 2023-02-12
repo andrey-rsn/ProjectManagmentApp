@@ -8,7 +8,7 @@ namespace PMA_TasksService.Models
         public string name { get; set; }
         public string status { get; set; }
         public int statusId { get; set; }
-        public DateTime changeDate { get; set; }
+        public DateTime changeDate { get; set; } = DateTime.UtcNow;
         public int assignedUserId { get; set; }
         public int? priority { get; set; }
         public string description { get; set; }

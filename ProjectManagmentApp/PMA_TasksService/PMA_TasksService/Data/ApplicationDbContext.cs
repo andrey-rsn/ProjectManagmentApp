@@ -50,8 +50,8 @@ namespace PMA_TasksService.Data
                 changeDate=DateTime.UtcNow,
                 description="Тестовая задача",
                 priority=1,
-                taskName="Тестовая задача 1"
-
+                taskName="Тестовая задача 1",
+                changedByUserId=1
             });
 
         }

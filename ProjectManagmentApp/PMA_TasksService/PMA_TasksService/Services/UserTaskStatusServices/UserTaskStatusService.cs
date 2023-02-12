@@ -60,7 +60,7 @@ namespace PMA_TasksService.Services.UserTaskStatusServices
         {
             _cache.TryGetValue(USER_TASK_STATUSES_CAHCE_KEY, out IEnumerable<UserTaskStatusDTO> entities);
 
-            if (entities == null || entities.Any())
+            if (entities != null && entities.Any())
             {
                 var userTaskStatus = entities.FirstOrDefault(obj => obj.userTaskStatusId == entityId);
 

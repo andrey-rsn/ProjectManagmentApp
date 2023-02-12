@@ -25,6 +25,7 @@ builder.Services.AddScoped<IUserTaskService,UserTaskService>();
 builder.Services.AddScoped<ICommentService,CommentService>();
 builder.Services.AddScoped<ITaskCommentsService,TaskCommentsService>();
 builder.Services.AddScoped<IUserTaskStatusService,UserTaskStatusService>();
+builder.Services.AddScoped<IUserTaskViewService,UserTaskViewService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient("authClient", c =>

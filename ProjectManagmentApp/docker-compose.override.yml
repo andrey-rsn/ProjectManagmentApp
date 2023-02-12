@@ -5,7 +5,7 @@ services:
     container_name: pma_tasksservice
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings:ConnectionString=Server=task-service-db;Port=5432;Database=TaskServiceDb;User Id=admin;Password=admin"
+      - "ConnectionStrings:TaskServiceDatabase=Server=task-service-db;Port=5432;Database=TaskServiceDb;User Id=admin;Password=admin"
     ports:
       - "8000:80"
     depends_on:

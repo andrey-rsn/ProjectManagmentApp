@@ -36,8 +36,14 @@ namespace PMA_TasksService.Services.UserTaskServices
                     {
                         await _commentService.AddRange(entity.comments);
                     }
+                    entity.id = addResult.taskId;
+                    return entity;
                 }
-                return entity;
+                else
+                {
+                    throw new Exception("Данные отсутствуют");
+                }
+                
             }
             catch
             {
@@ -102,7 +108,7 @@ namespace PMA_TasksService.Services.UserTaskServices
 
             var userTask = await _userTaskRepository.GetByIdAsync(entityId);
 
-            if(userTask == null)
+            if(userTask != null)
             {
                 var comments = await _commentService.GetByTaskId(userTask.taskId);
 

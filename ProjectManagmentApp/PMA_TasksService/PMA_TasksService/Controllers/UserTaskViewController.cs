@@ -18,7 +18,7 @@ namespace PMA_TasksService.Controllers
 
         // GET: api/v1/userTaskView?limit={limit}
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserTaskViewModel>>> GetAll(int limit)
+        public async Task<ActionResult<IEnumerable<UserTaskViewModel>>> GetAll(int limit = 100)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace PMA_TasksService.Controllers
         [HttpPut]
         public async Task<ActionResult<UserTaskViewModel>> Update([FromBody] UserTaskViewModel userTask)
         {
-            var result = _userTaskViewService.Update(userTask);
+            var result = await _userTaskViewService.Update(userTask);
 
             return Ok(result);
         }
