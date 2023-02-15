@@ -142,10 +142,7 @@ namespace PMA_SagaService.Controllers
             {
                 userTaskView.assignedTo = "";
                 userTaskView.changedByUserId = 0;
-
                 isConsistent= false;
-
-                return NoContent();
             }
             else
             {
@@ -170,7 +167,6 @@ namespace PMA_SagaService.Controllers
                 userTaskView.changedBy = "";
                 userTaskView.changedByUserId = 0;
                 isConsistent= false;
-                return NoContent();
             }
             else
             {
@@ -195,7 +191,7 @@ namespace PMA_SagaService.Controllers
 
                 if (!updateTaskResponse.IsSuccessStatusCode)
                 {
-                    return GetActionResultByStatusCode((int)changedByResponse.StatusCode);
+                    return GetActionResultByStatusCode((int)updateTaskResponse.StatusCode);
                 }
 
                 return Ok(userTaskView);
@@ -238,10 +234,69 @@ namespace PMA_SagaService.Controllers
 
         }
 
-        // PUT api/<UserTaskController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/v1/userTask
+        [HttpPut]
+        public async Task<ActionResult<UserTaskViewModelIn>> Update (UserTaskViewModelIn userTaskView)
         {
+            _tasksClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+            _identityClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+
+            if(userTaskView.assignedUserId != 0)
+            {
+                var assignedUserRequest = new HttpRequestMessage(
+                         HttpMethod.Get,
+                        _identityClient.BaseAddress + $"api/v1/userInfo/{userTaskView.assignedUserId}");
+
+                var assignedUserResponse = await _identityClient.SendAsync(assignedUserRequest);
+
+                if (!assignedUserResponse.IsSuccessStatusCode)
+                {
+                    return GetActionResultByStatusCode((int)assignedUserResponse.StatusCode);
+                }
+
+                var assignedUser = JsonSerializer.Deserialize<UserInfoViewModel>(await assignedUserResponse.Content.ReadAsStringAsync());
+
+                if (assignedUser == null)
+                {
+                    userTaskView.changedByUserId = 0;
+
+                }
+            }
+
+            if(userTaskView.changedByUserId != 0)
+            {
+                var changedByRequest = new HttpRequestMessage(
+                 HttpMethod.Get,
+                _identityClient.BaseAddress + $"api/v1/userInfo/{userTaskView.changedByUserId}");
+                var changedByResponse = await _identityClient.SendAsync(changedByRequest);
+
+                if (!changedByResponse.IsSuccessStatusCode)
+                {
+                    return GetActionResultByStatusCode((int)changedByResponse.StatusCode);
+                }
+
+                var changeByUser = JsonSerializer.Deserialize<UserInfoViewModel>(await changedByResponse.Content.ReadAsStringAsync());
+
+                if (changeByUser == null)
+                {
+                    userTaskView.changedByUserId = 0;
+                }
+            }
+
+            var updateTaskRequest = new HttpRequestMessage(
+                    HttpMethod.Put,
+                    _tasksClient.BaseAddress + $"api/v1/userTaskView");
+
+            updateTaskRequest.Content = new StringContent(JsonSerializer.Serialize(userTaskView), Encoding.UTF8, "application/json");
+
+            var updateTaskResponse = await _tasksClient.SendAsync(updateTaskRequest);
+
+            if (!updateTaskResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)updateTaskResponse.StatusCode);
+            }
+
+            return Ok();
         }
 
         // DELETE api/<UserTaskController>/5
