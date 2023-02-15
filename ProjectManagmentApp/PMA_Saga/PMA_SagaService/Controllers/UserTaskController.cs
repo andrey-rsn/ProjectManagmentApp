@@ -44,54 +44,68 @@ namespace PMA_SagaService.Controllers
                 return GetActionResultByStatusCode((int)tasksResponse.StatusCode);
             }
 
-            var userTaskView = JsonSerializer.Deserialize<List<UserTaskViewModelIn>>(await tasksResponse.Content.ReadAsStringAsync());
-
-            if (userTaskView == null || !userTaskView.Any())
+            if((int)tasksResponse.StatusCode == 204) 
             {
                 return NoContent();
             }
+
+            var userTaskView = JsonSerializer.Deserialize<List<UserTaskViewModelIn>>(await tasksResponse.Content.ReadAsStringAsync());
+
 
             var UserTaskViews = _mapper.Map<IEnumerable<UserTaskViewModel>>(userTaskView);
 
             foreach(var userTask in UserTaskViews)
             {
-                var assignedUserRequest = new HttpRequestMessage(
-                     HttpMethod.Get,
-                    _identityClient.BaseAddress + $"api/v1/userInfo/{userTask.assignedUserId}");
-                var assignedUserResponse = await _identityClient.SendAsync(assignedUserRequest);
-
-                if (!assignedUserResponse.IsSuccessStatusCode)
+                if(userTask.assignedUserId != 0)
                 {
-                    return GetActionResultByStatusCode((int)assignedUserResponse.StatusCode);
+                    var assignedUserRequest = new HttpRequestMessage(
+                         HttpMethod.Get,
+                        _identityClient.BaseAddress + $"api/v1/userInfo/{userTask.assignedUserId}");
+                    var assignedUserResponse = await _identityClient.SendAsync(assignedUserRequest);
+
+                    if (!assignedUserResponse.IsSuccessStatusCode)
+                    {
+                        return GetActionResultByStatusCode((int)assignedUserResponse.StatusCode);
+                    }
+
+                    if((int)assignedUserResponse.StatusCode == 204)
+                    {
+                        userTask.assignedUserId = 0;
+                        userTask.assignedTo = "";
+                    }
+                    else
+                    {
+                        var assignedUser = JsonSerializer.Deserialize<UserInfoViewModel>(await assignedUserResponse.Content.ReadAsStringAsync());
+                        userTask.assignedTo = assignedUser.FullName;
+                    }
+                    
                 }
-
-                var assignedUser = JsonSerializer.Deserialize<UserInfoViewModel>(await assignedUserResponse.Content.ReadAsStringAsync());
-
-                if (assignedUser == null)
+                
+                if(userTask.changedByUserId != 0)
                 {
-                    return NoContent();
-                }
-
-                userTask.assignedTo = assignedUser.FullName;
-
-                var changedByRequest = new HttpRequestMessage(
+                    var changedByRequest = new HttpRequestMessage(
                      HttpMethod.Get,
                     _identityClient.BaseAddress + $"api/v1/userInfo/{userTask.changedByUserId}");
-                var changedByResponse = await _identityClient.SendAsync(changedByRequest);
+                    var changedByResponse = await _identityClient.SendAsync(changedByRequest);
 
-                if (!changedByResponse.IsSuccessStatusCode)
-                {
-                    return GetActionResultByStatusCode((int)changedByResponse.StatusCode);
+                    if (!changedByResponse.IsSuccessStatusCode)
+                    {
+                        return GetActionResultByStatusCode((int)changedByResponse.StatusCode);
+                    }
+
+                    if((int)changedByResponse.StatusCode == 204)
+                    {
+                        userTask.changedByUserId = 0;
+                        userTask.changedBy = "";
+                    }
+                    else
+                    {
+                        var changeByUser = JsonSerializer.Deserialize<UserInfoViewModel>(await changedByResponse.Content.ReadAsStringAsync());
+                        userTask.changedBy = changeByUser.FullName;
+                    }
+                    
                 }
 
-                var changeByUser = JsonSerializer.Deserialize<UserInfoViewModel>(await changedByResponse.Content.ReadAsStringAsync());
-
-                if (changeByUser == null)
-                {
-                    return NoContent();
-                }
-
-                userTask.changedBy = changeByUser.FullName;
             }
 
             return Ok(UserTaskViews);
@@ -112,65 +126,69 @@ namespace PMA_SagaService.Controllers
 
             var tasksResponse = await _tasksClient.SendAsync(tasksRequest);
 
-            if (!tasksResponse.IsSuccessStatusCode)
+            if (!tasksResponse.IsSuccessStatusCode || (int)tasksResponse.StatusCode == 204)
             {
                 return GetActionResultByStatusCode((int)tasksResponse.StatusCode);
             }
 
-            var userTaskViewModelIn = JsonSerializer.Deserialize<UserTaskViewModelIn>(await tasksResponse.Content.ReadAsStringAsync());
-
-            if (userTaskViewModelIn == null)
+            if((int)tasksResponse.StatusCode == 204)
             {
                 return NoContent();
             }
 
+            var userTaskViewModelIn = JsonSerializer.Deserialize<UserTaskViewModelIn>(await tasksResponse.Content.ReadAsStringAsync());
+
             var userTaskView = _mapper.Map<UserTaskViewModel>(userTaskViewModelIn);
 
-            var assignedUserRequest = new HttpRequestMessage(
+            if(userTaskView.assignedUserId != 0)
+            {
+                var assignedUserRequest = new HttpRequestMessage(
+                         HttpMethod.Get,
+                        _identityClient.BaseAddress + $"api/v1/userInfo/{userTaskView.assignedUserId}");
+                var assignedUserResponse = await _identityClient.SendAsync(assignedUserRequest);
+
+                if (!assignedUserResponse.IsSuccessStatusCode)
+                {
+                    return GetActionResultByStatusCode((int)assignedUserResponse.StatusCode);
+                }
+
+                if((int)assignedUserResponse.StatusCode == 204)
+                {
+                    userTaskView.assignedTo = "";
+                    userTaskView.changedByUserId = 0;
+                    isConsistent= false;
+                }
+                else
+                {
+                    var assignedUser = JsonSerializer.Deserialize<UserInfoViewModel>(await assignedUserResponse.Content.ReadAsStringAsync());
+                    userTaskView.assignedTo = assignedUser.FullName;
+                }
+
+            }
+            
+            if(userTaskView.changedByUserId!= 0)
+            {
+                var changedByRequest = new HttpRequestMessage(
                      HttpMethod.Get,
-                    _identityClient.BaseAddress + $"api/v1/userInfo/{userTaskView.assignedUserId}");
-            var assignedUserResponse = await _identityClient.SendAsync(assignedUserRequest);
+                    _identityClient.BaseAddress + $"api/v1/userInfo/{userTaskView.changedByUserId}");
+                var changedByResponse = await _identityClient.SendAsync(changedByRequest);
 
-            if (!assignedUserResponse.IsSuccessStatusCode)
-            {
-                return GetActionResultByStatusCode((int)assignedUserResponse.StatusCode);
-            }
+                if (!changedByResponse.IsSuccessStatusCode)
+                {
+                    return GetActionResultByStatusCode((int)changedByResponse.StatusCode);
+                }
 
-            var assignedUser = JsonSerializer.Deserialize<UserInfoViewModel>(await assignedUserResponse.Content.ReadAsStringAsync());
-
-            if (assignedUser == null)
-            {
-                userTaskView.assignedTo = "";
-                userTaskView.changedByUserId = 0;
-                isConsistent= false;
-            }
-            else
-            {
-                userTaskView.assignedTo = assignedUser.FullName;
-            }
-
-
-            var changedByRequest = new HttpRequestMessage(
-                 HttpMethod.Get,
-                _identityClient.BaseAddress + $"api/v1/userInfo/{userTaskView.changedByUserId}");
-            var changedByResponse = await _identityClient.SendAsync(changedByRequest);
-
-            if (!changedByResponse.IsSuccessStatusCode)
-            {
-                return GetActionResultByStatusCode((int)changedByResponse.StatusCode);
-            }
-
-            var changeByUser = JsonSerializer.Deserialize<UserInfoViewModel>(await changedByResponse.Content.ReadAsStringAsync());
-
-            if (changeByUser == null)
-            {
-                userTaskView.changedBy = "";
-                userTaskView.changedByUserId = 0;
-                isConsistent= false;
-            }
-            else
-            {
-                userTaskView.changedBy = changeByUser.FullName;
+                if((int)changedByResponse.StatusCode == 204)
+                {
+                    userTaskView.changedBy = "";
+                    userTaskView.changedByUserId = 0;
+                    isConsistent = false;
+                }
+                else
+                {
+                    var changeByUser = JsonSerializer.Deserialize<UserInfoViewModel>(await changedByResponse.Content.ReadAsStringAsync());
+                    userTaskView.changedBy = changeByUser.FullName;
+                }
             }
 
             if(isConsistent)
@@ -189,7 +207,7 @@ namespace PMA_SagaService.Controllers
 
                 var updateTaskResponse = await _tasksClient.SendAsync(tasksRequest);
 
-                if (!updateTaskResponse.IsSuccessStatusCode)
+                if (!updateTaskResponse.IsSuccessStatusCode || (int)updateTaskResponse.StatusCode == 204)
                 {
                     return GetActionResultByStatusCode((int)updateTaskResponse.StatusCode);
                 }
@@ -201,7 +219,7 @@ namespace PMA_SagaService.Controllers
 
         // POST api/v1/userTask
         [HttpPost]
-        public async Task<ActionResult<UserTaskViewModelIn>> Add(UserTaskViewModelIn userTask)
+        public async Task<ActionResult> Add(UserTaskViewModelIn userTask)
         {
             var identityRequest = new HttpRequestMessage(
             HttpMethod.Get,
@@ -210,7 +228,7 @@ namespace PMA_SagaService.Controllers
 
             var identityResponse = await _identityClient.SendAsync(identityRequest);
 
-            if (!identityResponse.IsSuccessStatusCode)
+            if (!identityResponse.IsSuccessStatusCode || (int)identityResponse.StatusCode == 204)
             {
                 return GetActionResultByStatusCode((int)identityResponse.StatusCode);
             }
@@ -236,7 +254,7 @@ namespace PMA_SagaService.Controllers
 
         // PUT api/v1/userTask
         [HttpPut]
-        public async Task<ActionResult<UserTaskViewModelIn>> Update (UserTaskViewModelIn userTaskView)
+        public async Task<ActionResult> Update (UserTaskViewModelIn userTaskView)
         {
             _tasksClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
             _identityClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
@@ -254,13 +272,15 @@ namespace PMA_SagaService.Controllers
                     return GetActionResultByStatusCode((int)assignedUserResponse.StatusCode);
                 }
 
-                var assignedUser = JsonSerializer.Deserialize<UserInfoViewModel>(await assignedUserResponse.Content.ReadAsStringAsync());
-
-                if (assignedUser == null)
+                if((int)assignedUserResponse.StatusCode == 204)
                 {
                     userTaskView.changedByUserId = 0;
-
                 }
+                else
+                {
+                    var assignedUser = JsonSerializer.Deserialize<UserInfoViewModel>(await assignedUserResponse.Content.ReadAsStringAsync());
+                }
+
             }
 
             if(userTaskView.changedByUserId != 0)
@@ -275,11 +295,13 @@ namespace PMA_SagaService.Controllers
                     return GetActionResultByStatusCode((int)changedByResponse.StatusCode);
                 }
 
-                var changeByUser = JsonSerializer.Deserialize<UserInfoViewModel>(await changedByResponse.Content.ReadAsStringAsync());
-
-                if (changeByUser == null)
+                if((int)changedByResponse.StatusCode == 204)
                 {
                     userTaskView.changedByUserId = 0;
+                }
+                else
+                {
+                    var changeByUser = JsonSerializer.Deserialize<UserInfoViewModel>(await changedByResponse.Content.ReadAsStringAsync());
                 }
             }
 
@@ -299,10 +321,25 @@ namespace PMA_SagaService.Controllers
             return Ok();
         }
 
-        // DELETE api/<UserTaskController>/5
+        // DELETE api/v1/userTask/{id}
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> DeleteById (int id)
         {
+            _tasksClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+
+            var deleteTaskRequest = new HttpRequestMessage(
+                    HttpMethod.Delete,
+                    _tasksClient.BaseAddress + $"api/v1/userTaskView/{id}");
+
+
+            var deleteTaskResponse = await _tasksClient.SendAsync(deleteTaskRequest);
+
+            if (!deleteTaskResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)deleteTaskResponse.StatusCode);
+            }
+
+            return Ok();
         }
 
         private ActionResult GetActionResultByStatusCode(int statusCode)
