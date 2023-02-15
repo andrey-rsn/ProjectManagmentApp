@@ -7,13 +7,17 @@ var Configuration = builder.Configuration;
 // Add services to the container.
 
 builder.Services.AddControllers();
-
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 builder.Services.AddHttpClient("tasksServiceClient", c =>
 {
     c.BaseAddress = new Uri(Configuration.GetConnectionString("TasksService"));
+});
+builder.Services.AddHttpClient("identityServiceClient", c =>
+{
+    c.BaseAddress = new Uri(Configuration.GetConnectionString("IdentityService"));
 });
 
 
