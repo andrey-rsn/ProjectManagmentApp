@@ -19,9 +19,11 @@ namespace PMA_TasksService.Repositories
 
         public async Task AddRangeAsync(IEnumerable<CommentDTO> comments)
         {
-            var commentsModels = _mapper.Map<IEnumerable<Comment>>(comments);
+            var commentsModels = _mapper.Map<List<Comment>>(comments);
 
-            await _dbContext.Comments.AddRangeAsync(commentsModels);
+            commentsModels.ForEach(async comm => await _dbContext.Comments.AddAsync(comm));
+
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

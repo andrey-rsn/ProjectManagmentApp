@@ -12,6 +12,6 @@
         public string description { get; set; }
         public int changedByUserId { get; set; }
 
-        public IEnumerable<CommentViewModel> comments { get; set; }
+        public IEnumerable<CommentViewModelIn> comments { get; set; }
     }
 }

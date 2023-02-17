@@ -14,7 +14,7 @@
         public int changedByUserId { get; set; }
         public string changedBy { get; set; }
 
-        public IEnumerable<CommentViewModel> comments { get; set; }
+        public IEnumerable<CommentViewModel> comments { get; set; } = Enumerable.Empty<CommentViewModel>();
 
     }
 }

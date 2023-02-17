@@ -8,6 +8,7 @@ namespace PMA_SagaService.Services.AutoMapper
         public MapConfig()
         {
             CreateMap<UserTaskViewModel,UserTaskViewModelIn>().ReverseMap();
+            CreateMap<CommentViewModel, CommentViewModelIn>().ReverseMap();
         }
     }
 }

@@ -171,6 +171,7 @@ namespace PMA_SagaService.Controllers
                 var changedByRequest = new HttpRequestMessage(
                      HttpMethod.Get,
                     _identityClient.BaseAddress + $"api/v1/userInfo/{userTaskView.changedByUserId}");
+
                 var changedByResponse = await _identityClient.SendAsync(changedByRequest);
 
                 if (!changedByResponse.IsSuccessStatusCode)
@@ -191,7 +192,52 @@ namespace PMA_SagaService.Controllers
                 }
             }
 
-            if(isConsistent)
+            var commentsRequest = new HttpRequestMessage(
+                     HttpMethod.Get,
+                    _tasksClient.BaseAddress + $"api/v1/comments/byTask/{userTaskView.id}");
+
+            var commentsResponse = await _tasksClient.SendAsync(commentsRequest);
+
+            if (!commentsResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)commentsResponse.StatusCode);
+            }
+
+            if ((int)commentsResponse.StatusCode == 204)
+            {
+                userTaskView.comments = new List<CommentViewModel>();
+            }
+            else
+            {
+                var comments = JsonSerializer.Deserialize<List<CommentViewModelIn>>(await commentsResponse.Content.ReadAsStringAsync());
+                var commentsToAdd = new List<CommentViewModel>();
+
+                foreach(var comment in comments)
+                {
+
+                    var commentAuthorRequest = new HttpRequestMessage(
+                     HttpMethod.Get,
+                    _identityClient.BaseAddress + $"api/v1/userInfo/{comment.authorId}");
+
+                    var commentAuthorResponse = await _tasksClient.SendAsync(commentAuthorRequest);
+
+                    if (!commentAuthorResponse.IsSuccessStatusCode || ((int)commentAuthorResponse.StatusCode == 204))
+                    {
+                        continue;
+                    }
+
+                    var authorUser = JsonSerializer.Deserialize<UserInfoViewModel>(await commentAuthorResponse.Content.ReadAsStringAsync());
+
+                    var commentToAdd = _mapper.Map<CommentViewModel>(comment);
+
+                    commentToAdd.author = authorUser.FullName;
+
+                    commentsToAdd.Add(commentToAdd);
+                }
+                userTaskView.comments = commentsToAdd;
+            }
+
+            if (isConsistent)
             {
                 return Ok(userTaskView);
             }

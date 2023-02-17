@@ -34,6 +34,7 @@ namespace PMA_TasksService.Services.UserTaskServices
                 {
                     if (entity.comments != null && entity.comments.Any())
                     {
+                        entity.comments.ToList().ForEach(c => c.associatedTaskId = addResult.taskId);
                         await _commentService.AddRange(entity.comments);
                     }
                     entity.id = addResult.taskId;

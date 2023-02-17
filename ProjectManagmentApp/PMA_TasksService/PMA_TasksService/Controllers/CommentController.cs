@@ -20,7 +20,7 @@ namespace PMA_TasksService.Controllers
         [HttpGet("all")]
         [ProducesResponseType(typeof(IEnumerable<CommentDTO>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NoContent)]
-        public async Task<ActionResult<IEnumerable<CommentDTO>>> GetAll(int limit)
+        public async Task<ActionResult<IEnumerable<CommentDTO>>> GetAll(int limit = 100)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace PMA_TasksService.Controllers
             }
         }
 
-        // GET api/v1/comments/{authorId}
+        // GET api/v1/comments/byAuthor/{authorId}
         [HttpGet("byAuthor/{authorId}")]
         [ProducesResponseType(typeof(IEnumerable<CommentDTO>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NoContent)]
@@ -62,6 +62,24 @@ namespace PMA_TasksService.Controllers
             try
             {
                 var comment = await _commentService.GetByAuthorId(authorId);
+
+                return Ok(comment);
+            }
+            catch
+            {
+                return NoContent();
+            }
+        }
+
+        // GET api/v1/comments/byTask/{taskId}
+        [HttpGet("byTask/{taskId}")]
+        [ProducesResponseType(typeof(IEnumerable<CommentDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.NoContent)]
+        public async Task<ActionResult<IEnumerable<CommentDTO>>> GetByTaskId(int taskId)
+        {
+            try
+            {
+                var comment = await _commentService.GetByTaskId(taskId);
 
                 return Ok(comment);
             }
