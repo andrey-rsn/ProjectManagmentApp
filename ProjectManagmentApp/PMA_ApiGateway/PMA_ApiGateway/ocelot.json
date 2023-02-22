@@ -129,8 +129,46 @@
         }
       ],
       "DownstreamPathTemplate": "/api/v1/workTime/{UserId}"
-    }
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/userTask/all?limit={limit}",
+      "UpstreamHttpMethod": [ "Get" ],
 
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_sagaservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/userTask/all?limit={limit}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/userTask/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_sagaservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/userTask/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/userTask",
+      "UpstreamHttpMethod": [ "Post","Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_sagaservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/userTask"
+    }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:1000"
