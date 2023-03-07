@@ -28,6 +28,7 @@ const TaskCardForm = (props) => {
     const [taskInfo, setTaskInfo] = useState({});
     const [isChanged, setIsChanged] = useState(false);
     const [taskName, setTaskName] = useState("");
+    const [priority, setPriority] = useState(0);
     const [taskByIdFetch, { isLoading, error }] = useLazyGetTaskByIdQuery();
     const [UpdateTaskFetch, { updateTaskIsLoading }] = useUpdateTaskMutation();
 
@@ -44,6 +45,7 @@ const TaskCardForm = (props) => {
         await taskByIdFetch(taskId).unwrap().then(value => {
             setTaskInfo(value);
             setTaskName(value.name);
+            setPriority(value.priority);
         }).catch(err => console.log(err));
 
     }
@@ -54,7 +56,7 @@ const TaskCardForm = (props) => {
 
     const [commentText, setCommentText] = useState("");
 
-    const { id, img, name, assignedTo, priority, statusId, description, comments, changedBy, changeDate } = taskInfo;
+    const { id, img, name, assignedTo, statusId, description, comments, changedBy, changeDate } = taskInfo;
 
     const CommentsElements = React.useMemo(() => {
         if (comments?.length > 0) {
@@ -80,6 +82,7 @@ const TaskCardForm = (props) => {
         const taskInfoToSave = { ...taskInfo };
         taskInfoToSave.comments = [];
         taskInfoToSave.name = taskName;
+        taskInfoToSave.priority = priority;
 
         if (commentText) {
             const commentInfo = {
@@ -95,12 +98,17 @@ const TaskCardForm = (props) => {
     };
 
     const onTaskInfoUpdate = async () => {
-        console.log(taskInfo.statusId);
         await loadData();
     }
 
     const onTaskNameChange = (e) => {
+        setIsChanged(true);
         setTaskName(e.target.value);
+    }
+
+    const onPriorityChange = (e) => {
+        setIsChanged(true);
+        setPriority(e.target.value);
     }
 
     const commentTextChangeHandle = (e) => {
@@ -156,7 +164,7 @@ const TaskCardForm = (props) => {
                     <div className='secondary-info__state'>
                         <p>Состояние:</p>
                         <CircleIcon color={statusColor} sx={{ fontSize: '1.2em', height: '100%', marginRight: '0px !important' }} />
-                        <FormControl sx={{ m: 1, minWidth: 160, lineHeight: '50%' }} size="small">
+                        <FormControl sx={{ m: 1, minWidth: 132, lineHeight: '50%' }} size="small">
                             <InputLabel id="demo-select-small"></InputLabel>
                             <Select
                                 labelId="demo-select-small"
@@ -173,7 +181,7 @@ const TaskCardForm = (props) => {
                     </div>
                     <div className='secondary-info__priority'>
                         <p>Приоритет:</p>
-                        <p>{priority}</p>
+                        <OutlinedInput sx={{width:'15%', height:'30px'}} value={priority} onChange={(e) => onPriorityChange(e)}/>
                     </div>
                 </div>
                 <div className='right-side'>
