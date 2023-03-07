@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -13,6 +13,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateData } from '../../features/tasksApi/tasksSlice';
 import { useNavigate } from 'react-router-dom';
+import { useLazyGetAllTasksQuery } from '../../features/tasksApi/tasksApiSlice'; 
 import './TasksForm.css';
 
 
@@ -96,12 +97,22 @@ const columns = [
 const TasksForm = () => {
 
     const [selectedRows, setSelectedRows] = useState([]);
-
+    const [tasks, setTasks] = useState([]);
+    const [allTasksFetch, { isLoading, error }] = useLazyGetAllTasksQuery();
     const dispatch = useDispatch();
 
-    const tasks = useSelector(state => state.tasks.data);
-
     let navigate = useNavigate();
+
+    useEffect(() => {
+
+        async function updateData() {
+            await allTasksFetch(50).unwrap().then(value => {
+                setTasks(value);
+            }).catch(err => console.log(err));
+        }
+
+        updateData();
+    }, []);
 
     const onRowsDelete = () => {
         console.dir(selectedRows);

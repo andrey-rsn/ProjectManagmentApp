@@ -1,7 +1,6 @@
 import './TaskCardForm.css';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import Divider from '@mui/material/Divider';
-import ForumIcon from '@mui/icons-material/Forum';
 import Button from '@mui/material/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -11,94 +10,134 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import { useDispatch, useSelector } from 'react-redux';
-import { createSelector } from '@reduxjs/toolkit';
+import { useSelector } from 'react-redux';
 import CommentElement from '../CommentElement/CommentElement';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { updateElement } from '../../features/tasksApi/tasksSlice';
-import { selectCurrentUserName } from '../../features/auth/authSlice';
+import { selectCurrentUserId, selectCurrentUserName } from '../../features/auth/authSlice';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useLazyGetTaskByIdQuery, useUpdateTaskMutation } from '../../features/tasksApi/tasksApiSlice';
+import { formatTime } from '../../helpers/timeHelper/timeHelper';
+import CircularProgress from '@mui/material/CircularProgress';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 
 const TaskCardForm = (props) => {
     const { taskId } = props;
 
-    /* const taskInfoSelector = createSelector(); */
+    const [taskInfo, setTaskInfo] = useState({});
+    const [isChanged, setIsChanged] = useState(false);
+    const [taskName, setTaskName] = useState("");
+    const [taskByIdFetch, { isLoading, error }] = useLazyGetTaskByIdQuery();
+    const [UpdateTaskFetch, { updateTaskIsLoading }] = useUpdateTaskMutation();
 
-    const taskInfo = useSelector(state => state.tasks.data.find(value => value.id == taskId));
 
     const userName = useSelector(selectCurrentUserName);
+    const userId = useSelector(selectCurrentUserId);
 
-    const [taskInfoLocal, setTaskInfoLocal] = React.useState(taskInfo);
+    useEffect(() => {
+        loadData();
+    }, []);
 
-    const [commentText, setCommentText] = React.useState("");
+    async function loadData() {
 
-    const { id, img, name, assignedTo, priority, statusId, description, comments, changedBy, changeDate } = taskInfoLocal;
+        await taskByIdFetch(taskId).unwrap().then(value => {
+            setTaskInfo(value);
+            setTaskName(value.name);
+        }).catch(err => console.log(err));
 
-    const dispatch = useDispatch();
+    }
+
+    async function saveData(data) {
+        await UpdateTaskFetch(data).unwrap().catch(err => console.log(err));
+    }
+
+    const [commentText, setCommentText] = useState("");
+
+    const { id, img, name, assignedTo, priority, statusId, description, comments, changedBy, changeDate } = taskInfo;
 
     const CommentsElements = React.useMemo(() => {
         if (comments?.length > 0) {
-            return comments.map((value, index) => <CommentElement key={index} name={value.author} img={value.img} creationDate={value.creationDate} text={value.text} />)
+            return comments.map((value, index) => <CommentElement key={index} name={value.author} img={value.img} creationDate={formatTime(value.creationDate)} text={value.commentText} />)
         }
     }, [comments]);
 
     const handleStatusChange = (e) => {
-        setTaskInfoLocal({
-            ...taskInfoLocal,
+        setIsChanged(true);
+
+        setTaskInfo({
+            ...taskInfo,
             statusId: e.target.value
         })
     }
 
-    const onTaskInfoSave = () => {
-        if (commentText) {
-            const commentInfo = {
-                img: img, author: userName, creationDate: new Date().toLocaleDateString(), text: commentText
-            }
+    const onTaskInfoSave = async () => {
 
-            if (taskInfoLocal.comments?.length > 0) {
-                setTaskInfoLocal({
-                    ...taskInfoLocal,
-                    comments: [...taskInfoLocal.comments, commentInfo]
-                })
-            }else{
-                setTaskInfoLocal({
-                    ...taskInfoLocal,
-                    comments: [commentInfo]
-                })
-            }
-
+        if (!isChanged) {
+            return;
         }
 
-        dispatch(updateElement(taskInfoLocal));
+        const taskInfoToSave = { ...taskInfo };
+        taskInfoToSave.comments = [];
+        taskInfoToSave.name = taskName;
 
-        setCommentText("");
+        if (commentText) {
+            const commentInfo = {
+                authorId: userId, creationDate: new Date().toISOString(), commentText, associatedTaskId: taskId
+            }
+
+            taskInfoToSave.comments.push(commentInfo);
+
+        }
+        await saveData(taskInfoToSave);
+        await loadData();
+        clearCommentText();
     };
 
+    const onTaskInfoUpdate = async () => {
+        console.log(taskInfo.statusId);
+        await loadData();
+    }
+
+    const onTaskNameChange = (e) => {
+        setTaskName(e.target.value);
+    }
+
     const commentTextChangeHandle = (e) => {
+        setIsChanged(true);
         setCommentText(e.target.value);
     }
 
+    const clearCommentText = () => {
+        setCommentText("");
+    }
+
     const descriptionChangeHandle = (e) => {
-        console.log(e.target.value);
-        setTaskInfoLocal({ ...taskInfoLocal, description: e.target.value });
+        setIsChanged(true);
+
+        setTaskInfo({
+            ...taskInfo,
+            description: e.target.value
+        });
     }
 
     const statusColor = React.useMemo(() => {
-        switch (taskInfoLocal.statusId) {
+        switch (statusId) {
             case 1: return 'disabled';
             case 2: return 'info';
             case 3: return 'warning';
             case 4: return 'success';
             default: return 'disabled'
         }
-    }, [taskInfoLocal.statusId]);
+    }, [taskInfo.statusId]);
 
-    return (
-        <div className="task-card-form">
+    const content = isLoading
+        ? <div><CircularProgress /></div>
+        : <div className="task-card-form">
             <div className="task-card-form__header header">
                 <div className="header__main-info main-info">
                     <p className='main-info__id'>{id}</p>
-                    <p className='main-info__name'>{name}</p>
+                    <OutlinedInput placeholder="Наименование задачи" sx={{width:'80%', height:'35px'}} value={taskName} onChange={(e) => onTaskNameChange(e)}/>
                 </div>
                 <div className="header__additional-info additional-info">
                     <div className='additional-info__name'>
@@ -106,8 +145,8 @@ const TaskCardForm = (props) => {
                         <p>{assignedTo}</p>
                     </div>
                     <div className='additional-info__tools'>
-                        <Button size="small" sx={{ color: 'black' }}><SaveIcon sx={{ height: '100%' }} onClick={onTaskInfoSave} />Сохранить</Button>
-                        <Button size="small" sx={{ color: 'black' }}><RefreshIcon sx={{ height: '100%' }} />Обновить</Button>
+                        <Button size="small" sx={{ color: 'black' }} onClick={() => onTaskInfoSave()} ><SaveIcon sx={{ height: '100%' }} />Сохранить</Button>
+                        <Button size="small" sx={{ color: 'black' }} onClick={() => onTaskInfoUpdate()} ><RefreshIcon sx={{ height: '100%' }} />Обновить</Button>
                     </div>
                 </div>
             </div>
@@ -122,7 +161,7 @@ const TaskCardForm = (props) => {
                             <Select
                                 labelId="demo-select-small"
                                 id="demo-select-small"
-                                value={statusId}
+                                value={`${statusId}`}
                                 onChange={handleStatusChange}
                             >
                                 <MenuItem value={1}>Новая</MenuItem>
@@ -140,7 +179,7 @@ const TaskCardForm = (props) => {
                 <div className='right-side'>
                     <div className='secondary-info__updated-by'>
                         <p>Кем обновлено:</p>
-                        <p>{changedBy} {changeDate}</p>
+                        <p>{changedBy} {formatTime(changeDate)}</p>
                     </div>
                 </div>
             </div>
@@ -179,6 +218,11 @@ const TaskCardForm = (props) => {
                 </div>
             </div>
         </div>
+
+    return (
+        <>
+            {content}
+        </>
     )
 }
 

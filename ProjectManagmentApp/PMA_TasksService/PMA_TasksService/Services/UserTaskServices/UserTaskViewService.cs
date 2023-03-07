@@ -131,6 +131,8 @@ namespace PMA_TasksService.Services.UserTaskServices
         {
             var userTask = _mapper.Map<UserTaskDTO>(entity);
 
+            userTask.changeDate = DateTime.UtcNow;
+
             await _userTaskRepository.UpdateAsync(userTask);
 
             foreach(var comment in entity.comments)

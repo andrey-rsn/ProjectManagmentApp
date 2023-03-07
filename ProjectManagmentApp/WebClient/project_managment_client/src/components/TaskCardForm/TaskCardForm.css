@@ -23,6 +23,7 @@
 .header__main-info {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 .header__additional-info {
   display: flex;
