@@ -5,5 +5,5 @@ export const formatTime = (time) =>{
     }
     const date = new Date(time).toLocaleString().trim().split(',');
 
-    return `${date[1]}, ${date[0]}`;
+    return `${date[0]}, ${date[1]}`;
 }

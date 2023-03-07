@@ -15,6 +15,7 @@ import { updateData } from '../../features/tasksApi/tasksSlice';
 import { useNavigate } from 'react-router-dom';
 import { useLazyGetAllTasksQuery } from '../../features/tasksApi/tasksApiSlice'; 
 import './TasksForm.css';
+import { formatTime } from '../../helpers/timeHelper/timeHelper';
 
 
 const StyledMenu = styled((props) => (
@@ -80,9 +81,16 @@ const columns = [
         editable: false,
     },
     {
+        field: 'priority',
+        headerName: 'Приоритет',
+        width: 160,
+        editable: false,
+        hide: false
+    },
+    {
         field: 'assignedTo',
         headerName: 'Назначено на',
-        width: 160,
+        width: 200,
         editable: false
     },
     {
@@ -107,12 +115,28 @@ const TasksForm = () => {
 
         async function updateData() {
             await allTasksFetch(50).unwrap().then(value => {
-                setTasks(value);
+                setData(value);
             }).catch(err => console.log(err));
         }
 
         updateData();
     }, []);
+
+    const setData = (data) => {
+        setTasks(formatData(data));
+    }
+
+    const formatData = (data) => {
+        let items = [...data];
+
+        items = items.map(d => {
+            d = {...d, changeDate: formatTime(d.changeDate)};
+            return d;
+        });
+
+
+        return items;
+    }
 
     const onRowsDelete = () => {
         console.dir(selectedRows);
