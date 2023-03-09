@@ -31,8 +31,8 @@ namespace PMA_IdentityService.Services
         {
             var UserIdString = Convert.ToString(UserId);
             
-            var AccessToken = await CreateToken(UserName, UserIdString, TimeSpan.FromMinutes(15));
-            var RefreshToken = await CreateToken(UserName, UserIdString, TimeSpan.FromHours(1));
+            var AccessToken = await CreateToken(UserName, UserIdString, TimeSpan.FromMinutes(30));
+            var RefreshToken = await CreateToken(UserName, UserIdString, TimeSpan.FromHours(5));
 
             var LoginResponse = new LoginResponseViewModel()
             {
