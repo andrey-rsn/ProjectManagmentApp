@@ -13,9 +13,11 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateData } from '../../features/tasksApi/tasksSlice';
 import { useNavigate } from 'react-router-dom';
-import { useLazyGetAllTasksQuery } from '../../features/tasksApi/tasksApiSlice'; 
+import { useLazyGetAllTasksQuery, useDeleteTaskMutation } from '../../features/tasksApi/tasksApiSlice';
 import './TasksForm.css';
 import { formatTime } from '../../helpers/timeHelper/timeHelper';
+import Skeleton from '@mui/material/Skeleton';
+import { useMemo } from 'react';
 
 
 const StyledMenu = styled((props) => (
@@ -106,19 +108,20 @@ const TasksForm = () => {
 
     const [selectedRows, setSelectedRows] = useState([]);
     const [tasks, setTasks] = useState([]);
-    const [allTasksFetch, { isLoading, error }] = useLazyGetAllTasksQuery();
-    const dispatch = useDispatch();
+    const [allTasksFetch, { isLoading, error, isSuccess: isDataLoaded }] = useLazyGetAllTasksQuery();
+    const [deleteTaskByIdFetch, {isLoading : isDeleting} ] = useDeleteTaskMutation();
+    
+
 
     let navigate = useNavigate();
 
-    useEffect(() => {
-
-        async function updateData() {
+    async function updateData() {
             await allTasksFetch(50).unwrap().then(value => {
                 setData(value);
             }).catch(err => console.log(err));
         }
 
+    useEffect(() => {
         updateData();
     }, []);
 
@@ -130,7 +133,7 @@ const TasksForm = () => {
         let items = [...data];
 
         items = items.map(d => {
-            d = {...d, changeDate: formatTime(d.changeDate)};
+            d = { ...d, changeDate: formatTime(d.changeDate) };
             return d;
         });
 
@@ -138,24 +141,42 @@ const TasksForm = () => {
         return items;
     }
 
-    const onRowsDelete = () => {
-        console.dir(selectedRows);
-        if(selectedRows?.length > 0){
-            let newTasks = tasks;
-
-            selectedRows.forEach((id) => {
-                newTasks = newTasks.filter(value => value.id != id);
-            })
-            console.log(newTasks);
-            dispatch(updateData({data: newTasks}));
+    const onRowsDelete = async () => {
+        console.log(selectedRows);
+        if (selectedRows?.length > 0) {
+            selectedRows.forEach(id => deleteTaskByIdFetch(id).unwrap().catch(err => console.log(err)));
+            setTasks([]);
+            await updateData();
         }
     }
 
     const rowClickHandle = (e) => {
-        if(e.id){
+        if (e.id) {
             navigate(`/main/tasks/${e.id}`);
         }
     }
+
+    const dataTableContent = useMemo(() => {
+        return (isLoading || tasks.length === 0 || isDeleting || !isDataLoaded ?
+            <Skeleton
+                sx={{ height: 'auto', width: '100%' }}
+                variant='rounded'
+            />
+            :
+            <Box sx={{ height: 'auto', width: '100%' }}>
+                <DataGrid
+                    rows={tasks}
+                    columns={columns}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    checkboxSelection
+                    disableSelectionOnClick
+                    experimentalFeatures={{ newEditingApi: true }}
+                    onSelectionModelChange={e => setSelectedRows(e)}
+                    onRowClick={e => rowClickHandle(e)}
+                />
+            </Box>)
+    },[isLoading, tasks, isDeleting, isDataLoaded]);
 
     return (
         <div className='tasks-form'>
@@ -169,23 +190,11 @@ const TasksForm = () => {
                     <Button size="small" sx={{ color: 'black' }}><AddIcon />Создать задачу</Button>
                 </div>
                 <div>
-                    <Button size="small" sx={{ color: 'black' }} onClick={onRowsDelete}><DeleteIcon />Удалить выбранные</Button>
+                    <Button size="small" sx={{ color: 'black' }} onClick={(e) => onRowsDelete()}><DeleteIcon />Удалить выбранные</Button>
                 </div>
             </div>
             <div className='tasks-form__data-table'>
-                <Box sx={{ height: 'auto', width: '100%' }}>
-                    <DataGrid
-                        rows={tasks}
-                        columns={columns}
-                        pageSize={10}
-                        rowsPerPageOptions={[10]}
-                        checkboxSelection
-                        disableSelectionOnClick
-                        experimentalFeatures={{ newEditingApi: true }}
-                        onSelectionModelChange={e => setSelectedRows(e)}
-                        onRowClick={e => rowClickHandle(e)}
-                    />
-                </Box>
+                {dataTableContent}
             </div>
         </div>
     );
