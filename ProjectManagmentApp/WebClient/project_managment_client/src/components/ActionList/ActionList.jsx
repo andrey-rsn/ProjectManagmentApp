@@ -8,7 +8,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-import DuoIcon from '@mui/icons-material/Duo';
 import SettingsIcon from '@mui/icons-material/Settings';
 import './ActionList.css'
 import ActionItem from '../ActionItem/ActionItem';
@@ -35,7 +34,6 @@ const ActionList = () => {
         <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Документация" linkTo="/main/documents" image={<DescriptionIcon />} />
         <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Отчёты" linkTo="/main/reports" image={<SummarizeIcon />} />
         <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Аналитика работы" linkTo="/main/analytics" image={<AssessmentIcon />} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Видеоконференции" linkTo="/main/conferences" image={<DuoIcon />} />
         <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Параметры проекта" linkTo="/main/projectSettings" image={<SettingsIcon />} isHeaderDivider={true} />
       </List>
     </Box>
