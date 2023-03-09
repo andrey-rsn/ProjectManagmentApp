@@ -19,7 +19,7 @@ namespace PMA_IdentityService.Services
             _passwordKey = PasswordKeys.Value.localKey; 
         }
 
-        public async Task<int> Login(string Login, string Password)
+        public async Task<UserDTO> Login(string Login, string Password)
         {
             var User = await _userRepository.GetByLogin(Login);
 
@@ -29,19 +29,19 @@ namespace PMA_IdentityService.Services
 
                 if (string.Equals(DecryptPassword, Password))
                 {
-                    return User.User_Id;
+                    return User;
                 }
 
             }
 
-            return -1;
+            return new UserDTO();
         }
 
         public async Task<bool> Register(UserDTO UserInfo)
         {
             UserInfo.Password = HashService.Encrypt(UserInfo.Password, _passwordKey);
 
-            var IsAlreadyExists = (await Login(UserInfo.Login, UserInfo.Password) != -1);
+            var IsAlreadyExists = (await Login(UserInfo.Login, UserInfo.Password)).User_Id != 0;
 
             if(!IsAlreadyExists)
             {

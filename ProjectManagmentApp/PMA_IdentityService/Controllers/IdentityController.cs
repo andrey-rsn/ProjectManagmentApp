@@ -28,14 +28,14 @@ namespace PMA_IdentityService.Controllers
         [Route("login")]
         public async Task<ActionResult<string>> Login(UserViewModel UserModel)
         {
-            var UserId = await _accountService.Login(UserModel.Login, UserModel.Password);
+            var User = await _accountService.Login(UserModel.Login, UserModel.Password);
 
-            if(UserId == -1)
+            if(User.User_Id == 0)
             {
                 return NotFound();
             }
 
-            var Result = await _authService.CreateLoginRequest(UserModel.Login, UserId);
+            var Result = await _authService.CreateLoginRequest(UserModel.Login, User.User_Id, User.Role);
 
             return Ok(Result);
         }
