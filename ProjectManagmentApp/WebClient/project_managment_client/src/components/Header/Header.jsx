@@ -63,7 +63,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 const Header = () => {
-    const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+    const settings = ['Профиль','Выйти'];
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const dispatch = useDispatch();
 
@@ -77,7 +77,7 @@ const Header = () => {
 
     const onUserMenuParameterClick = (e) => {
         switch (e.target.innerHTML) {
-          case 'Logout': dispatch(logOut());
+          case 'Выйти': dispatch(logOut());
         }
     }
 

@@ -15,16 +15,28 @@ import { formatTime } from '../../helpers/timeHelper/timeHelper';
 const WorkTimePage = () => {
 
     const user_id = useSelector(selectCurrentUserId);
-    const [lastWorkTimeInfoFetch, { isLoading, error }] = useLazyLastWorkTimeInfoQuery();
+    const [lastWorkTimeInfoFetch, { isLoading: isLoadingWorkTimeInfo, error }] = useLazyLastWorkTimeInfoQuery();
     const dispatch = useDispatch();
 
+    async function updateData() {
+        await lastWorkTimeInfoFetch(user_id).unwrap().then(value => {
+            const workTimeInfo = formatWorkTimeInfo(value);
+            dispatch(updateInfo(workTimeInfo));
+        }).catch(err => {
+            if (err.originalStatus === 400) {
+                const emptyData = {
+                    startTime: '',
+                    endTime: '',
+                    isStarted: false
+                }
+                dispatch(updateInfo(emptyData));
+            } else {
+                console.log(err);
+            }
+        });
+    }
     useEffect(() => {
-        async function updateData() {
-            await lastWorkTimeInfoFetch(user_id).unwrap().then(value => {
-                const workTimeInfo = formatWorkTimeInfo(value);
-                dispatch(updateInfo(workTimeInfo));
-            }).catch(err => console.log(err));
-        }
+
         updateData();
     }, []);
 
@@ -38,7 +50,7 @@ const WorkTimePage = () => {
         }
     }
 
-    const content = (isLoading || error
+    const content = (isLoadingWorkTimeInfo
         ? <Skeleton sx={{ bgcolor: 'gray', borderRadius: '10px' }} variant="rectangular" width={400} height={210} />
         : <WorkTimeForm />)
 
