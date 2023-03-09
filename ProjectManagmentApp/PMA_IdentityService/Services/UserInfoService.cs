@@ -44,7 +44,7 @@ namespace PMA_IdentityService.Services
 
             foreach (var UserId in Users_Ids)
             {
-                var User = await _userRepository.GetById(UserIdd);
+                var User = await _userRepository.GetById(UserId);
 
                 if (User != null)
                 {
@@ -61,6 +61,8 @@ namespace PMA_IdentityService.Services
                 }
 
             }
+
+            return Result;
         }
     }
 }
