@@ -93,16 +93,6 @@ const Header = () => {
           >
             Project Managment
           </Typography>
-          <Search sx={{ marginLeft: '0 !important', margin: '0 auto', minWidth: '400px !important' }}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Поиск..."
-              inputProps={{ 'aria-label': 'search' }}
-              sx={{ textAlign: 'left' }}
-            />
-          </Search>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
