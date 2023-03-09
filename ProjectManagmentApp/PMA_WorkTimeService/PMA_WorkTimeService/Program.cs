@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using PMA_WorkTimeService.Data;
+using PMA_WorkTimeService.Extensions;
 using PMA_WorkTimeService.Middleware;
 using PMA_WorkTimeService.Repositories;
 using PMA_WorkTimeService.Services;
@@ -16,10 +15,10 @@ builder.Services.AddScoped<IWorkTimeRepository,WorkTimeRepository>();
 builder.Services.AddScoped<IWorkTimeService, WorkTimeService>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(Configuration.GetConnectionString("UsersDatabase")));
+    options.UseNpgsql(Configuration.GetConnectionString("WorkTimeDatabase")));
 builder.Services.AddHttpClient("authClient", c =>
 {
-    c.BaseAddress = new Uri("http://localhost:5069");
+    c.BaseAddress = new Uri(Configuration.GetConnectionString("IdentityService"));
 });
 builder.Services.AddCors();
 
@@ -41,5 +40,13 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.UseAuthorizationMiddleware();
+
+app.MigrateDatabase<ApplicationDbContext>((context, service) =>
+{
+    var logger = app.Services.GetService<ILogger<ApplicationDbContext>>();
+    DatabaseSeed
+                .SeedAsync(context, logger)
+                .Wait();
+});
 
 app.Run();

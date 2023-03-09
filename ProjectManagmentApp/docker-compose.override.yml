@@ -1,0 +1,97 @@
+version: '3.4'
+
+services:
+  pma_tasksservice:
+    container_name: pma_tasksservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:TaskServiceDatabase=Server=task-service-db;Port=5432;Database=TaskServiceDb;User Id=admin;Password=admin"
+    ports:
+      - "8000:80"
+    depends_on:
+      - task-service-db
+
+  pma_apigateway:
+    container_name: pma_apigateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "1000:80"
+
+
+  pma_identityservice:
+    container_name: pma_identityservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:UsersDatabase=Server=identity-service-db;Port=5432;Database=IdentityServiceDb;User Id=admin;Password=admin"
+    ports:
+      - "8002:80"
+    depends_on:
+      - identity-service-db
+
+
+  pma_worktimeservice:
+    container_name: pma_worktimeservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings:WorktimeDatabase=Server=work-time-service-db;Port=5432;Database=WorkTimeServiceDb;User Id=admin;Password=admin"
+      - "ConnectionStrings:IdentityService=http://pma_identityservice:80"
+    ports:
+      - "8003:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - work-time-service-db
+
+
+  task-service-db:
+    container_name: task-service-db
+    environment: 
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=TaskServiceDb
+    restart: always
+    ports:
+        - "9000:5432"
+    volumes:
+        - task-service-db_data:/var/lib/postgresql/data/
+
+
+  identity-service-db:
+    container_name: identity-service-db
+    environment: 
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=IdentityServiceDb
+    restart: always
+    ports:
+        - "9002:5432"
+    volumes:
+        - identity-service-db_data:/var/lib/postgresql/data/
+
+  work-time-service-db:
+    container_name: work-time-service-db
+    environment: 
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=WorkTimeServiceDb
+    restart: always
+    ports:
+        - "9003:5432"
+    volumes:
+        - work-time-service-db_data:/var/lib/postgresql/data/
+
+  pma_sagaservice:
+    container_name: pma_sagaservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:IdentityService=http://pma_identityservice:80"
+      - "ConnectionStrings:TasksService=http://pma_tasksservice:80"
+    ports:
+      - "8004:80"
+    depends_on:
+      - pma_identityservice
+      - pma_tasksservice
+

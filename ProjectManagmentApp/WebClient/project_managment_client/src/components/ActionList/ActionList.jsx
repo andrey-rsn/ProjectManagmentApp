@@ -24,7 +24,7 @@ const ActionList = () => {
   }
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 300, backgroundColor: 'rgb(190, 196, 181)', height: '100vh', padding: '0' }}>
+    <Box sx={{ width: '100%', maxWidth: 300, backgroundColor: 'rgb(190, 196, 181)', display: 'flex', flexDirection: 'column', flexGrow: 1 ,height: '100%', padding: '0' }}>
       <List className='action-list'>
         <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Название проекта" linkTo="." image={<ArticleIcon />}
           listItemStyle={{ backgroundColor: 'rgb(148, 148, 148)' }}

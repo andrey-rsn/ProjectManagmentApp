@@ -7,8 +7,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5069
+          "Host": "pma_identityservice",
+          "Port": 80
         }
       ],
       "DownstreamPathTemplate": "/api/v1/identity/login"
@@ -20,8 +20,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5069
+          "Host": "pma_identityservice",
+          "Port": 80
         }
       ],
       "DownstreamPathTemplate": "/api/v1/identity/registration"
@@ -33,8 +33,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5069
+          "Host": "pma_identityservice",
+          "Port": 80
         }
       ],
       "DownstreamPathTemplate": "/api/v1/identity/refresh?RefreshToken={RefreshToken}"
@@ -46,8 +46,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5069
+          "Host": "pma_identityservice",
+          "Port": 80
         }
       ],
       "DownstreamPathTemplate": "/api/v1/identity/validation"
@@ -59,8 +59,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5069
+          "Host": "pma_identityservice",
+          "Port": 80
         }
       ],
       "DownstreamPathTemplate": "/api/v1/userInfo/{User_Id}"
@@ -72,8 +72,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7001
+          "Host": "pma_worktimeservice",
+          "Port": 80
         }
       ],
       "DownstreamPathTemplate": "/api/v1/workTime/start?UserId={UserId}"
@@ -85,8 +85,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7001
+          "Host": "pma_worktimeservice",
+          "Port": 80
         }
       ],
       "DownstreamPathTemplate": "/api/v1/workTime/end?UserId={UserId}"
@@ -98,8 +98,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7001
+          "Host": "pma_worktimeservice",
+          "Port": 80
         }
       ],
       "DownstreamPathTemplate": "/api/v1/workTime/all/{UserId}"
@@ -111,8 +111,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7001
+          "Host": "pma_worktimeservice",
+          "Port": 80
         }
       ],
       "DownstreamPathTemplate": "/api/v1/workTime/last/{UserId}"
@@ -124,13 +124,51 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7001
+          "Host": "pma_worktimeservice",
+          "Port": 80
         }
       ],
       "DownstreamPathTemplate": "/api/v1/workTime/{UserId}"
-    }
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/userTask/all?limit={limit}",
+      "UpstreamHttpMethod": [ "Get" ],
 
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_sagaservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/userTask/all?limit={limit}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/userTask/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_sagaservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/userTask/{id}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/userTask",
+      "UpstreamHttpMethod": [ "Post","Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_sagaservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/userTask"
+    }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:1000"

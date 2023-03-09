@@ -1,0 +1,30 @@
+.tasks-form{
+    padding: 0px 15px 0px 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    &__header{
+        text-align: left;
+    }
+    &__filters{
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        :not(:last-child){
+            margin-right: 10px;
+        }
+    }
+    &__data-table{
+        display: flex;
+        flex-grow: 1;
+        height: auto;
+        padding-bottom: 10px;
+    }
+}
+
+.header{
+    &__text{
+        font-size: 150%;
+    }
+}
