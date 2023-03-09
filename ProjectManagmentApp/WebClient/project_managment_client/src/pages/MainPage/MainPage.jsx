@@ -4,6 +4,8 @@ import ActionList from '../../components/ActionList/ActionList';
 import Header from '../../components/Header/Header';
 import './MainPage.css';
 import ProjectInfoPage from "../ProjectInfoPage/ProjectInfoPage";
+import TasksPage from "../TasksPage/TasksPage";
+import TaskCardPage from "../TaskCardPage/TaskCardPage";
 
 
 const MainPage = () => {
@@ -19,6 +21,8 @@ const MainPage = () => {
                 <Routes>
                     <Route path="/" element={<ProjectInfoPage />} />
                     <Route path="/workTime" element={<WorkTimePage />} />
+                    <Route path="/tasks" element={<TasksPage />} />
+                    <Route path="/tasks/:taskId" element={<TaskCardPage />} />
                 </Routes>
             </div>
         </div >

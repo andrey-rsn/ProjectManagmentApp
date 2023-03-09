@@ -1,0 +1,50 @@
+version: '3.4'
+
+services:
+  pma_tasksservice:
+    image: ${DOCKER_REGISTRY-}pmatasksservice
+    build:
+      context: .
+      dockerfile: PMA_TasksService/PMA_TasksService/Dockerfile
+
+  pma_apigateway:
+    image: ${DOCKER_REGISTRY-}pmaapigateway
+    build:
+      context: .
+      dockerfile: PMA_ApiGateway/PMA_ApiGateway/Dockerfile
+
+
+  pma_identityservice:
+    image: ${DOCKER_REGISTRY-}pmaidentityservice
+    build:
+      context: .
+      dockerfile: PMA_IdentityService/Dockerfile
+
+
+  pma_worktimeservice:
+    image: ${DOCKER_REGISTRY-}pmaworktimeservice
+    build:
+      context: .
+      dockerfile: PMA_WorkTimeService/PMA_WorkTimeService/Dockerfile
+
+  task-service-db:
+    image: postgres
+
+  identity-service-db:
+    image: postgres
+
+  work-time-service-db:
+    image: postgres
+
+  pma_sagaservice:
+    image: ${DOCKER_REGISTRY-}pmasagaservice
+    build:
+      context: .
+      dockerfile: PMA_Saga/PMA_SagaService/Dockerfile
+
+volumes:
+  task-service-db_data:
+  identity-service-db_data:
+  work-time-service-db_data:
+  
+

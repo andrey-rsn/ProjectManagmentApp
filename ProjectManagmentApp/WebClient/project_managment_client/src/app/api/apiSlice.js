@@ -27,7 +27,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) =>{
         const refreshToken = cookies.get('refresh_token');
         const refreshResult = await baseQuery({url:`/api/v1/identity/refresh?RefreshToken=${refreshToken}`, method:'POST'}, api, extraOptions);
 
-        if(refreshResult?.data) {
+        if(refreshResult?.data && refreshResult?.error?.status != 401 ) {
 
             api.dispatch(setCredentials(refreshResult.data));
 

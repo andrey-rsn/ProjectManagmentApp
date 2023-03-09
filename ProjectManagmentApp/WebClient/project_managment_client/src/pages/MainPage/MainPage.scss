@@ -1,6 +1,11 @@
 .main-page{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     &__content{
         display: flex;
         flex-direction: row;
+        flex-grow: 1;
+        height: auto;
     }
 }

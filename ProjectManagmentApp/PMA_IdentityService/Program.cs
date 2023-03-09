@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PMA_IdentityService.Data;
+using PMA_IdentityService.Extensions;
 using PMA_IdentityService.Models;
 using PMA_IdentityService.Models.DTOs;
 using PMA_IdentityService.Repositories;
@@ -73,8 +75,18 @@ app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MigrateDatabase<ApplicationDbContext>((context, service) =>
+{
+    var logger = app.Services.GetService<ILogger<ApplicationDbContext>>();
+    var passwordKeys = app.Services.GetService<IOptions<SecretKeys>>();
+    DatabaseSeed
+                .SeedAsync(context, logger, passwordKeys)
+                .Wait();
+});
 
 app.MapControllers();
+
+
 
 app.Run();
 

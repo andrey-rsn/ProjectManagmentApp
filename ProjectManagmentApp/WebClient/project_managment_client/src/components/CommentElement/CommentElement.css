@@ -1,0 +1,43 @@
+.comment-element {
+  display: flex;
+  flex-direction: row;
+}
+.comment-element__img {
+  margin-right: 10px;
+}
+.comment-element__comment-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-info__comment-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+.comment-info__comment-header > p {
+  margin: 0;
+}
+.comment-info__comment-text {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.comment-info__comment-text > p {
+  margin: 0;
+}
+
+.comment-header__user-name {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: rgb(95, 93, 93);
+  margin-right: 10px !important;
+}
+.comment-header__change-date {
+  font-size: 0.8em;
+  font-weight: 400;
+  color: rgb(95, 93, 93);
+}/*# sourceMappingURL=CommentElement.css.map */
