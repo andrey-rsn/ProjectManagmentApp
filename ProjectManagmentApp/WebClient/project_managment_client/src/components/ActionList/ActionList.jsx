@@ -11,8 +11,11 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import SettingsIcon from '@mui/icons-material/Settings';
 import './ActionList.css'
 import ActionItem from '../ActionItem/ActionItem';
+import { useSelector } from 'react-redux';
+import { selectCurrentUserRole } from '../../features/auth/authSlice';
 
 const ActionList = () => {
+    const userRole = useSelector(selectCurrentUserRole);
 
   const LinkStyle = (isActive) => {
     return {
@@ -21,6 +24,8 @@ const ActionList = () => {
       backgroundColor: (isActive ? 'rgb(107, 153, 123)' : undefined)
     }
   }
+
+  const isUserPM = userRole === 'PM';
 
   return (
     <Box sx={{ width: '100%', maxWidth: 300, backgroundColor: 'rgb(190, 196, 181)', display: 'flex', flexDirection: 'column', flexGrow: 1 ,height: '100%', padding: '0' }}>
@@ -34,7 +39,7 @@ const ActionList = () => {
         <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Документация" linkTo="/main/documents" image={<DescriptionIcon />} />
         <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Отчёты" linkTo="/main/reports" image={<SummarizeIcon />} />
         <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Аналитика работы" linkTo="/main/analytics" image={<AssessmentIcon />} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Параметры проекта" linkTo="/main/projectSettings" image={<SettingsIcon />} isHeaderDivider={true} />
+        {isUserPM ? <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Параметры проекта" linkTo="/main/projectSettings" image={<SettingsIcon />} isHeaderDivider={true} /> : <div></div>}
       </List>
     </Box>
   );
