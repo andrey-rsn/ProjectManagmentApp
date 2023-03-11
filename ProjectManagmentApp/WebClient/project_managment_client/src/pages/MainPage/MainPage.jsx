@@ -6,6 +6,7 @@ import './MainPage.css';
 import ProjectInfoPage from "../ProjectInfoPage/ProjectInfoPage";
 import TasksPage from "../TasksPage/TasksPage";
 import TaskCardPage from "../TaskCardPage/TaskCardPage";
+import ProjectSettingsPage from "../ProjectSettingsPage/ProjectSettingsPage";
 
 
 const MainPage = () => {
@@ -23,6 +24,7 @@ const MainPage = () => {
                     <Route path="/workTime" element={<WorkTimePage />} />
                     <Route path="/tasks" element={<TasksPage />} />
                     <Route path="/tasks/:taskId" element={<TaskCardPage />} />
+                    <Route path="/projectSettings" element={<ProjectSettingsPage />} />
                 </Routes>
             </div>
         </div >

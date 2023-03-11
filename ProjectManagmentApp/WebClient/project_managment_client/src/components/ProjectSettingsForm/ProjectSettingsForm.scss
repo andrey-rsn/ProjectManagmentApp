@@ -1,0 +1,33 @@
+.project-settings-form{
+    width: 70%;
+    &__header{
+        font-size: 1.3em;
+        font-weight: 600;
+    }
+    &__bottom{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+.project-params{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &__params-input{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+}
+
+.params-input{
+    &__param-name{
+        font-size: 1.1em;
+    }
+}
+
