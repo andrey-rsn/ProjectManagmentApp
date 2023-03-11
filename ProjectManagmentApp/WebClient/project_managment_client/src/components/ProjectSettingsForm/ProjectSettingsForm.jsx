@@ -35,7 +35,7 @@ const ProjectSettingsForm = () => {
                     Сохранить
                 </Button>
                 <NavLink to='attachEmployee' relative='main/projectSettings' style={{textDecoration:'none'}}>
-                    <Button variant="contained" color="success">
+                    <Button variant="contained" >
                         Прикрепить сотрудников
                     </Button>
                 </NavLink>
