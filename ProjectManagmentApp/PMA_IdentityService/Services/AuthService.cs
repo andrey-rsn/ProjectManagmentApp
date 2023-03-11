@@ -55,8 +55,8 @@ namespace PMA_IdentityService.Services
 
                 var UserRole = encodedJwt.Claims.FirstOrDefault(x => x.Type == "UserRole").Value;
 
-                var AccessToken = await CreateToken(UserName, UserId, UserRole, TimeSpan.FromMinutes(15));
-                var RefreshToken = await CreateToken(UserName, UserId, UserRole, TimeSpan.FromHours(1));
+                var AccessToken = await CreateToken(UserName, UserId, UserRole, TimeSpan.FromMinutes(30));
+                var RefreshToken = await CreateToken(UserName, UserId, UserRole, TimeSpan.FromHours(5));
 
                 var LoginResponse = new LoginResponseViewModel()
                 {
