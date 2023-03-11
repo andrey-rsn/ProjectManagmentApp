@@ -7,11 +7,11 @@ namespace PMA_IdentityService.Services
 {
     public class AuthService : IAuthService
     {
-        public async Task<string> CreateToken(string UserName,string UserId, TimeSpan expires)
+        public async Task<string> CreateToken(string UserName,string UserId,string userRole , TimeSpan expires)
         {
             return await Task<string>.Run(() =>
             {
-                var claims = new List<Claim> { new Claim(ClaimTypes.Name, UserName), new Claim("UserId", UserId) };
+                var claims = new List<Claim> { new Claim(ClaimTypes.Name, UserName), new Claim("UserId", UserId), new Claim("UserRole", userRole) };
 
                 var jwt = new JwtSecurityToken(
                     issuer: AuthOptions.ISSUER,
@@ -27,19 +27,17 @@ namespace PMA_IdentityService.Services
             
         }
 
-        public async Task<LoginResponseViewModel> CreateLoginRequest(string UserName, int UserId) 
+        public async Task<LoginResponseViewModel> CreateLoginRequest(string UserName, int UserId, string userRole) 
         {
             var UserIdString = Convert.ToString(UserId);
             
-            var AccessToken = await CreateToken(UserName, UserIdString, TimeSpan.FromMinutes(15));
-            var RefreshToken = await CreateToken(UserName, UserIdString, TimeSpan.FromHours(1));
+            var AccessToken = await CreateToken(UserName, UserIdString, userRole, TimeSpan.FromMinutes(30));
+            var RefreshToken = await CreateToken(UserName, UserIdString, userRole, TimeSpan.FromHours(5));
 
             var LoginResponse = new LoginResponseViewModel()
             {
                 access_token = AccessToken,
-                refresh_token = RefreshToken,
-                user_name = UserName,
-                user_id = UserId
+                refresh_token = RefreshToken
             };
 
             return LoginResponse;
@@ -55,15 +53,15 @@ namespace PMA_IdentityService.Services
 
                 var UserId = encodedJwt.Claims.FirstOrDefault(x => x.Type == "UserId").Value;
 
-                var AccessToken = await CreateToken(UserName, UserId, TimeSpan.FromMinutes(15));
-                var RefreshToken = await CreateToken(UserName, UserId, TimeSpan.FromHours(1));
+                var UserRole = encodedJwt.Claims.FirstOrDefault(x => x.Type == "UserRole").Value;
+
+                var AccessToken = await CreateToken(UserName, UserId, UserRole, TimeSpan.FromMinutes(30));
+                var RefreshToken = await CreateToken(UserName, UserId, UserRole, TimeSpan.FromHours(5));
 
                 var LoginResponse = new LoginResponseViewModel()
                 {
                     access_token = AccessToken,
-                    refresh_token = RefreshToken,
-                    user_name = UserName,
-                    user_id = Int32.Parse(UserId)
+                    refresh_token = RefreshToken
                 };
                 return LoginResponse;
             }

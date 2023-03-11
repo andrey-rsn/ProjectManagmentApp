@@ -37,5 +37,32 @@ namespace PMA_IdentityService.Services
 
             return new UserInfoViewModel();
         }
+
+        public async Task<IEnumerable<UserInfoViewModel>> GetUsersInfosByIds(int[] Users_Ids)
+        {
+            var Result = new List<UserInfoViewModel>();
+
+            foreach (var UserId in Users_Ids)
+            {
+                var User = await _userRepository.GetById(UserId);
+
+                if (User != null)
+                {
+                    var Position = await _positionRepository.GetById(User.Position_Id);
+
+                    if (Position != null)
+                    {
+                        var UserInfo = _mapper.Map<UserInfoViewModel>(User);
+
+                        UserInfo.Position = Position.PositionName;
+
+                        Result.Add(UserInfo);
+                    }
+                }
+
+            }
+
+            return Result;
+        }
     }
 }
