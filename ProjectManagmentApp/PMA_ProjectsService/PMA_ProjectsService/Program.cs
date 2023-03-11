@@ -1,3 +1,5 @@
+using PMA_ProjectsService.Data;
+using PMA_ProjectsService.Extensions;
 using PMA_ProjectsService.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,5 +25,13 @@ app.UseHttpsRedirection();
 app.UseAuthorizationMiddleware();
 
 app.MapControllers();
+
+app.MigrateDatabase<ApplicationDbContext>((context, service) =>
+{
+    var logger = app.Services.GetService<ILogger<ApplicationDbContext>>();
+    DatabaseSeed
+                .SeedAsync(context, logger)
+                .Wait();
+});
 
 app.Run();
