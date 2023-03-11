@@ -1,0 +1,19 @@
+.project-info {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-main-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-additional-info {
+  padding: 15px 0px 0px 0px;
+  margin-bottom: 15px;
+}
+
+.project-employees__text {
+  text-align: start;
+}/*# sourceMappingURL=ProjectInfo.css.map */
