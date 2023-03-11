@@ -1,13 +1,16 @@
+using Microsoft.EntityFrameworkCore;
 using PMA_ProjectsService.Data;
 using PMA_ProjectsService.Extensions;
 using PMA_ProjectsService.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+var Configuration = builder.Configuration;
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(Configuration.GetConnectionString("ProjectsServiceDatabase")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
