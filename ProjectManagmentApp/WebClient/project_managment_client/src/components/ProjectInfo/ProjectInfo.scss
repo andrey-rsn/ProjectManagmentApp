@@ -6,6 +6,9 @@
 .project-main-info{
     display: flex;
     flex-direction: column;
+    &__project-description{
+        text-align: start;
+    }
 }
 
 .project-additional-info{
@@ -16,5 +19,20 @@
 .project-employees{
     &__text{
         text-align: start;
+        font-weight: 600;
+    }
+}
+
+.project-name{
+    text-align: center;
+    &__text{
+        font-size: 1.5em;
+        font-weight: 600;
+    }
+}
+
+.project-description{
+    &__text{
+        font-size: 1.1em;
     }
 }
