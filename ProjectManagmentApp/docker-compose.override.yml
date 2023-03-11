@@ -95,3 +95,26 @@ services:
       - pma_identityservice
       - pma_tasksservice
 
+
+  pma_projectsservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:ProjectsServiceDatabase=Server=projects-service-db;Port=5432;User ID=admin;Password=admin;Database=ProjectsServiceDb;"
+    ports:
+      - "8005:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+
+  projects-service-db:
+    container_name: projects-service-db
+    environment: 
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=ProjectsServiceDb
+    restart: always
+    ports:
+        - "9005:5432"
+    volumes:
+        - projects-service-db_data:/var/lib/postgresql/data/

@@ -42,9 +42,17 @@ services:
       context: .
       dockerfile: PMA_Saga/PMA_SagaService/Dockerfile
 
+  pma_projectsservice:
+    image: ${DOCKER_REGISTRY-}pmaprojectsservice
+    build:
+      context: .
+      dockerfile: PMA_ProjectsService/PMA_ProjectsService/Dockerfile
+
 volumes:
   task-service-db_data:
   identity-service-db_data:
   work-time-service-db_data:
+  projects-service-db_data:
   
+
 
