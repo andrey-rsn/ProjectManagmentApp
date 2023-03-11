@@ -3,6 +3,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
+import { NavLink } from "react-router-dom";
 
 const ProjectSettingsForm = () => {
 
@@ -20,7 +21,7 @@ const ProjectSettingsForm = () => {
                 <div className="project-params__params-input params-input">
                     <p className="params-input__param-name">Описание проекта :</p>
                     <TextField
-                        sx={{ width: '100%'}}
+                        sx={{ width: '100%' }}
                         id="outlined-multiline-flexible"
                         multiline
                         maxRows={6}
@@ -28,15 +29,17 @@ const ProjectSettingsForm = () => {
                     />
                 </div>
             </div>
-            <Divider sx={{ backgroundColor: 'grey', marginBottom: '20px'}} />
+            <Divider sx={{ backgroundColor: 'grey', marginBottom: '20px' }} />
             <div className="project-settings-form__bottom">
-                    <Button variant="contained" color="success" sx={{marginRight:"auto"}}>
-                        Сохранить
-                    </Button>
+                <Button variant="contained" color="success" sx={{ marginRight: "auto" }}>
+                    Сохранить
+                </Button>
+                <NavLink to='attachEmployee' relative='main/projectSettings' style={{textDecoration:'none'}}>
                     <Button variant="contained" color="success">
-                        Добавить сотрудника
+                        Прикрепить сотрудников
                     </Button>
-                </div>
+                </NavLink>
+            </div>
         </div>
     )
 }

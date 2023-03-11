@@ -7,6 +7,7 @@ import ProjectInfoPage from "../ProjectInfoPage/ProjectInfoPage";
 import TasksPage from "../TasksPage/TasksPage";
 import TaskCardPage from "../TaskCardPage/TaskCardPage";
 import ProjectSettingsPage from "../ProjectSettingsPage/ProjectSettingsPage";
+import AttachEmployeePage from "../AttachEmployeePage/AttachEmployeePage";
 
 
 const MainPage = () => {
@@ -25,6 +26,7 @@ const MainPage = () => {
                     <Route path="/tasks" element={<TasksPage />} />
                     <Route path="/tasks/:taskId" element={<TaskCardPage />} />
                     <Route path="/projectSettings" element={<ProjectSettingsPage />} />
+                    <Route path="/projectSettings/attachEmployee" element={<AttachEmployeePage />} />
                 </Routes>
             </div>
         </div >
