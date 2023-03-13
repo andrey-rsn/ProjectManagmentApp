@@ -13,6 +13,13 @@ namespace PMA_ProjectsService.Services.ProjectServices
             _projectRepository = projectRepository;
         }
 
+        public async Task<ProjectDTO> Add(ProjectDTO projectDTO)
+        {
+            var result = await _projectRepository.AddAsync(projectDTO);  
+
+            return result;
+        }
+
         public async Task<bool> DeleteById(int id)
         {
             var project = await _projectRepository.GetByIdAsync(id);
