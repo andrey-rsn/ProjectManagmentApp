@@ -36,6 +36,9 @@ services:
   work-time-service-db:
     image: postgres
 
+  projects-service-db:
+    image: postgres
+
   pma_sagaservice:
     image: ${DOCKER_REGISTRY-}pmasagaservice
     build:
