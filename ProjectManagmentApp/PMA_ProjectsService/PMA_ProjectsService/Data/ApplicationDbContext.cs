@@ -7,6 +7,7 @@ namespace PMA_ProjectsService.Data
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<EmployeesAttachedToProjectsModel> EmployeesAttachedToProjects { get; set; }
+        public DbSet<ProjectsTasksModel> ProjectsTasks { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             Database.EnsureCreated();
@@ -42,6 +43,20 @@ namespace PMA_ProjectsService.Data
                 EmployeeId = 1,
                 EmployeesAttachedToProjectsId = 2,
                 ProjectId = 2,
+            });
+
+            modelBuilder.Entity<EmployeesAttachedToProjectsModel>().HasData(new ProjectsTasksModel
+            {
+                ProjectId= 1,
+                ProjectsTasksId= 1,
+                TaskId=1
+            });
+
+            modelBuilder.Entity<EmployeesAttachedToProjectsModel>().HasData(new ProjectsTasksModel
+            {
+                ProjectId = 1,
+                ProjectsTasksId = 2,
+                TaskId = 2
             });
 
         }

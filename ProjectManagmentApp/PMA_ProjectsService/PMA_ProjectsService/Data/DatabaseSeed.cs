@@ -20,6 +20,13 @@ namespace PMA_ProjectsService.Data
                 logger.LogInformation("Seed database associated with context {DbContextName}", typeof(ApplicationDbContext).Name);
             }
 
+            if (!appDbContext.ProjectsTasks.Any())
+            {
+                appDbContext.ProjectsTasks.AddRange(GetPreconfiguredProjectsTasks());
+                await appDbContext.SaveChangesAsync();
+                logger.LogInformation("Seed database associated with context {DbContextName}", typeof(ApplicationDbContext).Name);
+            }
+
         }
 
         private static IEnumerable<Project> GetPreconfiguredProjects()
@@ -59,6 +66,25 @@ namespace PMA_ProjectsService.Data
                     ProjectId = 2,
                 }
 
+            };
+        }
+
+        private static IEnumerable<ProjectsTasksModel> GetPreconfiguredProjectsTasks()
+        {
+            return new List<ProjectsTasksModel>
+            {
+                new ProjectsTasksModel
+                {
+                    ProjectId = 1,
+                    ProjectsTasksId= 1,
+                    TaskId= 1
+                },
+                new ProjectsTasksModel
+                {
+                    ProjectId = 1,
+                    ProjectsTasksId= 2,
+                    TaskId= 2
+                }
             };
         }
     }
