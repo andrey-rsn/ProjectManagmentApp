@@ -1,0 +1,50 @@
+.main-info-form {
+  width: 90%;
+  margin-bottom: 20px;
+}
+.main-info-form__header {
+  text-align: center;
+  font-size: 1.3em;
+  font-weight: 500;
+}
+.main-info-form__content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.right-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
+}
+
+.left-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
+}
+
+.projects-list {
+  width: 100%;
+}
+.projects-list__text {
+  font-weight: 500;
+}
+
+.employees-list {
+  width: 100%;
+}
+.employees-list__text {
+  font-weight: 500;
+}
+
+.menu {
+  width: 100%;
+}
+.menu__text {
+  text-align: center;
+  font-weight: 500;
+}/*# sourceMappingURL=MainInfoForm.css.map */
