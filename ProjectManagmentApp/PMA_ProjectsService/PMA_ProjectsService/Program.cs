@@ -4,6 +4,9 @@ using PMA_ProjectsService.Extensions;
 using PMA_ProjectsService.Middleware;
 using PMA_ProjectsService.Repositories;
 using PMA_ProjectsService.Repositories.Interfaces;
+using PMA_ProjectsService.Services.EmployeesAttachedToProjectsServices;
+using PMA_ProjectsService.Services.ProjectServices;
+using PMA_ProjectsService.Services.ProjectsTasksServices;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
@@ -16,6 +19,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IEmployeesAttachedToProjectsRepository, EmployeesAttachedToProjectsRepository>();
+builder.Services.AddScoped<IProjectsTasksRepository, ProjectsTasksRepository>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IEmployeesAttachedToProjectsService, EmployeesAttachedToProjectsService>();
+builder.Services.AddScoped<IProjectsTasksService, ProjectsTasksService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
