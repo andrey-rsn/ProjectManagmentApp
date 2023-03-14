@@ -104,8 +104,8 @@ const columns = [
     }
 ];
 
-const TasksForm = () => {
-
+const TasksForm = (props) => {
+    const {projectId} = props;
     const [selectedRows, setSelectedRows] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [allTasksFetch, { isLoading, error, isSuccess: isDataLoaded }] = useLazyGetAllTasksQuery();
@@ -152,7 +152,7 @@ const TasksForm = () => {
 
     const rowClickHandle = (e) => {
         if (e.id) {
-            navigate(`/main/tasks/${e.id}`);
+            navigate(`${e.id}`);
         }
     }
 

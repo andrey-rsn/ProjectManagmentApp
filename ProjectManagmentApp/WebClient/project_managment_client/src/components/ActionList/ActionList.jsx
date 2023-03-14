@@ -14,7 +14,9 @@ import ActionItem from '../ActionItem/ActionItem';
 import { useSelector } from 'react-redux';
 import { selectCurrentUserRole } from '../../features/auth/authSlice';
 
-const ActionList = () => {
+
+const ActionList = (props) => {
+    const { projectId } = props;
     const userRole = useSelector(selectCurrentUserRole);
 
   const LinkStyle = (isActive) => {
@@ -30,16 +32,16 @@ const ActionList = () => {
   return (
     <Box sx={{ width: '100%', maxWidth: 300, backgroundColor: 'rgb(190, 196, 181)', display: 'flex', flexDirection: 'column', flexGrow: 1 ,height: '100%', padding: '0' }}>
       <List className='action-list'>
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Название проекта" linkTo="." image={<ArticleIcon />}
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Название проекта" linkTo={`/main/${projectId}`} image={<ArticleIcon />}
           listItemStyle={{ backgroundColor: 'rgb(148, 148, 148)' }}
         />
         <Divider sx={{ backgroundColor: 'black', height: '0.2px' }} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Учёт времени работы" linkTo="/main/workTime" image={<AccessTimeIcon />} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Задачи" linkTo="/main/tasks" image={<TaskAltIcon />} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Документация" linkTo="/main/documents" image={<DescriptionIcon />} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Отчёты" linkTo="/main/reports" image={<SummarizeIcon />} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Аналитика работы" linkTo="/main/analytics" image={<AssessmentIcon />} />
-        {isUserPM ? <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Параметры проекта" linkTo="/main/projectSettings" image={<SettingsIcon />} isHeaderDivider={true} /> : <div></div>}
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Учёт времени работы" linkTo='/main/workTime' image={<AccessTimeIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Задачи" linkTo={`/main/${projectId}/tasks`} image={<TaskAltIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Документация" linkTo={`/main/${projectId}/documents`} image={<DescriptionIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Отчёты" linkTo={`/main/${projectId}/reports`} image={<SummarizeIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Аналитика работы" linkTo={`/main/${projectId}/analytics`} image={<AssessmentIcon />} />
+        {isUserPM ? <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Параметры проекта" linkTo={`/main/${projectId}/projectSettings`} image={<SettingsIcon />} isHeaderDivider={true} /> : <div></div>}
       </List>
     </Box>
   );
