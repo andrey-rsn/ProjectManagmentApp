@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PMA_ProjectsService.Models
 {
@@ -8,6 +9,7 @@ namespace PMA_ProjectsService.Models
         public int ProjectsTasksId { get; set; }
 
         [Required]
+        [ForeignKey(nameof(Project))]
         public int ProjectId { get; set; }
 
         [Required]
