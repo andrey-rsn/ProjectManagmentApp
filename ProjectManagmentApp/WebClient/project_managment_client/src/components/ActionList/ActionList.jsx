@@ -32,16 +32,15 @@ const ActionList = (props) => {
   return (
     <Box sx={{ width: '100%', maxWidth: 300, backgroundColor: 'rgb(190, 196, 181)', display: 'flex', flexDirection: 'column', flexGrow: 1 ,height: '100%', padding: '0' }}>
       <List className='action-list'>
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Название проекта" linkTo={`/main/${projectId}`} image={<ArticleIcon />}
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Название проекта" linkTo={`/project/${projectId}`} image={<ArticleIcon />}
           listItemStyle={{ backgroundColor: 'rgb(148, 148, 148)' }}
         />
         <Divider sx={{ backgroundColor: 'black', height: '0.2px' }} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Учёт времени работы" linkTo='/main/workTime' image={<AccessTimeIcon />} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Задачи" linkTo={`/main/${projectId}/tasks`} image={<TaskAltIcon />} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Документация" linkTo={`/main/${projectId}/documents`} image={<DescriptionIcon />} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Отчёты" linkTo={`/main/${projectId}/reports`} image={<SummarizeIcon />} />
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Аналитика работы" linkTo={`/main/${projectId}/analytics`} image={<AssessmentIcon />} />
-        {isUserPM ? <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Параметры проекта" linkTo={`/main/${projectId}/projectSettings`} image={<SettingsIcon />} isHeaderDivider={true} /> : <div></div>}
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Задачи" linkTo={`/project/${projectId}/tasks`} image={<TaskAltIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Документация" linkTo={`/project/${projectId}/documents`} image={<DescriptionIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Отчёты" linkTo={`/project/${projectId}/reports`} image={<SummarizeIcon />} />
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Аналитика работы" linkTo={`/project/${projectId}/analytics`} image={<AssessmentIcon />} />
+        {isUserPM ? <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Параметры проекта" linkTo={`/project/${projectId}/projectSettings`} image={<SettingsIcon />} isHeaderDivider={true} /> : <div></div>}
       </List>
     </Box>
   );

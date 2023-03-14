@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom"
 import { DefaultPage } from './pages/DefaultPage/DefaultPage';
 import RequireAuth from './features/auth/requireAuth';
 import StartPage from './pages/StartPage/StartPage';
+import WorkTimePage from './pages/WorkTimePage/WorkTimePage';
 
 const App = () => {
 
@@ -20,8 +21,8 @@ const App = () => {
                 <Route path="/login" element={<LoginPage />} />
 
                 <Route element={< RequireAuth />}>
-                    <Route path="/main" element={<StartPage />} />
-                    <Route path="/main/:projectId/*" element={<MainPage />} />
+                    <Route path="/main/*" element={<StartPage />} />
+                    <Route path="/project/:projectId/*" element={<MainPage />} />
                 </Route>
 
             </Routes>

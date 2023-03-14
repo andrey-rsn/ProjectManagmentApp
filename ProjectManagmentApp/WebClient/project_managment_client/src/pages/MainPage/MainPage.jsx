@@ -1,4 +1,3 @@
-import WorkTimePage from "../WorkTimePage/WorkTimePage";
 import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-dom';
 import ActionList from '../../components/ActionList/ActionList';
 import Header from '../../components/Header/Header';
@@ -35,7 +34,6 @@ const MainPage = () => {
                 <ActionList projectId={projectId}/>
                 <Routes>
                     <Route path="/" element={<ProjectInfoPage projectId={projectId}/>} />
-                    <Route path="/workTime" element={<WorkTimePage />} />
                     <Route path="/tasks" element={<TasksPage projectId={projectId}/>} />
                     <Route path="/tasks/:taskId" element={<TaskCardPage />} />
                     <Route path="/projectSettings" element={<ProjectSettingsPage projectId={projectId}/>} />

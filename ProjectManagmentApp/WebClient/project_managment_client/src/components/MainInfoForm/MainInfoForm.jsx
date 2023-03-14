@@ -13,7 +13,7 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AddIcon from '@mui/icons-material/Add';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 
 const MainInfoForm = () => {
 
@@ -59,7 +59,7 @@ const MainInfoForm = () => {
 
     const rowClickHandle = (e) => {
         if (e.id) {
-            navigate(`${e.id}`);
+            navigate(`/project/${e.id}`);
         }
     }
 
@@ -77,26 +77,34 @@ const MainInfoForm = () => {
                         <div className='menu__menu-list'>
                             <Paper sx={{ width: '90%' }}>
                                 <MenuList>
-                                    <MenuItem>
-                                        <ListItemIcon>
-                                            <AccessTimeIcon fontSize="small" />
-                                        </ListItemIcon>
-                                        <Typography variant="inherit" noWrap>Учёт врменени работы</Typography>
-                                    </MenuItem>
-                                    <MenuItem>
-                                        <ListItemIcon>
-                                            <AccountBoxIcon fontSize="small" />
-                                        </ListItemIcon>
-                                        <Typography variant="inherit" noWrap>Зарегистрировать сотрудника</Typography>
-                                    </MenuItem>
-                                    <MenuItem>
-                                        <ListItemIcon>
-                                            <AddIcon fontSize="small" />
-                                        </ListItemIcon>
-                                        <Typography variant="inherit" noWrap>
-                                            Создать новый проект
-                                        </Typography>
-                                    </MenuItem>
+                                    <NavLink to='workTime' style={{ textDecoration: 'none', color: 'black' }} relative='main'>
+                                        <MenuItem>
+                                            <ListItemIcon>
+                                                <AccessTimeIcon fontSize="small" />
+                                            </ListItemIcon>
+                                            <Typography variant="inherit" noWrap>
+                                                Учёт врменени работы
+                                            </Typography>
+                                        </MenuItem>
+                                    </NavLink>
+                                    <NavLink to='addEmployee' style={{ textDecoration: 'none', color: 'black' }} relative='main'>
+                                        <MenuItem>
+                                            <ListItemIcon>
+                                                <AccountBoxIcon fontSize="small" />
+                                            </ListItemIcon>
+                                            <Typography variant="inherit" noWrap>Зарегистрировать сотрудника</Typography>
+                                        </MenuItem>
+                                    </NavLink>
+                                    <NavLink to='createProject' style={{ textDecoration: 'none', color: 'black' }} relative='main'>
+                                        <MenuItem>
+                                            <ListItemIcon>
+                                                <AddIcon fontSize="small" />
+                                            </ListItemIcon>
+                                            <Typography variant="inherit" noWrap>
+                                                Создать новый проект
+                                            </Typography>
+                                        </MenuItem>
+                                    </NavLink>
                                 </MenuList>
                             </Paper>
                         </div>
