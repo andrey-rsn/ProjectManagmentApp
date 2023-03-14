@@ -13,10 +13,11 @@ import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AddIcon from '@mui/icons-material/Add';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import { useNavigate } from 'react-router-dom';
 
 const MainInfoForm = () => {
 
-    const [selectedRows, setSelectedRows] = useState([]);
+    let navigate = useNavigate();
 
     const projectsColumns = [
         { field: 'id', headerName: 'ID', width: 90, hide: true },
@@ -55,6 +56,12 @@ const MainInfoForm = () => {
         { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
         { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
     ];
+
+    const rowClickHandle = (e) => {
+        if (e.id) {
+            navigate(`${e.id}`);
+        }
+    }
 
     return (
         <div className="main-info-form">
@@ -98,7 +105,7 @@ const MainInfoForm = () => {
                 <div className="content__right-wrapper right-wrapper">
                     <div className="right-wrapper__projects-list projects-list">
                         <div className="projects-list__text">
-                            <p>Список проектов</p>
+                            <p>Список доступных проектов</p>
                         </div>
                         <div className="projects-list__list">
                             <Box sx={{ height: 371, width: '100%' }}>
@@ -108,22 +115,7 @@ const MainInfoForm = () => {
                                     rowsPerPageOptions={[5]}
                                     pageSize={5}
                                     disableRowSelectionOnClick
-                                />
-                            </Box>
-                        </div>
-                    </div>
-                    <div className="right-wrapper__employees-list employees-list">
-                        <div className="employees-list__text">
-                            <p>Список сотрудников</p>
-                        </div>
-                        <div className="employees-list__list">
-                            <Box sx={{ height: 371, width: '100%' }}>
-                                <DataGrid
-                                    rows={rows}
-                                    columns={employeesColumns}
-                                    rowsPerPageOptions={[5]}
-                                    pageSize={5}
-                                    disableRowSelectionOnClick
+                                    onRowClick={e => rowClickHandle(e)}
                                 />
                             </Box>
                         </div>
