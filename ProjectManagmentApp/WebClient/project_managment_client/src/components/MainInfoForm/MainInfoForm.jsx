@@ -14,9 +14,12 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AddIcon from '@mui/icons-material/Add';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { useNavigate, NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectCurrentUserRole } from '../../features/auth/authSlice';
+import { useMemo } from 'react';
 
 const MainInfoForm = () => {
-
+    const userRole = useSelector(selectCurrentUserRole);
     let navigate = useNavigate();
 
     const projectsColumns = [
@@ -63,6 +66,34 @@ const MainInfoForm = () => {
         }
     }
 
+    const additionalMenuItems = useMemo(() => {
+        if (userRole === 'PM') {
+            return (
+                <>
+                    <NavLink to='addEmployee' style={{ textDecoration: 'none', color: 'black' }} relative='main'>
+                        <MenuItem>
+                            <ListItemIcon>
+                                <AccountBoxIcon fontSize="small" />
+                            </ListItemIcon>
+                            <Typography variant="inherit" noWrap>Зарегистрировать сотрудника</Typography>
+                        </MenuItem>
+                    </NavLink>
+                    <NavLink to='createProject' style={{ textDecoration: 'none', color: 'black' }} relative='main'>
+                        <MenuItem>
+                            <ListItemIcon>
+                                <AddIcon fontSize="small" />
+                            </ListItemIcon>
+                            <Typography variant="inherit" noWrap>
+                                Создать новый проект
+                            </Typography>
+                        </MenuItem>
+                    </NavLink>
+                </>
+            )
+        }
+
+    },[userRole])
+
     return (
         <div className="main-info-form">
             <div className="main-info-form__header">
@@ -87,24 +118,7 @@ const MainInfoForm = () => {
                                             </Typography>
                                         </MenuItem>
                                     </NavLink>
-                                    <NavLink to='addEmployee' style={{ textDecoration: 'none', color: 'black' }} relative='main'>
-                                        <MenuItem>
-                                            <ListItemIcon>
-                                                <AccountBoxIcon fontSize="small" />
-                                            </ListItemIcon>
-                                            <Typography variant="inherit" noWrap>Зарегистрировать сотрудника</Typography>
-                                        </MenuItem>
-                                    </NavLink>
-                                    <NavLink to='createProject' style={{ textDecoration: 'none', color: 'black' }} relative='main'>
-                                        <MenuItem>
-                                            <ListItemIcon>
-                                                <AddIcon fontSize="small" />
-                                            </ListItemIcon>
-                                            <Typography variant="inherit" noWrap>
-                                                Создать новый проект
-                                            </Typography>
-                                        </MenuItem>
-                                    </NavLink>
+                                    {additionalMenuItems}
                                 </MenuList>
                             </Paper>
                         </div>
