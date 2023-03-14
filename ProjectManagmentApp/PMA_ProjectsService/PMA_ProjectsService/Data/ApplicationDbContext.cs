@@ -45,14 +45,14 @@ namespace PMA_ProjectsService.Data
                 ProjectId = 2,
             });
 
-            modelBuilder.Entity<EmployeesAttachedToProjectsModel>().HasData(new ProjectsTasksModel
+            modelBuilder.Entity<ProjectsTasksModel>().HasData(new ProjectsTasksModel
             {
                 ProjectId= 1,
                 ProjectsTasksId= 1,
                 TaskId=1
             });
 
-            modelBuilder.Entity<EmployeesAttachedToProjectsModel>().HasData(new ProjectsTasksModel
+            modelBuilder.Entity<ProjectsTasksModel>().HasData(new ProjectsTasksModel
             {
                 ProjectId = 1,
                 ProjectsTasksId = 2,

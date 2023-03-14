@@ -25,6 +25,11 @@ builder.Services.AddScoped<IEmployeesAttachedToProjectsService, EmployeesAttache
 builder.Services.AddScoped<IProjectsTasksService, ProjectsTasksService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient("authClient", c =>
+{
+    c.BaseAddress = new Uri(Configuration.GetConnectionString("IdentityService"));
+});
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -36,6 +41,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
 app.UseAuthorizationMiddleware();
 
