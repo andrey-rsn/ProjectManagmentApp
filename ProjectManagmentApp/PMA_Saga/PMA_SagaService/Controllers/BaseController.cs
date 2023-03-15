@@ -16,6 +16,8 @@ namespace PMA_SagaService.Controllers
                     return NoContent();
                 case 403:
                     return Forbid();
+                case 404:
+                    return NotFound();
                 default:
                     return BadRequest();
             }
