@@ -170,7 +170,7 @@
       "DownstreamPathTemplate": "/api/v1/userTask"
     },
     {
-      "UpstreamPathTemplate": "api/v1/projects/byUser/{userId}",
+      "UpstreamPathTemplate": "/api/v1/projects/byUser/{userId}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "http",
@@ -180,7 +180,7 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "api/v1/projects/byUser/{userId}"
+      "DownstreamPathTemplate": "/api/v1/projects/byUser/{userId}"
     }
   ],
   "GlobalConfiguration": {
