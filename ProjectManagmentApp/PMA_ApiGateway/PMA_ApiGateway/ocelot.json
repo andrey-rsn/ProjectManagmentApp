@@ -181,6 +181,19 @@
         }
       ],
       "DownstreamPathTemplate": "/api/v1/projects/byUser/{userId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/projects/byUserAndProject?userId={userId}&projectId={projectId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_sagaservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/projects/byUserAndProject?userId={userId}&projectId={projectId}"
     }
   ],
   "GlobalConfiguration": {
