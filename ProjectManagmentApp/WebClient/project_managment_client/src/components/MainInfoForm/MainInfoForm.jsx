@@ -3,7 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
@@ -15,49 +15,35 @@ import AddIcon from '@mui/icons-material/Add';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectCurrentUserRole } from '../../features/auth/authSlice';
+import { selectCurrentUserRole, selectCurrentUserId } from '../../features/auth/authSlice';
 import { useMemo } from 'react';
+import { useLazyGetProjectsByUserIdQuery } from '../../features/projectsApi/projectsApiSlice';
 
 const MainInfoForm = () => {
     const userRole = useSelector(selectCurrentUserRole);
+    const userId = useSelector(selectCurrentUserId);
+    const[projects, setProjects] = useState([]);
+
     let navigate = useNavigate();
 
+    const[getPorjectsByIdFetch,{isLoading: isProjectsByUserIdLoading}] = useLazyGetProjectsByUserIdQuery();
+
+    useEffect(async () => {
+        await loadData();
+    })
+
+    const loadData = async () => {
+        await getPorjectsByIdFetch(userId).unwrap().then(data=> setProjects(data)).catch(err => console.log(err));
+    }
+
     const projectsColumns = [
-        { field: 'id', headerName: 'ID', width: 90, hide: true },
+        { field: 'projectId', headerName: 'ID', width: 90, hide: true },
         {
-            field: 'firstName',
-            headerName: 'Название',
+            field: 'name',
+            headerName: 'Название проекта',
             width: 400,
             editable: false,
         }
-    ];
-
-    const employeesColumns = [
-        { field: 'id', headerName: 'ID', width: 90, hide: true },
-        {
-            field: 'firstName',
-            headerName: 'Имя',
-            width: 150,
-            editable: false,
-        },
-        {
-            field: 'lastName',
-            headerName: 'Фамилия',
-            width: 150,
-            editable: true,
-        }
-    ];
-
-    const rows = [
-        { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
     ];
 
     const rowClickHandle = (e) => {
@@ -132,7 +118,7 @@ const MainInfoForm = () => {
                         <div className="projects-list__list">
                             <Box sx={{ height: 371, width: '100%' }}>
                                 <DataGrid
-                                    rows={rows}
+                                    rows={projects}
                                     columns={projectsColumns}
                                     rowsPerPageOptions={[5]}
                                     pageSize={5}
