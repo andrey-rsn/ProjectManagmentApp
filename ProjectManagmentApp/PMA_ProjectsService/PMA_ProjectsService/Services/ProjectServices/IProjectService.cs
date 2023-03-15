@@ -9,5 +9,6 @@ namespace PMA_ProjectsService.Services.ProjectServices
         Task<ProjectDTO> Update(ProjectDTO projectDTO);
         Task<ProjectDTO> Add(ProjectDTO projectDTO);
         Task<bool> DeleteById(int id);
+        Task<List<ProjectDTO>> GetByUserId(int userId);
     }
 }

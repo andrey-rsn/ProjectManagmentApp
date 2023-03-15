@@ -49,6 +49,21 @@ namespace PMA_ProjectsService.Controllers
             }
         }
 
+        // GET api/v1/projects/byUser/{id}
+        [HttpGet("byUser/{id}")]
+        public async Task<ActionResult<IEnumerable<ProjectDTO>>> GetByUserId(int userId)
+        {
+            var result = await _projectService.GetByUserId(userId);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         // POST api/v1/projects
         [HttpPost]
         public async Task<ActionResult<ProjectDTO>> Add([FromBody] ProjectDTO project)

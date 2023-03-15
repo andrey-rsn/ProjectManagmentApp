@@ -7,10 +7,12 @@ namespace PMA_ProjectsService.Services.ProjectServices
     public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
+        private readonly IEmployeesAttachedToProjectsRepository _employeesAttachedToProjectsRepository;
 
-        public ProjectService(IProjectRepository projectRepository)
+        public ProjectService(IProjectRepository projectRepository, IEmployeesAttachedToProjectsRepository employeesAttachedToProjectsRepository)
         {
             _projectRepository = projectRepository;
+            _employeesAttachedToProjectsRepository = employeesAttachedToProjectsRepository;
         }
 
         public async Task<ProjectDTO> Add(ProjectDTO projectDTO)
@@ -48,6 +50,25 @@ namespace PMA_ProjectsService.Services.ProjectServices
             var project = await _projectRepository.GetByIdAsync(id);
 
             return project;
+        }
+
+        public async Task<List<ProjectDTO>> GetByUserId(int userId)
+        {
+            var attachedEmployees = await _employeesAttachedToProjectsRepository.GetAsync(x=>x.EmployeeId== userId);
+
+            var result = new List<ProjectDTO>();
+
+            foreach(var projectId in attachedEmployees.Select(x=>x.ProjectId))
+            {
+                var project = await _projectRepository.GetByIdAsync(projectId);
+                if(project != null)
+                {
+                    result.Add(project);
+                }
+            }
+
+            return result;
+
         }
 
         public async Task<ProjectDTO> Update(ProjectDTO projectDTO)

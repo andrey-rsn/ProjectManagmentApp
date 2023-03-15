@@ -19,6 +19,10 @@ builder.Services.AddHttpClient("identityServiceClient", c =>
 {
     c.BaseAddress = new Uri(Configuration.GetConnectionString("IdentityService"));
 });
+builder.Services.AddHttpClient("projectsServiceClient", c =>
+{
+    c.BaseAddress = new Uri(Configuration.GetConnectionString("ProjectsService"));
+});
 
 
 var app = builder.Build();
