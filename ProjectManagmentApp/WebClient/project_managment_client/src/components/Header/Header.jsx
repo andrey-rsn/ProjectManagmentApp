@@ -93,7 +93,7 @@ const Header = () => {
                         component="div"
                         sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, textAlign: 'left', marginRight: 'auto', maxWidth: '200px' }}
                     >
-                        <NavLink to='../' style={{ textDecoration: 'none' }} relative='main'>
+                        <NavLink to='../' style={{ textDecoration: 'none', color:'white' }} relative='main'>
                             Project Managment
                         </NavLink>
                     </Typography>

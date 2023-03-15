@@ -9,7 +9,7 @@
     min-width: 400px;
     height: 210px;
     padding: 10px;
-    background-color: aliceblue;
+    background-color: rgb(232, 234, 235);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -46,7 +46,7 @@
 .right-wrapper{
     width: 100%;
     display: flex;
-    justify-content: end;
+    align-items: end;
 }
 
 .left-wrapper{
