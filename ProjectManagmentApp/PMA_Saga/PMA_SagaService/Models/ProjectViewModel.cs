@@ -4,10 +4,10 @@ namespace PMA_SagaService.Models
 {
     public class ProjectViewModel
     {
-        public int ProjectId { get; set; }
+        public int projectId { get; set; }
 
-        public string Name { get; set; }
+        public string name { get; set; }
 
-        public string Description { get; set; }
+        public string description { get; set; }
     }
 }
