@@ -71,6 +71,13 @@ namespace PMA_ProjectsService.Services.ProjectServices
 
         }
 
+        public async Task<bool> IsUserAttachedToProject(int userId, int projectId)
+        {
+            var result = (await _employeesAttachedToProjectsRepository.GetAsync(x=>x.ProjectId==projectId && x.EmployeeId== userId, limit:1)).Any();
+
+            return result;
+        }
+
         public async Task<ProjectDTO> Update(ProjectDTO projectDTO)
         {
             var result = await _projectRepository.UpdateAsync(projectDTO);

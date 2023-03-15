@@ -64,6 +64,28 @@ namespace PMA_ProjectsService.Controllers
             }
         }
 
+        // GET api/v1/projects/byUserAndProject?userId={userId}&projectId={projectId}
+        [HttpGet("byUserAndProject")]
+        public async Task<ActionResult<IEnumerable<ProjectDTO>>> GetByUserAndProjectId(int userId,int projectId)
+        {
+            var result = await _projectService.GetById(projectId);
+            if (result != null)
+            {
+                if(await _projectService.IsUserAttachedToProject(userId, projectId))
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return Forbid();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         // POST api/v1/projects
         [HttpPost]
         public async Task<ActionResult<ProjectDTO>> Add([FromBody] ProjectDTO project)

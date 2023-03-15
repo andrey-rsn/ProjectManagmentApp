@@ -10,5 +10,6 @@ namespace PMA_ProjectsService.Services.ProjectServices
         Task<ProjectDTO> Add(ProjectDTO projectDTO);
         Task<bool> DeleteById(int id);
         Task<List<ProjectDTO>> GetByUserId(int userId);
+        Task<bool> IsUserAttachedToProject(int userId,int projectId);
     }
 }
