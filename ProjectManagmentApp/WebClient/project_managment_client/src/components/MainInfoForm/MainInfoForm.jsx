@@ -28,16 +28,16 @@ const MainInfoForm = () => {
 
     const[getPorjectsByIdFetch,{isLoading: isProjectsByUserIdLoading}] = useLazyGetProjectsByUserIdQuery();
 
-    useEffect(async () => {
-        await loadData();
-    })
+    useEffect(() => {
+        loadData();
+    },[])
 
     const loadData = async () => {
         await getPorjectsByIdFetch(userId).unwrap().then(data=> setProjects(data)).catch(err => console.log(err));
     }
 
     const projectsColumns = [
-        { field: 'projectId', headerName: 'ID', width: 90, hide: true },
+        { field: 'projectId', headerName: 'projectId', width: 90, hide: true },
         {
             field: 'name',
             headerName: 'Название проекта',
@@ -124,6 +124,7 @@ const MainInfoForm = () => {
                                     pageSize={5}
                                     disableRowSelectionOnClick
                                     onRowClick={e => rowClickHandle(e)}
+                                    getRowId={(row) => row.projectId}
                                 />
                             </Box>
                         </div>
