@@ -88,8 +88,11 @@ namespace PMA_ProjectsService.Repositories
         {
             var Entity = await _dbContext.Set<U>().FindAsync(id);
 
-            _dbContext.Entry(Entity).State = EntityState.Detached;
-
+            if(Entity != null)
+            {
+                _dbContext.Entry(Entity).State = EntityState.Detached;
+            }
+            
             return _mapper.Map<T>(Entity);
         }
 
