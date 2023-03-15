@@ -47,4 +47,7 @@
 .menu__text {
   text-align: center;
   font-weight: 500;
+}
+.menu__text p {
+  padding-right: 100px;
 }/*# sourceMappingURL=MainInfoForm.css.map */

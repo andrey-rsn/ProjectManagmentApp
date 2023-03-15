@@ -106,7 +106,7 @@ const MainInfoForm = () => {
                             <p>Меню</p>
                         </div>
                         <div className='menu__menu-list'>
-                            <Paper sx={{ width: '90%' }}>
+                            <Paper sx={{ width: '90%', backgroundColor:'aliceblue'}}>
                                 <MenuList>
                                     <NavLink to='workTime' style={{ textDecoration: 'none', color: 'black' }} relative='main'>
                                         <MenuItem>
