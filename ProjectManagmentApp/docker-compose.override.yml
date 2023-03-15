@@ -89,6 +89,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:IdentityService=http://pma_identityservice:80"
       - "ConnectionStrings:TasksService=http://pma_tasksservice:80"
+      - "ConnectionStrings:ProjectsService=http://pma_projectsservice:80"
     ports:
       - "8004:80"
     depends_on:
@@ -97,6 +98,7 @@ services:
 
 
   pma_projectsservice:
+    container_name: pma_projectsservice
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:ProjectsServiceDatabase=Server=projects-service-db;Port=5432;User ID=admin;Password=admin;Database=ProjectsServiceDb;"
