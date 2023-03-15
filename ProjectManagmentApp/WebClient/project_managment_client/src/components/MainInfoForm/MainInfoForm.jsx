@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUserRole, selectCurrentUserId } from '../../features/auth/authSlice';
 import { useMemo } from 'react';
 import { useLazyGetProjectsByUserIdQuery } from '../../features/projectsApi/projectsApiSlice';
+import Skeleton from '@mui/material/Skeleton';
 
 const MainInfoForm = () => {
     const userRole = useSelector(selectCurrentUserRole);
@@ -117,6 +118,8 @@ const MainInfoForm = () => {
                         </div>
                         <div className="projects-list__list">
                             <Box sx={{ height: 371, width: '100%' }}>
+                                {isProjectsByUserIdLoading ? <Skeleton sx={{ height: '100%', width: '100%' }}/> 
+                                :
                                 <DataGrid
                                     rows={projects}
                                     columns={projectsColumns}
@@ -125,7 +128,7 @@ const MainInfoForm = () => {
                                     disableRowSelectionOnClick
                                     onRowClick={e => rowClickHandle(e)}
                                     getRowId={(row) => row.projectId}
-                                />
+                                />}
                             </Box>
                         </div>
                     </div>
