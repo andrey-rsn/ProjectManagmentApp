@@ -49,8 +49,8 @@ namespace PMA_ProjectsService.Controllers
             }
         }
 
-        // GET api/v1/projects/byUser/{id}
-        [HttpGet("byUser/{id}")]
+        // GET api/v1/projects/byUser/{userId}
+        [HttpGet("byUser/{userId}")]
         public async Task<ActionResult<IEnumerable<ProjectDTO>>> GetByUserId(int userId)
         {
             var result = await _projectService.GetByUserId(userId);
