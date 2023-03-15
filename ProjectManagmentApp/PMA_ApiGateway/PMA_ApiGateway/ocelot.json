@@ -158,7 +158,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/v1/userTask",
-      "UpstreamHttpMethod": [ "Post","Put" ],
+      "UpstreamHttpMethod": [ "Post", "Put" ],
 
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -168,6 +168,19 @@
         }
       ],
       "DownstreamPathTemplate": "/api/v1/userTask"
+    },
+    {
+      "UpstreamPathTemplate": "api/v1/projects/byUser/{userId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_sagaservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "api/v1/projects/byUser/{userId}"
     }
   ],
   "GlobalConfiguration": {
