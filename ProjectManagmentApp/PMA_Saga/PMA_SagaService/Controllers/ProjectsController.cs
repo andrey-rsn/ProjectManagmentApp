@@ -52,5 +52,33 @@ namespace PMA_SagaService.Controllers
 
         }
 
+        // GET: api/v1/projects/byUserAndProject?userId={userId}&projectId={projectId}
+        [HttpGet("byUserAndProject")]
+        public async Task<ActionResult<ProjectViewModel>> GetByUserAndProjectId(int userId, int projectId)
+        {
+            _projectsClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+
+            var projectRequest = new HttpRequestMessage(
+            HttpMethod.Get,
+                    _projectsClient.BaseAddress + $"api/v1/projects/byUserAndProject?userId={userId}&projectId={projectId}");
+
+            var projectResponse = await _projectsClient.SendAsync(projectRequest);
+
+            if (!projectResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)projectResponse.StatusCode);
+            }
+
+            if ((int)projectResponse.StatusCode == 204)
+            {
+                return NoContent();
+            }
+
+            var project = JsonSerializer.Deserialize<ProjectViewModel>(await projectResponse.Content.ReadAsStringAsync());
+
+            return Ok(project);
+
+        }
+
     }
 }

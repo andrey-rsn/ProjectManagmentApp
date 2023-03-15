@@ -14,6 +14,8 @@ namespace PMA_SagaService.Controllers
                     return Unauthorized();
                 case 204:
                     return NoContent();
+                case 403:
+                    return Forbid();
                 default:
                     return BadRequest();
             }
