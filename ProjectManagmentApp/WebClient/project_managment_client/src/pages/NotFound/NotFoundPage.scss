@@ -1,0 +1,16 @@
+.not-found-page{
+    height: 100%;
+}
+
+.not-found-page-content{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+        &__text{
+            font-size: 3em;
+        }
+        &__reference{
+            font-size: 2em;
+        }
+}

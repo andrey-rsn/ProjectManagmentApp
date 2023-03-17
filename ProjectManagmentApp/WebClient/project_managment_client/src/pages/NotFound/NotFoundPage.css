@@ -1,0 +1,16 @@
+.not-found-page {
+  height: 100%;
+}
+
+.not-found-page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.not-found-page-content__text {
+  font-size: 3em;
+}
+.not-found-page-content__reference {
+  font-size: 2em;
+}/*# sourceMappingURL=NotFoundPage.css.map */
