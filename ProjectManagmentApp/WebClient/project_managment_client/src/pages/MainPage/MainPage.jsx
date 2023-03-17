@@ -63,7 +63,7 @@ const MainPage = () => {
                 <Header />
             </div>
             <div className="main-page__content">
-                {isProjectLoading || dataIsLoading? <Skeleton sx={{width:'100%', height:'100%'}}/> : <ActionList projectId={projectId} projectName={data.name}/>}
+                {isProjectLoading || dataIsLoading? <Skeleton sx={{width:'300px', height:'100%'}}/> : <ActionList projectId={projectId} projectName={data.name}/>}
                 <Routes>
                     <Route path="/" element={<ProjectInfoPage projectInfo={data} />} />
                     <Route path="/tasks" element={<TasksPage projectId={projectId}/>} />
