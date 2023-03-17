@@ -1,11 +1,12 @@
 import ProjectInfo from "../../components/ProjectInfo/ProjectInfo";
 import './ProjectInfoPage.css';
 
-const ProjectInfoPage = ()=>{
+const ProjectInfoPage = (props)=>{
+    const {projectInfo} = props;
 
     return(
         <div className="project-info-page">
-            <ProjectInfo/>
+            <ProjectInfo projectInfo = {projectInfo}/>
         </div>
     )
 }

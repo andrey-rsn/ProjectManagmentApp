@@ -13,14 +13,17 @@ import { useSelector, useDispatch} from 'react-redux';
 import { selectCurrentUserId } from '../../features/auth/authSlice';
 import { useLazyGetProjectsByUserAndProjectIdQuery } from '../../features/projectsApi/projectsApiSlice';
 import { setProjectInfo } from '../../features/projectsApi/projectsSlice';
+import Skeleton from '@mui/material/Skeleton';
+import { useState } from 'react';
 
 
 const MainPage = () => {
     const {projectId} = useParams();
     const navigate = useNavigate();
     const userId = useSelector(selectCurrentUserId);
-    const dispatch = useDispatch();
     const[projectFetch, {isLoading: isProjectLoading}] = useLazyGetProjectsByUserAndProjectIdQuery();
+    const[dataIsLoading,setDataIsLoading] = useState(true);
+    const [data, setData] = useState({});
 
     useEffect(() => {
         if(checkProjectId()){
@@ -31,7 +34,9 @@ const MainPage = () => {
     },[])
 
     const loadData = async () =>{
-        await projectFetch({userId, projectId}).unwrap().then(data => dispatch(setProjectInfo(data))).catch(err => handleError(err));
+        var data = await projectFetch({userId, projectId}).unwrap().then(data => data).catch(err => handleError(err));
+        setData(data);
+        setDataIsLoading(false);
     }
 
     const handleError = (error) => {
@@ -43,7 +48,6 @@ const MainPage = () => {
                 navigate('/forbid');
                 break;
             default:
-                console.log(error);
                 navigate('/main');
                 break;
         }
@@ -59,9 +63,9 @@ const MainPage = () => {
                 <Header />
             </div>
             <div className="main-page__content">
-                <ActionList projectId={projectId}/>
+                {isProjectLoading || dataIsLoading? <Skeleton sx={{width:'100%', height:'100%'}}/> : <ActionList projectId={projectId} projectName={data.name}/>}
                 <Routes>
-                    <Route path="/" element={<ProjectInfoPage projectId={projectId}/>} />
+                    <Route path="/" element={<ProjectInfoPage projectInfo={data} />} />
                     <Route path="/tasks" element={<TasksPage projectId={projectId}/>} />
                     <Route path="/tasks/:taskId" element={<TaskCardPage />} />
                     <Route path="/projectSettings" element={<ProjectSettingsPage projectId={projectId}/>} />

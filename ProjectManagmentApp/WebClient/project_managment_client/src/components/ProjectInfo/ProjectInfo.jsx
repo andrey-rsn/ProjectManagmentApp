@@ -3,7 +3,9 @@ import Divider from '@mui/material/Divider';
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 
-const ProjectInfo = () => {
+
+const ProjectInfo = (props) => {
+    const {projectInfo} = props;
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 90, hide:true},
@@ -37,11 +39,11 @@ const ProjectInfo = () => {
         <div className="project-info">
             <div className="project-info__project-main-info project-main-info">
                 <div className="project-main-info__project-name project-name">
-                    <p className="project-name__text">Название проекта</p>
+                    <p className="project-name__text">{projectInfo.name}</p>
                 </div>
                 <Divider sx={{ backgroundColor: 'grey' }} />
                 <div className="project-main-info__project-description project-description">
-                    <p className="project-description__text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam necessitatibus nam, laboriosam id ex eum doloribus fugiat quibusdam molestiae corrupti rem culpa fugit totam repellat, aliquid accusantium itaque numquam in? Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quisquam necessitatibus nam, laboriosam id ex eum doloribus fugiat quibusdam molestiae corrupti rem culpa fugit totam repellat, aliquid accusantium itaque numquam in?</p>
+                    <p className="project-description__text">{projectInfo.description}</p>
                 </div>
             </div>
             <Divider sx={{ backgroundColor: 'grey' }} />

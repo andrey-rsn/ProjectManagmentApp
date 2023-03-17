@@ -15,9 +15,12 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUserRole } from '../../features/auth/authSlice';
 
 
+
 const ActionList = (props) => {
-    const { projectId } = props;
+    const { projectId, projectName } = props;
     const userRole = useSelector(selectCurrentUserRole);
+
+    
 
   const LinkStyle = (isActive) => {
     return {
@@ -32,7 +35,7 @@ const ActionList = (props) => {
   return (
     <Box sx={{ width: '100%', maxWidth: 300, backgroundColor: 'rgb(190, 196, 181)', display: 'flex', flexDirection: 'column', flexGrow: 1 ,height: '100%', padding: '0' }}>
       <List className='action-list'>
-        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Название проекта" linkTo={`/project/${projectId}`} image={<ArticleIcon />}
+        <ActionItem style={({ isActive }) => LinkStyle(isActive)} text={`${projectName}`} linkTo={`/project/${projectId}`} image={<ArticleIcon />}
           listItemStyle={{ backgroundColor: 'rgb(148, 148, 148)' }}
         />
         <Divider sx={{ backgroundColor: 'black', height: '0.2px' }} />
