@@ -68,7 +68,7 @@ const MainPage = () => {
                     <Route path="/" element={<ProjectInfoPage projectInfo={data} />} />
                     <Route path="/tasks" element={<TasksPage projectId={projectId}/>} />
                     <Route path="/tasks/:taskId" element={<TaskCardPage />} />
-                    <Route path="/projectSettings" element={<ProjectSettingsPage projectId={projectId}/>} />
+                    <Route path="/projectSettings" element={<ProjectSettingsPage projectInfo={data}/>} />
                     <Route path="/projectSettings/attachEmployee" element={<AttachEmployeePage projectId={projectId}/>} />
                 </Routes>
             </div>

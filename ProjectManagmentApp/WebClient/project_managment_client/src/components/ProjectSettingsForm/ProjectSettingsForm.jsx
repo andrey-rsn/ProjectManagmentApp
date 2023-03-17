@@ -5,7 +5,9 @@ import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import { NavLink } from "react-router-dom";
 
-const ProjectSettingsForm = () => {
+const ProjectSettingsForm = (props) => {
+
+    const {projectInfo} = props;
 
     return (
         <div className="project-settings-form">
@@ -16,7 +18,7 @@ const ProjectSettingsForm = () => {
             <div className="project-settings-form__project-params project-params">
                 <div className="project-params__params-input params-input">
                     <p className="params-input__param-name">Название проекта :</p>
-                    <OutlinedInput placeholder="Название проекта" sx={{ width: '100%', height: '35px' }} />
+                    <OutlinedInput placeholder="Название проекта" sx={{ width: '100%', height: '35px' }} defaultValue={`${projectInfo.name}`}/>
                 </div>
                 <div className="project-params__params-input params-input">
                     <p className="params-input__param-name">Описание проекта :</p>
@@ -26,6 +28,7 @@ const ProjectSettingsForm = () => {
                         multiline
                         maxRows={6}
                         placeholder="Описание проекта"
+                        defaultValue={`${projectInfo.description}`}
                     />
                 </div>
             </div>
