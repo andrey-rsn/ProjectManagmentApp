@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PMA_SagaService.Models;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -141,6 +142,35 @@ namespace PMA_SagaService.Controllers
 
             return Ok(employees);
 
+        }
+
+        // PUT: api/v1/projects
+        [HttpPut]
+        public async Task<ActionResult<ProjectViewModel>> UpdateProjectInfo(ProjectViewModel project)
+        {
+            _projectsClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+
+            var projectUpdateRequest = new HttpRequestMessage(
+            HttpMethod.Put,
+                    _projectsClient.BaseAddress + $"api/v1/projects");
+
+            projectUpdateRequest.Content = new StringContent(JsonSerializer.Serialize(project), Encoding.UTF8, "application/json");
+
+            var projectUpdateResponse = await _projectsClient.SendAsync(projectUpdateRequest);
+
+            if (!projectUpdateResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)projectUpdateResponse.StatusCode);
+            }
+
+            if ((int)projectUpdateResponse.StatusCode == 204)
+            {
+                return NoContent();
+            }
+
+            var updateResult = JsonSerializer.Deserialize<ProjectViewModel>(await projectUpdateResponse.Content.ReadAsStringAsync());
+
+            return Ok(updateResult);
         }
 
     }

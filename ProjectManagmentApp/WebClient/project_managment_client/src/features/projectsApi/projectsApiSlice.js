@@ -19,12 +19,21 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
                 url: `/api/v1/projects/${payload.projectId}/attachedEmployees`,
                 method: 'GET'
             })
+        }),
+        updateProject: builder.mutation({
+            query: (project) => ({
+                url: `/api/v1/projects`,
+                method: 'PUT',
+                body: project
+            })
         })
+
     })
 })
 
 export const {
     useLazyGetProjectsByUserIdQuery,
     useLazyGetProjectsByUserAndProjectIdQuery,
-    useLazyGetEmployeesAttachedToProjectQuery
+    useLazyGetEmployeesAttachedToProjectQuery,
+    useUpdateProjectMutation
 } = projectsApiSlice
