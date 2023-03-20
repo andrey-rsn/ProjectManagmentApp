@@ -1,0 +1,28 @@
+.employee-registration-form{
+    background-color: rgb(190, 196, 201);
+    border-radius: 10px;
+    width: 40%;
+        &__header-text{
+            font-size: 1.3em;
+            font-weight: 500;
+        }
+}
+
+.input-element{
+    width: 90%;
+    &__element-text{
+        text-align: start;
+    }
+}
+
+.registration-form-body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-bottom{
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
