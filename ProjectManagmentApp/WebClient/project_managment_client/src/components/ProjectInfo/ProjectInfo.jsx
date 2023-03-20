@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import { useLazyGetEmployeesAttachedToProjectQuery } from '../../features/projectsApi/projectsApiSlice';
 import { useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
+import Skeleton from '@mui/material/Skeleton';
 
 
 
@@ -12,7 +13,7 @@ const ProjectInfo = (props) => {
     const {projectInfo} = props;
     const {projectId} = useParams();
 
-    const[attachedEmployeesFetch, {isLoading: isAttachedEmployeesLoading}] = useLazyGetEmployeesAttachedToProjectQuery();
+    const[attachedEmployeesFetch, {isLoading: isAttachedEmployeesLoading, isSuccess: isAttachedEmployeesSuccess}] = useLazyGetEmployeesAttachedToProjectQuery();
 
     const [employees, setEmployees] = useState([]);
 
@@ -77,6 +78,11 @@ const ProjectInfo = (props) => {
                         <p>Список сотрудников проекта :</p>
                     </div>
                     <div className="project-employees__empoyees-list">
+                        {isAttachedEmployeesLoading || !isAttachedEmployeesSuccess ? 
+                        <Skeleton
+                        sx={{ height: 371, width: '100%' }}
+                        variant='rounded'
+                        />:
                         <Box sx={{ height: 371, width: '100%' }}>
                             <DataGrid
                                 rows={employees}
@@ -86,7 +92,7 @@ const ProjectInfo = (props) => {
                                 disableRowSelectionOnClick
                                 getRowId={(row) => row.user_Id}
                             />
-                        </Box>
+                        </Box>}
                     </div>
                 </div>
             </div>

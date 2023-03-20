@@ -10,8 +10,6 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Divider from '@mui/material/Divider';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateData } from '../../features/tasksApi/tasksSlice';
 import { useNavigate } from 'react-router-dom';
 import { useLazyGetAllTasksQuery, useDeleteTaskMutation } from '../../features/tasksApi/tasksApiSlice';
 import './TasksForm.css';
