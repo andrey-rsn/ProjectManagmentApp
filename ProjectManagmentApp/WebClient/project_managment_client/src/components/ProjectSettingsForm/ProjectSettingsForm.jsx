@@ -40,7 +40,7 @@ const ProjectSettingsForm = () => {
 
         dataToSave.projectId = projectInfo.projectId;
 
-        await updateProjectFetch(dataToSave).unwrap().then(data => dispatch(setProjectInfo(data))).catch(err => console.log(err));
+        await updateProjectFetch(dataToSave).unwrap().then(data => dispatch(setProjectInfo(data))).then(setProjectInfoChanges({name:'', description:''})).catch(err => console.log(err));
     }
 
     return (
@@ -69,7 +69,7 @@ const ProjectSettingsForm = () => {
             </div>
             <Divider sx={{ backgroundColor: 'grey', marginBottom: '20px' }} />
             <div className="project-settings-form__bottom">
-                <Button variant="contained" color="success" sx={{ marginRight: "auto" }} onClick={() => onSaveClick()} disabled ={projectInfoChanges.name.length === 0 || projectInfoChanges.description.length === 0}>
+                <Button variant="contained" color="success" sx={{ marginRight: "auto" }} onClick={() => onSaveClick()} disabled ={!(projectInfoChanges.name.length !== 0 || projectInfoChanges.description.length !== 0)}>
                     Сохранить
                 </Button>
                 <NavLink to='attachEmployee' relative='main/projectSettings' style={{textDecoration:'none'}}>
