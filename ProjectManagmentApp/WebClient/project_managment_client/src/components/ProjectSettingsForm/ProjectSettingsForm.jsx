@@ -6,15 +6,18 @@ import Divider from '@mui/material/Divider';
 import { NavLink } from "react-router-dom";
 import { useUpdateProjectMutation } from "../../features/projectsApi/projectsApiSlice";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setProjectInfo } from "../../features/projectsApi/projectsSlice";
 
-const ProjectSettingsForm = (props) => {
-
-    const {projectInfo} = props;
+const ProjectSettingsForm = () => {
 
     const [projectInfoChanges, setProjectInfoChanges] = useState({name:'', description:''}); 
 
     const [updateProjectFetch, {isLoading: isProjectUpdating, isSuccess: isProjectUpdateSuccess}] = useUpdateProjectMutation();
 
+    const projectInfo = useSelector(state => state.projects);
+
+    const dispatch = useDispatch();
 
     const onDescriptionChange = (e) => {
         setProjectInfoChanges({...projectInfoChanges, description: e.target.value})
@@ -37,7 +40,7 @@ const ProjectSettingsForm = (props) => {
 
         dataToSave.projectId = projectInfo.projectId;
 
-        await updateProjectFetch(dataToSave).unwrap().then().catch(err => console.log(err));
+        await updateProjectFetch(dataToSave).unwrap().then(data => dispatch(setProjectInfo(data))).catch(err => console.log(err));
     }
 
     return (

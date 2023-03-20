@@ -6,23 +6,24 @@ import { useLazyGetEmployeesAttachedToProjectQuery } from '../../features/projec
 import { useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import Skeleton from '@mui/material/Skeleton';
+import { useSelector } from 'react-redux';
 
 
 
-const ProjectInfo = (props) => {
-    const {projectInfo} = props;
+const ProjectInfo = () => {
     const {projectId} = useParams();
 
     const[attachedEmployeesFetch, {isLoading: isAttachedEmployeesLoading, isSuccess: isAttachedEmployeesSuccess}] = useLazyGetEmployeesAttachedToProjectQuery();
 
     const [employees, setEmployees] = useState([]);
 
+    const projectInfo = useSelector(state => state.projects);
+
     useEffect(() => {
         loadData();
     },[])
 
     const loadData = async () => {
-        console.log(projectId);
         await attachedEmployeesFetch({projectId}).unwrap().then(data =>setEmployees(data)).catch(err => console.log(err));
     }
 

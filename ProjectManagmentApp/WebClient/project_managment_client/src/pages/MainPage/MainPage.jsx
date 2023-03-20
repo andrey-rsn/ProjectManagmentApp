@@ -9,11 +9,12 @@ import ProjectSettingsPage from "../ProjectSettingsPage/ProjectSettingsPage";
 import AttachEmployeePage from "../AttachEmployeePage/AttachEmployeePage";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector} from 'react-redux';
+import { useSelector, useDispatch} from 'react-redux';
 import { selectCurrentUserId } from '../../features/auth/authSlice';
 import { useLazyGetProjectsByUserAndProjectIdQuery } from '../../features/projectsApi/projectsApiSlice';
 import Skeleton from '@mui/material/Skeleton';
 import { useState } from 'react';
+import { setProjectInfo } from '../../features/projectsApi/projectsSlice';
 
 
 const MainPage = () => {
@@ -22,11 +23,16 @@ const MainPage = () => {
     const userId = useSelector(selectCurrentUserId);
     const[projectFetch, {isLoading: isProjectLoading}] = useLazyGetProjectsByUserAndProjectIdQuery();
     const[dataIsLoading,setDataIsLoading] = useState(true);
-    const [data, setData] = useState({});
+    const projectInfo = useSelector(state => state.projects);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if(checkProjectId()){
-            loadData();
+            const loadDataProcess = async () =>{
+                await loadData();
+            }
+
+            loadDataProcess();
         } else {
             navigate('/main');
         }
@@ -34,8 +40,8 @@ const MainPage = () => {
 
 
     const loadData = async () =>{
-        var data = await projectFetch({userId, projectId}).unwrap().then(data => data).catch(err => handleError(err));
-        setData(data);
+        await projectFetch({userId, projectId}).unwrap().then(data => dispatch(setProjectInfo(data))).catch(err => handleError(err));
+
         setDataIsLoading(false);
     }
 
@@ -65,12 +71,12 @@ const MainPage = () => {
                 <Header />
             </div>
             <div className="main-page__content">
-                {isProjectLoading || dataIsLoading? <Skeleton sx={{width:'300px', height:'100%'}}/> : <ActionList projectId={projectId} projectName={data.name}/>}
+                {isProjectLoading || dataIsLoading? <Skeleton sx={{width:'300px', height:'100%'}}/> : <ActionList projectId={projectId} projectName={projectInfo.name}/>}
                 <Routes>
-                    <Route exact path="/" element={<ProjectInfoPage projectInfo={data} />} />
+                    <Route exact path="/" element={<ProjectInfoPage />} />
                     <Route path="/tasks" element={<TasksPage projectId={projectId}/>} />
                     <Route path="/tasks/:taskId" element={<TaskCardPage />} />
-                    <Route path="/projectSettings" element={<ProjectSettingsPage projectInfo={data}/>} />
+                    <Route path="/projectSettings" element={<ProjectSettingsPage />} />
                     <Route path="/projectSettings/attachEmployee" element={<AttachEmployeePage projectId={projectId}/>} />
                 </Routes>
             </div>

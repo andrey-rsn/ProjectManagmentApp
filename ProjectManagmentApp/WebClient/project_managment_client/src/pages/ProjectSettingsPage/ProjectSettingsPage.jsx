@@ -1,13 +1,12 @@
 import ProjectSettingsForm from "../../components/ProjectSettingsForm/ProjectSettingsForm";
 import "./ProjectSettingsPage.css";
 
-const ProjectSettingsPage = (props) => {
+const ProjectSettingsPage = () => {
 
-    const {projectInfo} = props;
 
     return(
         <div className="project-settings-page">
-            <ProjectSettingsForm projectInfo={projectInfo}/>
+            <ProjectSettingsForm />
         </div>
     )
 }
