@@ -2,10 +2,10 @@
 {
     public class EmployeesAttachedToProjectsViewModel
     {
-        public int EmployeesAttachedToProjectsId { get; set; }
+        public int employeesAttachedToProjectsId { get; set; }
 
-        public int EmployeeId { get; set; }
+        public int employeeId { get; set; }
 
-        public int ProjectId { get; set; }
+        public int projectId { get; set; }
     }
 }

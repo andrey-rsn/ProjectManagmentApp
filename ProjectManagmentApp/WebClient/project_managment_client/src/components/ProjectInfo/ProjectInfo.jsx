@@ -2,10 +2,28 @@ import './ProjectInfo.css';
 import Divider from '@mui/material/Divider';
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
+import { useLazyGetEmployeesAttachedToProjectQuery } from '../../features/projectsApi/projectsApiSlice';
+import { useEffect, useState} from 'react';
+import { useParams } from 'react-router-dom';
+
 
 
 const ProjectInfo = (props) => {
     const {projectInfo} = props;
+    const {projectId} = useParams();
+
+    const[attachedEmployeesFetch, {isLoading: isAttachedEmployeesLoading}] = useLazyGetEmployeesAttachedToProjectQuery();
+
+    const [employees, setEmployees] = useState([]);
+
+    useEffect(() => {
+        loadData();
+    },[])
+
+    const loadData = async () => {
+        console.log(projectId);
+        await attachedEmployeesFetch({projectId}).unwrap().then(data =>setEmployees(data)).catch(err => console.log(err));
+    }
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 90, hide:true},
@@ -16,9 +34,15 @@ const ProjectInfo = (props) => {
             editable: false,
         },
         {
-            field: 'lastName',
+            field: 'secondName',
             headerName: 'Фамилия',
             width: 150,
+            editable: true,
+        },
+        {
+            field: 'position',
+            headerName: 'Должность',
+            width: 190,
             editable: true,
         }
     ];
@@ -55,11 +79,12 @@ const ProjectInfo = (props) => {
                     <div className="project-employees__empoyees-list">
                         <Box sx={{ height: 371, width: '100%' }}>
                             <DataGrid
-                                rows={rows}
+                                rows={employees}
                                 columns={columns}
                                 rowsPerPageOptions={[5]}
                                 pageSize={5}
                                 disableRowSelectionOnClick
+                                getRowId={(row) => row.user_Id}
                             />
                         </Box>
                     </div>

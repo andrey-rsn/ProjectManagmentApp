@@ -9,10 +9,9 @@ import ProjectSettingsPage from "../ProjectSettingsPage/ProjectSettingsPage";
 import AttachEmployeePage from "../AttachEmployeePage/AttachEmployeePage";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch} from 'react-redux';
+import { useSelector} from 'react-redux';
 import { selectCurrentUserId } from '../../features/auth/authSlice';
 import { useLazyGetProjectsByUserAndProjectIdQuery } from '../../features/projectsApi/projectsApiSlice';
-import { setProjectInfo } from '../../features/projectsApi/projectsSlice';
 import Skeleton from '@mui/material/Skeleton';
 import { useState } from 'react';
 
@@ -33,11 +32,14 @@ const MainPage = () => {
         }
     },[])
 
+
     const loadData = async () =>{
         var data = await projectFetch({userId, projectId}).unwrap().then(data => data).catch(err => handleError(err));
         setData(data);
         setDataIsLoading(false);
     }
+
+    
 
     const handleError = (error) => {
         switch(error.status){
@@ -65,7 +67,7 @@ const MainPage = () => {
             <div className="main-page__content">
                 {isProjectLoading || dataIsLoading? <Skeleton sx={{width:'300px', height:'100%'}}/> : <ActionList projectId={projectId} projectName={data.name}/>}
                 <Routes>
-                    <Route path="/" element={<ProjectInfoPage projectInfo={data} />} />
+                    <Route exact path="/" element={<ProjectInfoPage projectInfo={data} />} />
                     <Route path="/tasks" element={<TasksPage projectId={projectId}/>} />
                     <Route path="/tasks/:taskId" element={<TaskCardPage />} />
                     <Route path="/projectSettings" element={<ProjectSettingsPage projectInfo={data}/>} />

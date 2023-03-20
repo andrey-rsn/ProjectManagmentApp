@@ -116,9 +116,9 @@ namespace PMA_SagaService.Controllers
             {
                 var userInfoRequest = new HttpRequestMessage(
                 HttpMethod.Get,
-                    _projectsClient.BaseAddress + $"api/v1/userInfo/{employee.EmployeeId}");
+                    _identityClient.BaseAddress + $"api/v1/userInfo/{employee.employeeId}");
 
-                var userInfoResponse = await _projectsClient.SendAsync(userInfoRequest);
+                var userInfoResponse = await _identityClient.SendAsync(userInfoRequest);
 
                 if (!userInfoResponse.IsSuccessStatusCode)
                 {

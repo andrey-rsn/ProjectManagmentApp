@@ -11,7 +11,10 @@ export const projectsSlice = createSlice({
     initialState,
     reducers: {
         setProjectInfo: (state, action) => {
-            state = action.payload;
+            const {projectId, name, description} = action.payload;
+            state.projectId = projectId;
+            state.name = name;
+            state.description = description;
             console.log(state);
         }
     }

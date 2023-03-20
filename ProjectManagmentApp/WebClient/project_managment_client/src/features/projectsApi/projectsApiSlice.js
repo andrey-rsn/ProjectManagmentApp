@@ -13,11 +13,18 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
                 url: `api/v1/projects/byUserAndProject?userId=${payload.userId}&projectId=${payload.projectId}`,
                 method: 'GET'
             })
+        }),
+        getEmployeesAttachedToProject: builder.query({
+            query: (payload) => ({
+                url: `/api/v1/projects/${payload.projectId}/attachedEmployees`,
+                method: 'GET'
+            })
         })
     })
 })
 
 export const {
     useLazyGetProjectsByUserIdQuery,
-    useLazyGetProjectsByUserAndProjectIdQuery
+    useLazyGetProjectsByUserAndProjectIdQuery,
+    useLazyGetEmployeesAttachedToProjectQuery
 } = projectsApiSlice

@@ -35,7 +35,7 @@ namespace PMA_ProjectsService.Controllers
         }
 
         // GET: api/v1/employeesAttachedToProjects/byProject/{projectId}
-        [HttpGet("{projectId}")]
+        [HttpGet("byProject/{projectId}")]
         public async Task<ActionResult<IEnumerable<EmployeesAttachedToProjectsDTO>>> GetByProjectId(int projectId)
         {
             var result = await _employeesAttachedToProjectsService.GetByProjectId(projectId);
