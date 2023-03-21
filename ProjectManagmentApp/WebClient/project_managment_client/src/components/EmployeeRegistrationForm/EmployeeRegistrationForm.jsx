@@ -10,11 +10,13 @@ import InputLabel from '@mui/material/InputLabel';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import { useLazyGetPositionsQuery } from "../../features/auth/authApiSlice";
+import { useSnackbar } from 'notistack';
 
 const EmployeeRegistrationForm = () => {
 
     const [registrationError, setRegistrationError] = useState();
     const [positions, setPositions] = useState([]);
+    const { enqueueSnackbar } = useSnackbar();
 
     const [getAllPositionsFetch, {isLoading: isPositionsLoading, isSuccess: isPositionsLoadingSuccess}] = useLazyGetPositionsQuery();
 
@@ -85,6 +87,7 @@ const EmployeeRegistrationForm = () => {
 
 
     const onFormSubmit = async (values) => {
+        enqueueSnackbar('This is a success message!', {variant:'success'});
         console.log(values);
     }
 
