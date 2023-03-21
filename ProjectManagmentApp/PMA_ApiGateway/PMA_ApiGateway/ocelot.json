@@ -236,7 +236,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/v1/projects",
-      "UpstreamHttpMethod": [ "Put" ],
+      "UpstreamHttpMethod": [ "Post", "Put" ],
 
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

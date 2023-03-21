@@ -1,4 +1,4 @@
-﻿namespace PMA_ProjectsService.Models
+﻿namespace PMA_SagaService.Models
 {
     public class CreateProjectRequestModel
     {

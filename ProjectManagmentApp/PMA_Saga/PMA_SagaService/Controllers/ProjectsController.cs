@@ -262,7 +262,33 @@ namespace PMA_SagaService.Controllers
             }
 
             return Ok();
+        }
 
+        // POST: api/v1/projects
+        [HttpPost]
+        public async Task<ActionResult> CreateProject([FromBody] CreateProjectRequestModel requestData)
+        {
+            _projectsClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+
+            var createProjectRequest = new HttpRequestMessage(
+            HttpMethod.Post,
+                    _projectsClient.BaseAddress + $"api/v1/projects");
+
+            createProjectRequest.Content = new StringContent(JsonSerializer.Serialize(requestData), Encoding.UTF8, "application/json");
+
+            var createProjectResponse = await _projectsClient.SendAsync(createProjectRequest);
+
+            if (!createProjectResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)createProjectResponse.StatusCode);
+            }
+
+            if ((int)createProjectResponse.StatusCode == 204)
+            {
+                return NoContent();
+            }
+
+            return Ok();
         }
 
     }
