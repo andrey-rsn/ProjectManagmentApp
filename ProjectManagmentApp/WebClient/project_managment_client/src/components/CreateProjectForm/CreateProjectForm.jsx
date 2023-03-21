@@ -6,12 +6,19 @@ import * as yup from 'yup';
 import { useState } from "react";
 import Button from '@mui/material/Button';
 import { useSnackbar } from 'notistack';
+import { useCreateProjectMutation } from "../../features/projectsApi/projectsApiSlice";
+import { useSelector } from "react-redux";
+import { selectCurrentUserId } from "../../features/auth/authSlice";
 
 const CreateProjectForm = () => {
 
     const [createProjectError, setCreateProjectError] = useState();
 
+    const [createProjectFetch] = useCreateProjectMutation();
+
     const { enqueueSnackbar } = useSnackbar();
+
+    const userId = useSelector(selectCurrentUserId);
 
     const validationSchema = yup.object({
         name: yup
@@ -34,8 +41,26 @@ const CreateProjectForm = () => {
     });
 
     const onFormSubmit = async (values) => {
-        console.log(values);
+        const requestData = {
+            name: values.name,
+            description: values.description,
+            authorId: userId
+        }
+
+        await createProjectFetch(requestData).unwrap().then(() => handleSuccessProjectCreation()).catch(err => handleErrorProjectCreation(err));
+    }
+
+    const handleSuccessProjectCreation = () => {
         enqueueSnackbar('Проект успешно создан', {variant:'success'});
+        formik.resetForm();
+    }
+
+    const handleErrorProjectCreation = (error) => {
+        if(error.status === 409) {
+            enqueueSnackbar('Проект с таким названием уже существует', {variant:'error'});
+        } else {
+           enqueueSnackbar('Ошибка при создании проекта', {variant:'error'}); 
+        }
     }
 
     return (
