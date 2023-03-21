@@ -20,6 +20,22 @@ namespace PMA_ProjectsService.Services.EmployeesAttachedToProjectsServices
             return result;
         }
 
+        public async Task<bool> AddRange(IEnumerable<EmployeesAttachedToProjectsDTO> EmployeesAttachedToProjects)
+        {
+            foreach(var employeeAttachedToProject in EmployeesAttachedToProjects)
+            {
+                var result = await _employeesAttachedToProjectsRepository.AddAsync(employeeAttachedToProject);
+
+                if(result == null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+            
+        }
+
         public async Task<bool> DeleteByUserAndProjectId(int UserId, int ProjectId)
         {
             var entities = await _employeesAttachedToProjectsRepository.GetAsync(x=>x.ProjectId== ProjectId && x.EmployeeId == UserId);

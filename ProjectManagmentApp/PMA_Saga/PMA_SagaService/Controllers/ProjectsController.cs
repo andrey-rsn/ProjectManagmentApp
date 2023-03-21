@@ -229,5 +229,41 @@ namespace PMA_SagaService.Controllers
             return Ok(updateResult);
         }
 
+        // POST: api/v1/projects/attachEmployees
+        [HttpPost]
+        [Route("attachEmployees")]
+        public async Task<ActionResult> AttachEmployeesToProject([FromBody] AttachEmployeesToProjectRequestModel requestData)
+        {
+            _projectsClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+
+            var employeesToAttach = new List<EmployeesAttachedToProjectsViewModel>();
+
+            foreach(var employeeId in requestData.employeesIds)
+            {
+                employeesToAttach.Add(new EmployeesAttachedToProjectsViewModel() { employeeId= employeeId, projectId=requestData.projectId });
+            }
+
+            var attachEmployeesRequest = new HttpRequestMessage(
+            HttpMethod.Post,
+                    _projectsClient.BaseAddress + $"api/v1/projects/range");
+
+            attachEmployeesRequest.Content = new StringContent(JsonSerializer.Serialize(employeesToAttach), Encoding.UTF8, "application/json");
+
+            var attachEmployeesResponse = await _projectsClient.SendAsync(attachEmployeesRequest);
+
+            if (!attachEmployeesResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)attachEmployeesResponse.StatusCode);
+            }
+
+            if ((int)attachEmployeesResponse.StatusCode == 204)
+            {
+                return NoContent();
+            }
+
+            return Ok();
+
+        }
+
     }
 }

@@ -68,6 +68,23 @@ namespace PMA_ProjectsService.Controllers
             }
         }
 
+        // POST api/v1/employeesAttachedToProjects/range
+        [HttpPost]
+        [Route("range")]
+        public async Task<ActionResult> AddRange([FromBody] IEnumerable<EmployeesAttachedToProjectsDTO> entities)
+        {
+            var result = await _employeesAttachedToProjectsService.AddRange(entities);
+
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
 
         // DELETE api/v1/employeesAttachedToProjects/byUserAndProject?userId={userId}&projectId={projectId}
         [HttpDelete]

@@ -246,6 +246,19 @@
         }
       ],
       "DownstreamPathTemplate": "/api/v1/projects"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/projects/range",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_sagaservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/projects/range"
     }
   ],
   "GlobalConfiguration": {
