@@ -26,6 +26,13 @@ export const projectsApiSlice = apiSlice.injectEndpoints({
                 method: 'GET'
             })
         }),
+        attachEmployees: builder.mutation({
+            query: (payload) => ({
+                url: `/api/v1/projects/attachEmployees`,
+                method: 'POST',
+                body: payload
+            })
+        }),
         updateProject: builder.mutation({
             query: (project) => ({
                 url: `/api/v1/projects`,
@@ -42,5 +49,6 @@ export const {
     useLazyGetProjectsByUserAndProjectIdQuery,
     useLazyGetEmployeesAttachedToProjectQuery,
     useLazyGetEmployeesNotAttachedToProjectQuery,
-    useUpdateProjectMutation
+    useUpdateProjectMutation,
+    useAttachEmployeesMutation
 } = projectsApiSlice

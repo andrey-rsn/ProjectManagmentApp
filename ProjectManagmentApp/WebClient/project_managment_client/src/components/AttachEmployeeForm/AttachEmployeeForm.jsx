@@ -8,6 +8,8 @@ import { useLazyGetEmployeesAttachedToProjectQuery, useLazyGetEmployeesNotAttach
 import { useParams } from 'react-router-dom';
 import Skeleton from '@mui/material/Skeleton';
 import { useSelector } from 'react-redux';
+import { useAttachEmployeesMutation } from "../../features/projectsApi/projectsApiSlice";
+import { useSnackbar } from 'notistack';
 
 const AttachEmployeeForm = () => {
 
@@ -15,6 +17,9 @@ const AttachEmployeeForm = () => {
 
     const [selectedRows, setSelectedRows] = useState([]);
 
+    const { enqueueSnackbar } = useSnackbar();
+
+    const [attachEmployeesToProjectFetch, {isLoading: isAttaching, isSuccess: isSuccessAttaching}] = useAttachEmployeesMutation();
     const [attachedEmployeesFetch, { isLoading: isAttachedEmployeesLoading, isSuccess: isAttachedEmployeesSuccess }] = useLazyGetEmployeesAttachedToProjectQuery();
     const [notAttachedEmployeesFetch, { isLoading: isNotAttachedEmployeesLoading, isSuccess: isNotAttachedEmployeesSuccess }] = useLazyGetEmployeesNotAttachedToProjectQuery();
 
@@ -54,18 +59,26 @@ const AttachEmployeeForm = () => {
         }
     ];
 
-    const rows = [
-        { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-    ];
+    const onAttachClick = async () => {
+        let requestData = {
+            projectId: Number(projectId),
+            employeesIds: selectedRows
+        }
 
+        await attachEmployeesToProjectFetch(requestData).unwrap().then(()=>handleSuccessAttach()).catch(err => handleErrorAttach(err));
+
+    }
+
+    const handleSuccessAttach = async () => {
+        enqueueSnackbar('Пользователи успешно прикрепелены к проекту', {variant:'success'});
+        setSelectedRows([]);
+        await loadData();
+    }
+
+    const handleErrorAttach = (error) => {
+        enqueueSnackbar(`Ошибка при прикреплении пользователя`, {variant:'error'});
+        console.log(error);
+    }
 
     return (
         <div className="attach-employee-form">
@@ -121,7 +134,7 @@ const AttachEmployeeForm = () => {
                 </div>
             </div>
             <div className="attach-employee-form__bottom bottom">
-                <Button variant="contained" color="success" disabled={selectedRows.length === 0}>
+                <Button variant="contained" color="success" disabled={selectedRows.length === 0} onClick={() => onAttachClick()}>
                     Прикрепить выбранных сотрудников
                 </Button>
             </div>

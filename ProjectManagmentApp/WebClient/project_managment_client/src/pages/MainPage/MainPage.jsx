@@ -9,26 +9,27 @@ import ProjectSettingsPage from "../ProjectSettingsPage/ProjectSettingsPage";
 import AttachEmployeePage from "../AttachEmployeePage/AttachEmployeePage";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentUserId } from '../../features/auth/authSlice';
 import { useLazyGetProjectsByUserAndProjectIdQuery } from '../../features/projectsApi/projectsApiSlice';
 import Skeleton from '@mui/material/Skeleton';
 import { useState } from 'react';
 import { setProjectInfo } from '../../features/projectsApi/projectsSlice';
+import { SnackbarProvider } from 'notistack';
 
 
 const MainPage = () => {
-    const {projectId} = useParams();
+    const { projectId } = useParams();
     const navigate = useNavigate();
     const userId = useSelector(selectCurrentUserId);
-    const[projectFetch, {isLoading: isProjectLoading}] = useLazyGetProjectsByUserAndProjectIdQuery();
-    const[dataIsLoading,setDataIsLoading] = useState(true);
+    const [projectFetch, { isLoading: isProjectLoading }] = useLazyGetProjectsByUserAndProjectIdQuery();
+    const [dataIsLoading, setDataIsLoading] = useState(true);
     const projectInfo = useSelector(state => state.projects);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if(checkProjectId()){
-            const loadDataProcess = async () =>{
+        if (checkProjectId()) {
+            const loadDataProcess = async () => {
                 await loadData();
             }
 
@@ -36,19 +37,19 @@ const MainPage = () => {
         } else {
             navigate('/main');
         }
-    },[])
+    }, [])
 
 
-    const loadData = async () =>{
-        await projectFetch({userId, projectId}).unwrap().then(data => dispatch(setProjectInfo(data))).catch(err => handleError(err));
+    const loadData = async () => {
+        await projectFetch({ userId, projectId }).unwrap().then(data => dispatch(setProjectInfo(data))).catch(err => handleError(err));
 
         setDataIsLoading(false);
     }
 
-    
+
 
     const handleError = (error) => {
-        switch(error.status){
+        switch (error.status) {
             case 404:
                 navigate('/notFound');
                 break;
@@ -71,14 +72,16 @@ const MainPage = () => {
                 <Header />
             </div>
             <div className="main-page__content">
-                {isProjectLoading || dataIsLoading? <Skeleton sx={{width:'300px', height:'100%'}}/> : <ActionList projectId={projectId} projectName={projectInfo.name}/>}
-                <Routes>
-                    <Route exact path="/" element={<ProjectInfoPage />} />
-                    <Route path="/tasks" element={<TasksPage projectId={projectId}/>} />
-                    <Route path="/tasks/:taskId" element={<TaskCardPage />} />
-                    <Route path="/projectSettings" element={<ProjectSettingsPage />} />
-                    <Route path="/projectSettings/attachEmployee" element={<AttachEmployeePage projectId={projectId}/>} />
-                </Routes>
+                <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} autoHideDuration={5000}>
+                    {isProjectLoading || dataIsLoading ? <Skeleton sx={{ width: '300px', height: '100%' }} /> : <ActionList projectId={projectId} projectName={projectInfo.name} />}
+                    <Routes>
+                        <Route exact path="/" element={<ProjectInfoPage />} />
+                        <Route path="/tasks" element={<TasksPage projectId={projectId} />} />
+                        <Route path="/tasks/:taskId" element={<TaskCardPage />} />
+                        <Route path="/projectSettings" element={<ProjectSettingsPage />} />
+                        <Route path="/projectSettings/attachEmployee" element={<AttachEmployeePage projectId={projectId} />} />
+                    </Routes>
+                </SnackbarProvider>
             </div>
         </div >
     )
