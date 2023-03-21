@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using PMA_ProjectsService.Models;
 using PMA_ProjectsService.Models.DTOs;
 using PMA_ProjectsService.Repositories.Interfaces;
 
@@ -8,11 +9,13 @@ namespace PMA_ProjectsService.Services.ProjectServices
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IEmployeesAttachedToProjectsRepository _employeesAttachedToProjectsRepository;
+        private readonly IMapper _mapper;
 
-        public ProjectService(IProjectRepository projectRepository, IEmployeesAttachedToProjectsRepository employeesAttachedToProjectsRepository)
+        public ProjectService(IProjectRepository projectRepository, IEmployeesAttachedToProjectsRepository employeesAttachedToProjectsRepository, IMapper mapper)
         {
             _projectRepository = projectRepository;
             _employeesAttachedToProjectsRepository = employeesAttachedToProjectsRepository;
+            _mapper = mapper;
         }
 
         public async Task<ProjectDTO> Add(ProjectDTO projectDTO)
@@ -20,6 +23,24 @@ namespace PMA_ProjectsService.Services.ProjectServices
             var result = await _projectRepository.AddAsync(projectDTO);  
 
             return result;
+        }
+
+        public async Task<bool> CreateProject(CreateProjectRequestModel projectInfo)
+        {
+            var IsAlreadyExists = (await _projectRepository.GetAsync(x=> string.Equals(x.Name ,projectInfo.Name))).Any();
+
+            if(!IsAlreadyExists )
+            {
+                var project = _mapper.Map<ProjectDTO>(projectInfo);
+
+                await _projectRepository.AddAsync(project);
+
+                await _employeesAttachedToProjectsRepository.AddAsync(new EmployeesAttachedToProjectsDTO() { EmployeeId = projectInfo.AuthorId, ProjectId = projectInfo.ProjectId });
+
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<bool> DeleteById(int id)

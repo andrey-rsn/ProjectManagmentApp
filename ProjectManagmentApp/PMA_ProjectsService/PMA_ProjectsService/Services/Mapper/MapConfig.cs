@@ -9,6 +9,7 @@ namespace PMA_ProjectsService.Services.Mapper
         public MapConfig() 
         { 
             CreateMap<Project,ProjectDTO>().ReverseMap();
+            CreateMap<CreateProjectRequestModel, ProjectDTO>().ReverseMap();
             CreateMap<EmployeesAttachedToProjectsModel, EmployeesAttachedToProjectsDTO>().ReverseMap();
             CreateMap<ProjectsTasksModel, ProjectsTasksDTO>().ReverseMap();
         }

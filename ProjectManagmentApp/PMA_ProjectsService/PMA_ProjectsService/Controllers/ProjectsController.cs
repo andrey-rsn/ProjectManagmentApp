@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PMA_ProjectsService.Models;
 using PMA_ProjectsService.Models.DTOs;
 using PMA_ProjectsService.Services.ProjectServices;
 
@@ -88,16 +89,16 @@ namespace PMA_ProjectsService.Controllers
 
         // POST api/v1/projects
         [HttpPost]
-        public async Task<ActionResult<ProjectDTO>> Add([FromBody] ProjectDTO project)
+        public async Task<ActionResult<ProjectDTO>> CreateProject([FromBody] CreateProjectRequestModel projectInfo)
         {
-            var result = await _projectService.Add(project);
+            var result = await _projectService.CreateProject(projectInfo);
 
-            if(result != null)
+            if(result)
             {
                 return Ok(result);
             }
 
-            return BadRequest();
+            return Conflict();
         }
 
         // PUT api/v1/projects
