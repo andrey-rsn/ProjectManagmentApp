@@ -5,10 +5,13 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useState } from "react";
 import Button from '@mui/material/Button';
+import { useSnackbar } from 'notistack';
 
 const CreateProjectForm = () => {
 
     const [createProjectError, setCreateProjectError] = useState();
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const validationSchema = yup.object({
         name: yup
@@ -32,6 +35,7 @@ const CreateProjectForm = () => {
 
     const onFormSubmit = async (values) => {
         console.log(values);
+        enqueueSnackbar('Проект успешно создан', {variant:'success'});
     }
 
     return (
