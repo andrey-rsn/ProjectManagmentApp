@@ -248,7 +248,7 @@
       "DownstreamPathTemplate": "/api/v1/projects"
     },
     {
-      "UpstreamPathTemplate": "/api/v1/projects/range",
+      "UpstreamPathTemplate": "/api/v1/projects/attachEmployees",
       "UpstreamHttpMethod": [ "Post" ],
 
       "DownstreamScheme": "http",
@@ -258,7 +258,7 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "/api/v1/projects/range"
+      "DownstreamPathTemplate": "/api/v1/projects/attachEmployees"
     }
   ],
   "GlobalConfiguration": {
