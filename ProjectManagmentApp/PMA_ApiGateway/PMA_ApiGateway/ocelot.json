@@ -66,6 +66,19 @@
       "DownstreamPathTemplate": "/api/v1/userInfo/{User_Id}"
     },
     {
+      "UpstreamPathTemplate": "/api/v1/positions",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_identityservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/positions"
+    },
+    {
       "UpstreamPathTemplate": "/api/v1/workTime/start?UserId={UserId}",
       "UpstreamHttpMethod": [ "Post" ],
 
