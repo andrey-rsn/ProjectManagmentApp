@@ -236,6 +236,7 @@ const EmployeeRegistrationForm = () => {
                                 value={formik.values.position_Id}
                                 onChange={formik.handleChange}
                                 error={formik.touched.position_Id && Boolean(formik.errors.position_Id) || Boolean(registrationError)}
+                                disabled={isPositionsLoading || !isPositionsLoadingSuccess}
                             >
                                 {positionsElements}
                             </Select>
