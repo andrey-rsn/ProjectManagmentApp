@@ -9,10 +9,17 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 body: { ...credentials }
             })
         }),
+        getPositions: builder.query({
+            query: () => ({
+                url: '/api/v1/positions',
+                method: 'GET'
+            })
+        })
 
     })
 })
 
 export const {
-    useLoginMutation
+    useLoginMutation,
+    useLazyGetPositionsQuery
 } = authApiSlice

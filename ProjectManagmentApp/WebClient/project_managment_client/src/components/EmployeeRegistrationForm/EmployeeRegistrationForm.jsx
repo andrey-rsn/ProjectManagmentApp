@@ -2,28 +2,41 @@ import "./EmployeeRegistrationForm.css";
 import TextField from '@mui/material/TextField';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
+import { useLazyGetPositionsQuery } from "../../features/auth/authApiSlice";
 
 const EmployeeRegistrationForm = () => {
 
     const [registrationError, setRegistrationError] = useState();
+    const [positions, setPositions] = useState([]);
 
-    const [userInfo, setUserInfo] = useState({
-        email:'',
-        login:'',
-        password:'',
-        firstName:'',
-        secondName:'',
-        patronymic:'',
-        role:'',
-        positionId: 0
-    });
+    const [getAllPositionsFetch, {isLoading: isPositionsLoading, isSuccess: isPositionsLoadingSuccess}] = useLazyGetPositionsQuery();
+
+    useEffect(() => {
+        const loadDataAsync = async () => {
+            await loadData();
+        }
+
+        loadDataAsync();
+    }, [])
+
+    const loadData = async () => {
+        await getAllPositionsFetch().unwrap().then(data => setPositions(data)).catch(err => console.log(err));
+    }
+
+    const positionsElements = useMemo(() => {
+        return (
+            positions.map(value => {
+                return <MenuItem key={value.position_Id} value={value.position_Id}>{value.positionName}</MenuItem>
+            })
+        )
+    }, [positions])
 
     const validationSchema = yup.object({
         email: yup
@@ -47,7 +60,7 @@ const EmployeeRegistrationForm = () => {
         role: yup
             .string()
             .required('Поле обязательно для заполенения'),
-        positionId: yup
+        position_Id: yup
             .number()
             .min(1)
             .required('Поле обязательно для заполенения')
@@ -62,7 +75,7 @@ const EmployeeRegistrationForm = () => {
             secondName:'',
             patronymic:'',
             role:'',
-            positionId: 0
+            position_Id: 0
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -203,7 +216,6 @@ const EmployeeRegistrationForm = () => {
                                 value={formik.values.role}
                                 onChange={formik.handleChange}
                                 error={formik.touched.role && Boolean(formik.errors.role) || Boolean(registrationError)}
-                                helperText={formik.touched.role && formik.errors.role}
                             >
                                 <MenuItem value={'PM'}>Проектный менеджер</MenuItem>
                                 <MenuItem value={'Employee'}>Сотрудник</MenuItem>
@@ -219,15 +231,13 @@ const EmployeeRegistrationForm = () => {
                         <FormControl sx={{ m: 1, width:'100%', textAlign:'start', margin:'0' }} size="medium">
                             <InputLabel id="demo-select-small"></InputLabel>
                             <Select
-                                id="positionId"
-                                name="positionId"
-                                value={formik.values.positionId}
+                                id="position_Id"
+                                name="position_Id"
+                                value={formik.values.position_Id}
                                 onChange={formik.handleChange}
-                                error={formik.touched.positionId && Boolean(formik.errors.positionId) || Boolean(registrationError)}
-                                helperText={formik.touched.positionId && formik.errors.positionId}
+                                error={formik.touched.position_Id && Boolean(formik.errors.position_Id) || Boolean(registrationError)}
                             >
-                                <MenuItem value={1}>Проектный менеджер</MenuItem>
-                                <MenuItem value={2}>Сотрудник</MenuItem>
+                                {positionsElements}
                             </Select>
                         </FormControl>
                     </div>
