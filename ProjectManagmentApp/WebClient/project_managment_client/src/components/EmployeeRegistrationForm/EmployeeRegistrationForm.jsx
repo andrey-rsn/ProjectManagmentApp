@@ -9,7 +9,7 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
-import { useLazyGetPositionsQuery } from "../../features/auth/authApiSlice";
+import { useLazyGetPositionsQuery, useRegisterMutation } from "../../features/auth/authApiSlice";
 import { useSnackbar } from 'notistack';
 
 const EmployeeRegistrationForm = () => {
@@ -19,6 +19,7 @@ const EmployeeRegistrationForm = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const [getAllPositionsFetch, {isLoading: isPositionsLoading, isSuccess: isPositionsLoadingSuccess}] = useLazyGetPositionsQuery();
+    const [registrationFetch] = useRegisterMutation();
 
     useEffect(() => {
         const loadDataAsync = async () => {
@@ -62,7 +63,7 @@ const EmployeeRegistrationForm = () => {
         role: yup
             .string()
             .required('Поле обязательно для заполенения'),
-        position_Id: yup
+        PositionId: yup
             .number()
             .min(1)
             .required('Поле обязательно для заполенения')
@@ -77,7 +78,7 @@ const EmployeeRegistrationForm = () => {
             secondName:'',
             patronymic:'',
             role:'',
-            position_Id: 0
+            PositionId: 0
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -87,8 +88,21 @@ const EmployeeRegistrationForm = () => {
 
 
     const onFormSubmit = async (values) => {
-        enqueueSnackbar('This is a success message!', {variant:'success'});
         console.log(values);
+        await registrationFetch(values).unwrap().then(() => handleSuccessRegistartion()).catch(err => handleErrorRegistration(err));
+    }
+
+    const handleSuccessRegistartion = () => {
+        enqueueSnackbar('Пользователь был успешно зарегистрирован', {variant:'success'});
+        formik.resetForm();
+    }
+
+    const handleErrorRegistration = (err) => {
+        if(err.status === 409) {
+            enqueueSnackbar(`Пользователь с таким Email или Логином уже существует`, {variant:'error'});
+        } else {
+            enqueueSnackbar(`Ошибка при регистрации пользователя`, {variant:'error'});
+        }
     }
 
     return (
@@ -234,11 +248,11 @@ const EmployeeRegistrationForm = () => {
                         <FormControl sx={{ m: 1, width:'100%', textAlign:'start', margin:'0' }} size="medium">
                             <InputLabel id="demo-select-small"></InputLabel>
                             <Select
-                                id="position_Id"
-                                name="position_Id"
-                                value={formik.values.position_Id}
+                                id="PositionId"
+                                name="PositionId"
+                                value={formik.values.PositionId}
                                 onChange={formik.handleChange}
-                                error={formik.touched.position_Id && Boolean(formik.errors.position_Id) || Boolean(registrationError)}
+                                error={formik.touched.PositionId && Boolean(formik.errors.PositionId) || Boolean(registrationError)}
                                 disabled={isPositionsLoading || !isPositionsLoadingSuccess}
                             >
                                 {positionsElements}
