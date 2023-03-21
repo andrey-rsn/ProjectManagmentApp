@@ -33,9 +33,9 @@ namespace PMA_ProjectsService.Services.ProjectServices
             {
                 var project = _mapper.Map<ProjectDTO>(projectInfo);
 
-                await _projectRepository.AddAsync(project);
+                var addedProject = await _projectRepository.AddAsync(project);
 
-                await _employeesAttachedToProjectsRepository.AddAsync(new EmployeesAttachedToProjectsDTO() { EmployeeId = projectInfo.AuthorId, ProjectId = projectInfo.ProjectId });
+                await _employeesAttachedToProjectsRepository.AddAsync(new EmployeesAttachedToProjectsDTO() { EmployeeId = projectInfo.AuthorId, ProjectId = addedProject.ProjectId });
 
                 return true;
             }
