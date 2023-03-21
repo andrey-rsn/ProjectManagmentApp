@@ -54,7 +54,7 @@ namespace PMA_IdentityService.Controllers
                 return Ok();
             }
 
-            return BadRequest();
+            return Conflict();
         }
 
         // POST api/v1/identity/refresh

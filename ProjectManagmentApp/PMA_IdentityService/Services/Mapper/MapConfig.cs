@@ -11,7 +11,7 @@ namespace PMA_IdentityService.Services.Mapper
         {
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<UserDTO, UserInfoViewModel>().ReverseMap();
-            CreateMap<UserRegistrationViewModel,UserDTO>().ReverseMap();
+            CreateMap<UserRegistrationViewModel,UserDTO>().ForMember(m => m.Position_Id, opt => opt.MapFrom(src => src.PositionId)).ReverseMap();
             CreateMap<Position, PositionDTO>().ReverseMap();
         }
     }

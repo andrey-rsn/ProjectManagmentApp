@@ -41,15 +41,20 @@ namespace PMA_IdentityService.Services
         {
             UserInfo.Password = HashService.Encrypt(UserInfo.Password, _passwordKey);
 
-            var IsAlreadyExists = (await Login(UserInfo.Login, UserInfo.Password)).User_Id != 0;
-
-            if(!IsAlreadyExists)
+            var EmailAlreadyExists = (await _userRepository.GetByEmail(UserInfo.Email)) != null;
+            if (EmailAlreadyExists)
             {
-                await _userRepository.Add(UserInfo);
-                return true;
+                return false;
             }
 
-            return false;
+            var LoginAlreadyExists = (await _userRepository.GetByLogin(UserInfo.Login)) != null;
+            if(LoginAlreadyExists)
+            {
+                return false;
+            }
+
+            await _userRepository.Add(UserInfo);
+            return true;
         }
     }
 }
