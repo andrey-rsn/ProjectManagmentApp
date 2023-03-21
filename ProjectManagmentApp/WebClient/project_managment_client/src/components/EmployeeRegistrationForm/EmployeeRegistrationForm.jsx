@@ -43,7 +43,14 @@ const EmployeeRegistrationForm = () => {
             .string('Введите фамилию')
             .required('Поле обязательно для заполенения'),
         patronymic: yup
-            .string('Введите отчество')
+            .string('Введите отчество'),
+        role: yup
+            .string()
+            .required('Поле обязательно для заполенения'),
+        positionId: yup
+            .number()
+            .min(1)
+            .required('Поле обязательно для заполенения')
     });
 
     const formik = useFormik({
@@ -65,7 +72,7 @@ const EmployeeRegistrationForm = () => {
 
 
     const onFormSubmit = async (values) => {
-
+        console.log(values);
     }
 
     return (
@@ -188,13 +195,15 @@ const EmployeeRegistrationForm = () => {
                         <p>Роль</p>
                     </div>
                     <div className="input-element__input-box">
-                        <FormControl sx={{ m: 1, width:'100%', textAlign:'start', margin:'0' }} size="small">
+                        <FormControl sx={{ m: 1, width:'100%', textAlign:'start', margin:'0' }} size="medium">
                             <InputLabel id="demo-select-small"></InputLabel>
                             <Select
                                 id="role"
                                 name="role"
                                 value={formik.values.role}
                                 onChange={formik.handleChange}
+                                error={formik.touched.role && Boolean(formik.errors.role) || Boolean(registrationError)}
+                                helperText={formik.touched.role && formik.errors.role}
                             >
                                 <MenuItem value={'PM'}>Проектный менеджер</MenuItem>
                                 <MenuItem value={'Employee'}>Сотрудник</MenuItem>
@@ -207,13 +216,15 @@ const EmployeeRegistrationForm = () => {
                         <p>Должность</p>
                     </div>
                     <div className="input-element__input-box">
-                        <FormControl sx={{ m: 1, width:'100%', textAlign:'start', margin:'0' }} size="small">
+                        <FormControl sx={{ m: 1, width:'100%', textAlign:'start', margin:'0' }} size="medium">
                             <InputLabel id="demo-select-small"></InputLabel>
                             <Select
                                 id="positionId"
                                 name="positionId"
-                                value={formik.values.statusId}
+                                value={formik.values.positionId}
                                 onChange={formik.handleChange}
+                                error={formik.touched.positionId && Boolean(formik.errors.positionId) || Boolean(registrationError)}
+                                helperText={formik.touched.positionId && formik.errors.positionId}
                             >
                                 <MenuItem value={1}>Проектный менеджер</MenuItem>
                                 <MenuItem value={2}>Сотрудник</MenuItem>
