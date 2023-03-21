@@ -83,7 +83,7 @@ namespace PMA_SagaService.Controllers
 
         // GET: api/v1/projects/{projectId}/attachedEmployees
         [HttpGet("{projectId}/attachedEmployees")]
-        public async Task<ActionResult<UserInfoViewModel>> GetEmployeesAttachedToProject(int projectId)
+        public async Task<ActionResult<IEnumerable<UserInfoViewModel>>> GetEmployeesAttachedToProject(int projectId)
         {
             _projectsClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
             _identityClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
@@ -139,6 +139,62 @@ namespace PMA_SagaService.Controllers
                 }
 
             }
+
+            return Ok(employees);
+
+        }
+
+        // GET: api/v1/projects/{projectId}/notAttachedEmployees
+        [HttpGet("{projectId}/notAttachedEmployees")]
+        public async Task<ActionResult<IEnumerable<UserInfoViewModel>>> GetEmployeesNotAttachedToProject(int projectId)
+        {
+            _projectsClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+            _identityClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+
+            var employyesAttachedToProjectRequest = new HttpRequestMessage(
+            HttpMethod.Get,
+                    _projectsClient.BaseAddress + $"api/v1/employeesAttachedToProjects/byProject/{projectId}");
+
+            var employyesAttachedToProjectResponse = await _projectsClient.SendAsync(employyesAttachedToProjectRequest);
+
+            if (!employyesAttachedToProjectResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)employyesAttachedToProjectResponse.StatusCode);
+            }
+
+            if ((int)employyesAttachedToProjectResponse.StatusCode == 204)
+            {
+                return NoContent();
+            }
+
+            var employyesAttachedToProjectList = JsonSerializer.Deserialize<List<EmployeesAttachedToProjectsViewModel>>(await employyesAttachedToProjectResponse.Content.ReadAsStringAsync());
+
+            if (employyesAttachedToProjectList == null || !employyesAttachedToProjectList.Any())
+            {
+                return NotFound();
+            }
+
+            
+
+            var userInfoRequest = new HttpRequestMessage(
+            HttpMethod.Get,
+                _identityClient.BaseAddress + $"api/v1/userInfo");
+
+            var userInfoResponse = await _identityClient.SendAsync(userInfoRequest);
+
+            if (!userInfoResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)userInfoResponse.StatusCode);
+            }
+
+            if ((int)userInfoResponse.StatusCode == 204)
+            {
+                return NoContent();
+            }
+
+            var usersInfos = JsonSerializer.Deserialize<List<UserInfoViewModel>>(await userInfoResponse.Content.ReadAsStringAsync());
+
+            var employees = usersInfos.AsParallel().Where(x=> !employyesAttachedToProjectList.Select(e=>e.employeeId).Contains(x.user_Id)).ToList();
 
             return Ok(employees);
 
