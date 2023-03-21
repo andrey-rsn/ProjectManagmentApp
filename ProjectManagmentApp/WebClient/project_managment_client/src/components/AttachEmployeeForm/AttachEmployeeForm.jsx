@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useLazyGetEmployeesAttachedToProjectQuery, useLazyGetEmployeesNotAttachedToProjectQuery } from '../../features/projectsApi/projectsApiSlice';
 import { useParams } from 'react-router-dom';
 import Skeleton from '@mui/material/Skeleton';
+import { useSelector } from 'react-redux';
 
 const AttachEmployeeForm = () => {
 
@@ -20,6 +21,7 @@ const AttachEmployeeForm = () => {
     const [attachedEmployees, setAttachedEmployees] = useState([]);
 
     const [notAttachedEmployees, setNotAttachedEmployees] = useState([]);
+    const projectInfo = useSelector(state => state.projects);
 
     useEffect(() => {
         loadData();
@@ -68,7 +70,7 @@ const AttachEmployeeForm = () => {
     return (
         <div className="attach-employee-form">
             <div className="attach-employee-form__header header">
-                <p className="header__text">Прикрепление сотрудников к проекту Название проекта</p>
+                <p className="header__text">Прикрепление сотрудников к проекту {projectInfo.name}</p>
             </div>
             <Divider sx={{ backgroundColor: 'grey', marginBottom: '20px' }} />
             <div className="attach-employee-form__attached-employees attached-employees">
