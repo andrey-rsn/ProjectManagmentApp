@@ -1,0 +1,23 @@
+.create-project-form{
+    background-color: rgb(190, 196, 201);
+    border-radius: 10px;
+    width: 40%;
+        &__header-text{
+            font-size: 1.3em;
+            font-weight: 500;
+        }
+}
+
+
+.create-project-form-body{
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-element{
+    &__text{
+        text-align: start;
+    }
+}

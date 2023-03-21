@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes, useParams } from 'react-router-
 import WorkTimePage from '../WorkTimePage/WorkTimePage';
 import EmployeeRegistrationPage from '../EmployeeRegistrationPage/EmployeeRegistrationPage';
 import { SnackbarProvider } from 'notistack';
+import CreateProjectPage from '../CreateProjectPage/CreateProjectPage';
 
 const StartPage = () => {
 
@@ -20,6 +21,7 @@ const StartPage = () => {
                         <Route path="/" element={<MainInfoForm />} />
                         <Route path="/workTime" element={<WorkTimePage />} />
                         <Route path="/addEmployee" element={<EmployeeRegistrationPage />} />
+                        <Route path="/createProject" element={<CreateProjectPage />} />
                     </Routes>
                 </SnackbarProvider>
             </div>
