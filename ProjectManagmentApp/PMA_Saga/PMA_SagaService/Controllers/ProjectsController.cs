@@ -245,7 +245,7 @@ namespace PMA_SagaService.Controllers
 
             var attachEmployeesRequest = new HttpRequestMessage(
             HttpMethod.Post,
-                    _projectsClient.BaseAddress + $"api/v1/projects/range");
+                    _projectsClient.BaseAddress + $"api/v1/employeesAttachedToProjects/range");
 
             attachEmployeesRequest.Content = new StringContent(JsonSerializer.Serialize(employeesToAttach), Encoding.UTF8, "application/json");
 
