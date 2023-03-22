@@ -157,6 +157,19 @@
       "DownstreamPathTemplate": "/api/v1/userTask/all?limit={limit}"
     },
     {
+      "UpstreamPathTemplate": "/api/v1/userTask/byProject?projectId={projectId}&limit={limit}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_sagaservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/userTask/byProject?projectId={projectId}&limit={limit}"
+    },
+    {
       "UpstreamPathTemplate": "/api/v1/userTask/{id}",
       "UpstreamHttpMethod": [ "Get", "Delete" ],
 
