@@ -8,6 +8,11 @@ namespace PMA_SagaService.Services.AutoMapper
         public MapConfig()
         {
             CreateMap<UserTaskViewModel,UserTaskViewModelIn>().ReverseMap();
+            CreateMap<UserTaskCreateViewModel, UserTaskViewModelIn>().ReverseMap();
+            CreateMap<UserTaskCreateViewModel, UserTaskResponseViewModel>()
+                .ForMember(m => m.userTaskStatusId, opt => opt.MapFrom(src => src.statusId))
+                .ForMember(m => m.taskName, opt => opt.MapFrom(src => src.name))
+                .ReverseMap();
             CreateMap<CommentViewModel, CommentViewModelIn>().ReverseMap();
         }
     }

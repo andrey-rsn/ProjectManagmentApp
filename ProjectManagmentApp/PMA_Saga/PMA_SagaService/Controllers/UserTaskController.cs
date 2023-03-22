@@ -376,27 +376,18 @@ namespace PMA_SagaService.Controllers
 
         // POST api/v1/userTask
         [HttpPost]
-        public async Task<ActionResult> Add(UserTaskViewModelIn userTask)
+        public async Task<ActionResult> Add(UserTaskCreateViewModel userTask)
         {
-            var identityRequest = new HttpRequestMessage(
-            HttpMethod.Get,
-                    _identityClient.BaseAddress + $"api/v1/userInfo/{userTask.assignedUserId}");
-            _identityClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+            _tasksClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+            _projectsClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
 
-            var identityResponse = await _identityClient.SendAsync(identityRequest);
-
-            if (!identityResponse.IsSuccessStatusCode || (int)identityResponse.StatusCode == 204)
-            {
-                return GetActionResultByStatusCode((int)identityResponse.StatusCode);
-            }
-
+            var userTaskToAdd = _mapper.Map<UserTaskViewModelIn>(userTask);
             var tasksRequest = new HttpRequestMessage(
                     HttpMethod.Post,
                     _tasksClient.BaseAddress + $"api/v1/userTaskView");
 
-            tasksRequest.Content = new StringContent(JsonSerializer.Serialize(userTask), Encoding.UTF8, "application/json");
+            tasksRequest.Content = new StringContent(JsonSerializer.Serialize(userTaskToAdd), Encoding.UTF8, "application/json");
 
-            _tasksClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
 
             var tasksResponse = await _tasksClient.SendAsync(tasksRequest);
 
@@ -405,7 +396,24 @@ namespace PMA_SagaService.Controllers
                 return GetActionResultByStatusCode((int)tasksResponse.StatusCode);
             }
 
-            return Ok();
+            var createdTask = JsonSerializer.Deserialize<UserTaskViewModelIn>(await tasksResponse.Content.ReadAsStringAsync());
+
+            var projectsTasks = new ProjectsTasksViewModel() { taskId = createdTask.id, projectId = userTask.projectId };
+
+            var addProjectsTasksRequest = new HttpRequestMessage(
+            HttpMethod.Post,
+                    _projectsClient.BaseAddress + $"api/projectsTasks");
+
+            addProjectsTasksRequest.Content = new StringContent(JsonSerializer.Serialize(projectsTasks), Encoding.UTF8, "application/json");
+
+            var addProjectsTasksResponse = await _projectsClient.SendAsync(addProjectsTasksRequest);
+
+            if (!addProjectsTasksResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)addProjectsTasksResponse.StatusCode);
+            }
+
+            return Ok(createdTask.id);
 
         }
 
