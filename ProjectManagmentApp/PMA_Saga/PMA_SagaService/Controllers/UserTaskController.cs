@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -482,6 +483,7 @@ namespace PMA_SagaService.Controllers
         public async Task<ActionResult> DeleteById (int id)
         {
             _tasksClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+            _projectsClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
 
             var deleteTaskRequest = new HttpRequestMessage(
                     HttpMethod.Delete,
@@ -495,7 +497,20 @@ namespace PMA_SagaService.Controllers
                 return GetActionResultByStatusCode((int)deleteTaskResponse.StatusCode);
             }
 
+            var deleteProjectsTasksRequest = new HttpRequestMessage(
+            HttpMethod.Delete,
+                    _projectsClient.BaseAddress + $"api/projectsTasks/byTask/{id}");
+
+
+            var deleteProjectsTasksResponse = await _tasksClient.SendAsync(deleteProjectsTasksRequest);
+
+            if (!deleteProjectsTasksResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)deleteProjectsTasksResponse.StatusCode);
+            }
+
             return Ok();
+
         }
 
     }
