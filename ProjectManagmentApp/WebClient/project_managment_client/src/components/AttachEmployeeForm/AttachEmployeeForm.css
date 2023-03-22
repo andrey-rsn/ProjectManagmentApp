@@ -1,0 +1,30 @@
+.attach-employee-form {
+  width: 80%;
+}
+
+.header__text {
+  font-size: 1.3em;
+  font-weight: 600;
+}
+
+.attached-employees {
+  margin-bottom: 20px;
+}
+.attached-employees__text {
+  text-align: left;
+  font-size: 1.1em;
+}
+
+.all-employees {
+  margin-bottom: 20px;
+}
+.all-employees__text {
+  text-align: left;
+  font-size: 1.1em;
+}
+
+.bottom {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+}/*# sourceMappingURL=AttachEmployeeForm.css.map */

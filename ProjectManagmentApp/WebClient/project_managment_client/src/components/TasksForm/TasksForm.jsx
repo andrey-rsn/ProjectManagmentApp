@@ -10,8 +10,6 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Divider from '@mui/material/Divider';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateData } from '../../features/tasksApi/tasksSlice';
 import { useNavigate } from 'react-router-dom';
 import { useLazyGetAllTasksQuery, useDeleteTaskMutation } from '../../features/tasksApi/tasksApiSlice';
 import './TasksForm.css';
@@ -104,8 +102,8 @@ const columns = [
     }
 ];
 
-const TasksForm = () => {
-
+const TasksForm = (props) => {
+    const {projectId} = props;
     const [selectedRows, setSelectedRows] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [allTasksFetch, { isLoading, error, isSuccess: isDataLoaded }] = useLazyGetAllTasksQuery();
@@ -152,7 +150,7 @@ const TasksForm = () => {
 
     const rowClickHandle = (e) => {
         if (e.id) {
-            navigate(`/main/tasks/${e.id}`);
+            navigate(`${e.id}`);
         }
     }
 

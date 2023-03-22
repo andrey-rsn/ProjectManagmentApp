@@ -43,7 +43,7 @@ namespace PMA_IdentityService.Controllers
         // POST api/v1/identity/registration
         [HttpPost]
         [Route("registration")]
-        public async Task<ActionResult<string>> Register(UserRegistrationViewModel UserModel)
+        public async Task<ActionResult> Register(UserRegistrationViewModel UserModel)
         {
             var User = _mapper.Map<UserDTO>(UserModel);
 
@@ -51,10 +51,10 @@ namespace PMA_IdentityService.Controllers
 
             if (Result)
             {
-                return Ok($"User {User.Login} was succesfully created");
+                return Ok();
             }
 
-            return BadRequest("Some error occured during registration process");
+            return Conflict();
         }
 
         // POST api/v1/identity/refresh

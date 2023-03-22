@@ -9,10 +9,25 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 body: { ...credentials }
             })
         }),
+        register: builder.mutation({
+            query: credentials => ({
+                url: '/api/v1/identity/registration',
+                method: 'POST',
+                body: { ...credentials }
+            })
+        }),
+        getPositions: builder.query({
+            query: () => ({
+                url: '/api/v1/positions',
+                method: 'GET'
+            })
+        })
 
     })
 })
 
 export const {
-    useLoginMutation
+    useLoginMutation,
+    useLazyGetPositionsQuery,
+    useRegisterMutation
 } = authApiSlice

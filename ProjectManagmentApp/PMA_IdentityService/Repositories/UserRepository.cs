@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PMA_IdentityService.Data;
 using PMA_IdentityService.Models;
 using PMA_IdentityService.Models.DTOs;
+using System.Collections.Generic;
 
 namespace PMA_IdentityService.Repositories
 {
@@ -71,6 +72,13 @@ namespace PMA_IdentityService.Repositories
         public async Task<UserDTO> GetByLogin(string Login)
         {
             var User = await _dbContext.Users.FirstOrDefaultAsync(x=>x.Login == Login);
+
+            return _mapper.Map<UserDTO>(User);
+        }
+
+        public async Task<UserDTO> GetByEmail(string Email)
+        {
+            var User = await _dbContext.Users.FirstOrDefaultAsync(u=> u.Email == Email);
 
             return _mapper.Map<UserDTO>(User);
         }

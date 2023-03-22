@@ -3,12 +3,12 @@ import TasksForm from "../../components/TasksForm/TasksForm";
 import TaskCardPage from "../TaskCardPage/TaskCardPage";
 import "./TasksPage.css";
 
-const TasksPage = () => {
-    
+const TasksPage = (props) => {
+    const { projectId } = props;
 
     return (
         <div className="tasks-page">
-            <TasksForm />
+            <TasksForm projectId={projectId}/>
         </div>
     )
 }

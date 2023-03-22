@@ -13,7 +13,7 @@ namespace PMA_SagaService.Controllers
 {
     [Route("api/v1/userTask")]
     [ApiController]
-    public class UserTaskController : ControllerBase
+    public class UserTaskController : BaseController
     {
         private readonly HttpClient _tasksClient;
         private readonly HttpClient _identityClient;
@@ -388,19 +388,5 @@ namespace PMA_SagaService.Controllers
             return Ok();
         }
 
-        private ActionResult GetActionResultByStatusCode(int statusCode)
-        {
-            switch(statusCode)
-            {
-                case 200:
-                    return Ok();
-                case 401: 
-                    return Unauthorized();
-                case 204:
-                    return NoContent();
-                default:
-                    return BadRequest();
-            }
-        }
     }
 }

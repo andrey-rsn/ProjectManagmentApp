@@ -1,0 +1,30 @@
+.project-settings-form {
+  width: 70%;
+}
+.project-settings-form__header {
+  font-size: 1.3em;
+  font-weight: 600;
+}
+.project-settings-form__bottom {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.project-params {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.project-params__params-input {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.params-input__param-name {
+  font-size: 1.1em;
+}/*# sourceMappingURL=ProjectSettingsForm.css.map */

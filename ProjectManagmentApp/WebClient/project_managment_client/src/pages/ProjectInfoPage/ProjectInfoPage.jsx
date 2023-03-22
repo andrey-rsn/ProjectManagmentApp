@@ -1,9 +1,12 @@
-
+import ProjectInfo from "../../components/ProjectInfo/ProjectInfo";
+import './ProjectInfoPage.css';
 
 const ProjectInfoPage = ()=>{
 
     return(
-        <p>Main page</p>
+        <div className="project-info-page">
+            <ProjectInfo />
+        </div>
     )
 }
 

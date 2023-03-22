@@ -56,6 +56,7 @@ builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddScoped<IUserInfoService, UserInfoService>();
+builder.Services.AddScoped<IPositionService, PositionService>();
 
 builder.Services.AddControllers();
 

@@ -1,0 +1,8 @@
+.start-page {
+  height: 100%;
+}
+.start-page__content {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}/*# sourceMappingURL=StartPage.css.map */

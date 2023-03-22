@@ -33,6 +33,20 @@ namespace PMA_IdentityService.Controllers
             return NotFound();
         }
 
+        // GET: api/v1/userInfo
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserInfoViewModel>>> GetAllUsersInfos()
+        {
+            var UsersInfos = await _userInfoService.GetAllUsersInfos();
+
+            if (UsersInfos.Any())
+            {
+                return Ok(UsersInfos);
+            }
+
+            return NotFound();
+        }
+
 
     }
 }
