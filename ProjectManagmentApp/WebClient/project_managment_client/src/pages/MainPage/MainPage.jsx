@@ -78,6 +78,7 @@ const MainPage = () => {
                         <Route exact path="/" element={<ProjectInfoPage />} />
                         <Route path="/tasks" element={<TasksPage projectId={projectId} />} />
                         <Route path="/tasks/:taskId" element={<TaskCardPage />} />
+                        <Route path="/tasks/createTask" element={<TaskCardPage isNew={true}/>} />
                         <Route path="/projectSettings" element={<ProjectSettingsPage />} />
                         <Route path="/projectSettings/attachEmployee" element={<AttachEmployeePage projectId={projectId} />} />
                     </Routes>

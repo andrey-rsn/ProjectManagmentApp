@@ -14,30 +14,48 @@ import { useSelector } from 'react-redux';
 import CommentElement from '../CommentElement/CommentElement';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { selectCurrentUserId, selectCurrentUserName } from '../../features/auth/authSlice';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useEffect } from 'react';
-import { useLazyGetTaskByIdQuery, useUpdateTaskMutation } from '../../features/tasksApi/tasksApiSlice';
+import { useLazyGetTaskByIdQuery, useUpdateTaskMutation, useAddTaskMutation } from '../../features/tasksApi/tasksApiSlice';
 import { formatTime } from '../../helpers/timeHelper/timeHelper';
 import CircularProgress from '@mui/material/CircularProgress';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import { useLazyGetEmployeesAttachedToProjectQuery } from '../../features/projectsApi/projectsApiSlice';
 import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { useNavigate } from 'react-router-dom';
 
 
 const TaskCardForm = (props) => {
-    const { taskId } = props;
+    const { taskId, isNew } = props;
+    const { projectId } = useParams();
 
-    const {projectId} = useParams();
-    const {enqueueSnackbar} = useSnackbar();
-    const [taskInfo, setTaskInfo] = useState({});
+    const navigate = useNavigate();
+
+    const { enqueueSnackbar } = useSnackbar();
+    const [taskInfo, setTaskInfo] = useState({
+        id: 0,
+        name:'',
+        status:'',
+        statusId:0,
+        changeDate: '',
+        assignedTo:'',
+        assignedUserId:0,
+        priority:0,
+        description:'',
+        changedByUserId: 0,
+        changedBy:'',
+        comments: []
+    });
+
     const [isChanged, setIsChanged] = useState(false);
     const [taskName, setTaskName] = useState("");
     const [priority, setPriority] = useState(0);
     const [attachedEmployees, setAttachedEmployees] = useState([]);
-    const [taskByIdFetch, { isLoading, error }] = useLazyGetTaskByIdQuery();
+    const [taskByIdFetch, { isLoading: isTasksLoading, isSuccess: isTasksLoadingSuccess, error }] = useLazyGetTaskByIdQuery();
     const [UpdateTaskFetch, { updateTaskIsLoading }] = useUpdateTaskMutation();
     const [attachedEmployeesFetch, { isLoading: isAttachedEmployeesLoading, isSuccess: isAttachedEmployeesSuccess }] = useLazyGetEmployeesAttachedToProjectQuery();
+    const [addTaskFetch] = useAddTaskMutation();
 
     const ITEM_HEIGHT = 48;
     const ITEM_PADDING_TOP = 8;
@@ -58,18 +76,24 @@ const TaskCardForm = (props) => {
 
     async function loadData() {
 
-        await attachedEmployeesFetch({projectId}).unwrap().then(data => setAttachedEmployees(data)).catch(err => console.log(err));
+        await attachedEmployeesFetch({ projectId }).unwrap().then(data => setAttachedEmployees(data)).catch(err => console.log(err));
 
-        await taskByIdFetch(taskId).unwrap().then(value => {
-            setTaskInfo(value);
-            setTaskName(value.name);
-            setPriority(value.priority);
-        }).catch(err => console.log(err));
+        if(!isNew){
+            await taskByIdFetch(taskId).unwrap().then(value => {
+                setTaskInfo(value);
+                setTaskName(value.name);
+                setPriority(value.priority);
+            }).catch(err => console.log(err));
+        }
 
     }
 
     async function saveData(data) {
-        await UpdateTaskFetch(data).unwrap().then(()=>handleSuccesTaskUpdate()).catch(err => handleErrorTaskUpdate(err));
+        await UpdateTaskFetch(data).unwrap().then(() => handleSuccesTaskUpdate()).catch(err => handleErrorTaskUpdate(err));
+    }
+
+    async function addTask(data) {
+        await addTaskFetch(data).unwrap().then((data) => handleSuccesTaskCreate(data)).catch(err => handleErrorTaskCreate(err));
     }
 
     const [commentText, setCommentText] = useState("");
@@ -125,6 +149,22 @@ const TaskCardForm = (props) => {
         clearCommentText();
     };
 
+    const onTaskInfoCreate = async () => {
+
+        const taskInfoToSave = { 
+            projectId: Number(projectId),
+            name: taskName,
+            description: taskInfo.description,
+            assignedUserId: taskInfo.assignedUserId,
+            priority : Number(priority),
+            changedByUserId: Number(userId),
+            comments: [],
+            statusId: taskInfo.statusId
+        };
+
+        await addTask(taskInfoToSave);
+    };
+
     const onTaskInfoUpdate = async () => {
         await loadData();
     }
@@ -158,13 +198,35 @@ const TaskCardForm = (props) => {
     }
 
     const handleSuccesTaskUpdate = () => {
-        enqueueSnackbar('Параметры задачи сохранены', {variant:'success'});
+        enqueueSnackbar('Параметры задачи сохранены', { variant: 'success' });
     }
 
     const handleErrorTaskUpdate = (error) => {
-        enqueueSnackbar('Ошибка при сохранении параметров задачи', {variant:'error'});
+        enqueueSnackbar('Ошибка при сохранении параметров задачи', { variant: 'error' });
         console.log(error);
     }
+
+    const handleSuccesTaskCreate = (id) => {
+        enqueueSnackbar('Задача создана', { variant: 'success' });
+        navigate(`../tasks/${id}`);
+    }
+
+    const handleErrorTaskCreate = (error) => {
+        enqueueSnackbar('Ошибка при создании задачи', { variant: 'error' });
+        console.log(error);
+    }
+
+    const onSaveClick = async () => {
+        if(isNew){
+            await onTaskInfoCreate();
+        } else {
+            await onTaskInfoSave();
+        }
+    }
+
+    const canSaveOrAdd = useMemo(() => {
+        return taskName.length !== 0 && taskInfo.description.length !== 0 && priority > 0 && taskInfo.assignedUserId > 0;
+    },[taskName, taskInfo, priority])
 
     const statusColor = React.useMemo(() => {
         switch (statusId) {
@@ -176,12 +238,12 @@ const TaskCardForm = (props) => {
         }
     }, [taskInfo.statusId]);
 
-    const content = isLoading
+    const content = isTasksLoading || (!isTasksLoadingSuccess && !isNew )
         ? <div><CircularProgress /></div>
         : <div className="task-card-form">
             <div className="task-card-form__header header">
                 <div className="header__main-info main-info">
-                    <p className='main-info__id'>{id}</p>
+                    <p className='main-info__id'>{!isNew ? id : 'id'}</p>
                     <OutlinedInput placeholder="Наименование задачи" sx={{ width: '80%', height: '35px' }} value={taskName} onChange={(e) => onTaskNameChange(e)} />
                 </div>
                 <div className="header__additional-info additional-info">
@@ -201,8 +263,8 @@ const TaskCardForm = (props) => {
                         </FormControl>
                     </div>
                     <div className='additional-info__tools'>
-                        <Button size="small" sx={{ color: 'black' }} onClick={() => onTaskInfoSave()} ><SaveIcon sx={{ height: '100%' }} />Сохранить</Button>
-                        <Button size="small" sx={{ color: 'black' }} onClick={() => onTaskInfoUpdate()} ><RefreshIcon sx={{ height: '100%' }} />Обновить</Button>
+                        <Button size="small" sx={{ color: 'black' }} onClick={() => onSaveClick()} disabled={!canSaveOrAdd}><SaveIcon sx={{ height: '100%' }} />Сохранить</Button>
+                        {!isNew ? <Button size="small" sx={{ color: 'black' }} onClick={() => onTaskInfoUpdate()} ><RefreshIcon sx={{ height: '100%' }} />Обновить</Button> : null}
                     </div>
                 </div>
             </div>
@@ -233,10 +295,12 @@ const TaskCardForm = (props) => {
                     </div>
                 </div>
                 <div className='right-side'>
-                    <div className='secondary-info__updated-by'>
-                        <p>Кем обновлено:</p>
-                        <p>{changedBy} {formatTime(changeDate)}</p>
-                    </div>
+                    {!isNew ?
+                        <div className='secondary-info__updated-by'>
+                            <p>Кем обновлено:</p>
+                            <p>{changedBy} {formatTime(changeDate)}</p>
+                        </div> :
+                        null}
                 </div>
             </div>
             <Divider sx={{ backgroundColor: 'grey', marginRight: '-1%', marginLeft: '-1%' }} variant='fullWidth' />
@@ -254,24 +318,26 @@ const TaskCardForm = (props) => {
                         onChange={descriptionChangeHandle}
                     />
                 </div>
-                <div className='main-info__comments comments'>
-                    <div className='comments__input'>
-                        <p>Комментарии</p>
-                        <TextField
-                            id="filled-multiline-static"
-                            multiline
-                            rows={1}
-                            placeholder="Введите текст комментария"
-                            variant="filled"
-                            sx={{ width: '70%' }}
-                            defaultValue=''
-                            onChange={commentTextChangeHandle}
-                        />
-                    </div>
-                    <div className='comments__list'>
-                        {CommentsElements}
-                    </div>
-                </div>
+                {!isNew ?
+                    <div className='main-info__comments comments'>
+                        <div className='comments__input'>
+                            <p>Комментарии</p>
+                            <TextField
+                                id="filled-multiline-static"
+                                multiline
+                                rows={1}
+                                placeholder="Введите текст комментария"
+                                variant="filled"
+                                sx={{ width: '70%' }}
+                                defaultValue=''
+                                onChange={commentTextChangeHandle}
+                            />
+                        </div>
+                        <div className='comments__list'>
+                            {CommentsElements}
+                        </div>
+                    </div> :
+                    null}
             </div>
         </div>
 

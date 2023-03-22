@@ -192,6 +192,10 @@ const TasksForm = (props) => {
         }
     }
 
+    const onCreateTask = () => {
+        navigate("createTask");
+    }
+
     const dataTableContent = useMemo(() => {
         return (isLoading || isDeleting || (!isDataLoaded && isEmptyData) || (isDeleting && !isDeletingSuccess) ?
             <Skeleton
@@ -223,7 +227,7 @@ const TasksForm = (props) => {
                 <CustomizedMenus onFilterChange={(e) => onFilterChange(e)}/>
                 <Divider orientation="vertical" flexItem />
                 <div className='filters__button'>
-                    <Button size="small" sx={{ color: 'black' }}><AddIcon />Создать задачу</Button>
+                    <Button size="small" sx={{ color: 'black' }} onClick={(e) => onCreateTask()}><AddIcon />Создать задачу</Button>
                 </div>
                 <div className='filters__button'>
                     <Button size="small" sx={{ color: 'black' }} onClick={(e) => onRowsDelete()} disabled={selectedRows.length === 0}><DeleteIcon />Удалить выбранные</Button>

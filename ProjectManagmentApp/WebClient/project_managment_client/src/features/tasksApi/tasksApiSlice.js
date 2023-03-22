@@ -3,10 +3,10 @@ import { apiSlice } from "../../app/api/apiSlice";
 export const tasksApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         addTask: builder.mutation({
-            query: (task) => ({
+            query: (payload) => ({
                 url: `/api/v1/userTask`,
                 method: 'POST',
-                body: task
+                body: payload
             })
         }),
 
