@@ -123,10 +123,10 @@ namespace PMA_SagaService.Controllers
 
             var projectsTasksRequest = new HttpRequestMessage(
                     HttpMethod.Get,
-                    _tasksClient.BaseAddress + $"api/projectsTasks/byProject/{projectId}");
+                    _projectsClient.BaseAddress + $"api/projectsTasks/byProject/{projectId}");
 
 
-            var projectsTasksResponse = await _tasksClient.SendAsync(projectsTasksRequest);
+            var projectsTasksResponse = await _projectsClient.SendAsync(projectsTasksRequest);
 
             if (!projectsTasksResponse.IsSuccessStatusCode)
             {
@@ -160,7 +160,7 @@ namespace PMA_SagaService.Controllers
 
             var userTaskView = JsonSerializer.Deserialize<List<UserTaskViewModelIn>>(await tasksResponse.Content.ReadAsStringAsync());
 
-            var selectedTasks = userTaskView.Where(x=> projectTasks.Select(t=>t.TaskId).Contains(x.id)).ToList();
+            var selectedTasks = userTaskView.Where(x=> projectTasks.Select(t=>t.taskId).Contains(x.id)).ToList();
 
             var UserTaskViews = _mapper.Map<IEnumerable<UserTaskViewModel>>(selectedTasks);
 
