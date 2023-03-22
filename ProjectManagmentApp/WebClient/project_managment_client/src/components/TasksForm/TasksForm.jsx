@@ -11,7 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Divider from '@mui/material/Divider';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router-dom';
-import { useLazyGetAllTasksQuery, useDeleteTaskMutation } from '../../features/tasksApi/tasksApiSlice';
+import { useLazyGetTasksByProjectIdQuery, useDeleteTaskMutation } from '../../features/tasksApi/tasksApiSlice';
 import './TasksForm.css';
 import { formatTime } from '../../helpers/timeHelper/timeHelper';
 import Skeleton from '@mui/material/Skeleton';
@@ -107,17 +107,18 @@ const TasksForm = (props) => {
     const {projectId} = props;
     const [selectedRows, setSelectedRows] = useState([]);
     const [tasks, setTasks] = useState([]);
-    const [allTasksFetch, { isLoading, error, isSuccess: isDataLoaded }] = useLazyGetAllTasksQuery();
+    const [allTasksFetch, { isLoading, error, isSuccess: isDataLoaded }] = useLazyGetTasksByProjectIdQuery();
     const [deleteTaskByIdFetch, {isLoading : isDeleting, isSuccess: isDeletingSuccess} ] = useDeleteTaskMutation();
     const {enqueueSnackbar} = useSnackbar();
+    const [isEmptyData, setIsEmptyData] = useState(false);
 
 
     let navigate = useNavigate();
 
     async function updateData() {
-            await allTasksFetch(50).unwrap().then(value => {
+            await allTasksFetch({projectId: projectId, limit: 100}).unwrap().then(value => {
                 setData(value);
-            }).catch(err => console.log(err));
+            }).catch(err => handleErrorTasksLoading(err));
         }
 
     useEffect(() => {
@@ -150,6 +151,13 @@ const TasksForm = (props) => {
         }
     }
 
+    const handleErrorTasksLoading = (error) => {
+        if(error.status === 404){
+            setIsEmptyData(true);
+        }
+        console.log(error);
+    }
+
     const handleSuccessRowDeleting = (id) => {
         enqueueSnackbar(`Задача ${id} успешно удалена`, {variant:'success'});
     }
@@ -166,7 +174,7 @@ const TasksForm = (props) => {
     }
 
     const dataTableContent = useMemo(() => {
-        return (isLoading || tasks.length === 0 || isDeleting || !isDataLoaded || (isDeleting && !isDeletingSuccess) ?
+        return (isLoading || isDeleting || (!isDataLoaded && isEmptyData) || (isDeleting && !isDeletingSuccess) ?
             <Skeleton
                 sx={{ height: 'auto', width: '100%' }}
                 variant='rounded'
