@@ -20,20 +20,36 @@ import { useLazyGetTaskByIdQuery, useUpdateTaskMutation } from '../../features/t
 import { formatTime } from '../../helpers/timeHelper/timeHelper';
 import CircularProgress from '@mui/material/CircularProgress';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import { useLazyGetEmployeesAttachedToProjectQuery } from '../../features/projectsApi/projectsApiSlice';
+import { useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 
 const TaskCardForm = (props) => {
     const { taskId } = props;
 
+    const {projectId} = useParams();
+    const {enqueueSnackbar} = useSnackbar();
     const [taskInfo, setTaskInfo] = useState({});
     const [isChanged, setIsChanged] = useState(false);
     const [taskName, setTaskName] = useState("");
     const [priority, setPriority] = useState(0);
+    const [attachedEmployees, setAttachedEmployees] = useState([]);
     const [taskByIdFetch, { isLoading, error }] = useLazyGetTaskByIdQuery();
     const [UpdateTaskFetch, { updateTaskIsLoading }] = useUpdateTaskMutation();
+    const [attachedEmployeesFetch, { isLoading: isAttachedEmployeesLoading, isSuccess: isAttachedEmployeesSuccess }] = useLazyGetEmployeesAttachedToProjectQuery();
 
+    const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+        PaperProps: {
+            style: {
+                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                width: 250,
+            },
+        },
+    };
 
-    const userName = useSelector(selectCurrentUserName);
     const userId = useSelector(selectCurrentUserId);
 
     useEffect(() => {
@@ -41,6 +57,8 @@ const TaskCardForm = (props) => {
     }, []);
 
     async function loadData() {
+
+        await attachedEmployeesFetch({projectId}).unwrap().then(data => setAttachedEmployees(data)).catch(err => console.log(err));
 
         await taskByIdFetch(taskId).unwrap().then(value => {
             setTaskInfo(value);
@@ -51,7 +69,7 @@ const TaskCardForm = (props) => {
     }
 
     async function saveData(data) {
-        await UpdateTaskFetch(data).unwrap().catch(err => console.log(err));
+        await UpdateTaskFetch(data).unwrap().then(()=>handleSuccesTaskUpdate()).catch(err => handleErrorTaskUpdate(err));
     }
 
     const [commentText, setCommentText] = useState("");
@@ -73,6 +91,15 @@ const TaskCardForm = (props) => {
         })
     }
 
+    const handleAssignedEmployeeChange = (e) => {
+        setIsChanged(true);
+
+        setTaskInfo({
+            ...taskInfo,
+            assignedUserId: e.target.value
+        })
+    }
+
     const onTaskInfoSave = async () => {
 
         if (!isChanged) {
@@ -83,6 +110,7 @@ const TaskCardForm = (props) => {
         taskInfoToSave.comments = [];
         taskInfoToSave.name = taskName;
         taskInfoToSave.priority = priority;
+        taskInfoToSave.changedByUserId = userId;
 
         if (commentText) {
             const commentInfo = {
@@ -129,6 +157,15 @@ const TaskCardForm = (props) => {
         });
     }
 
+    const handleSuccesTaskUpdate = () => {
+        enqueueSnackbar('Параметры задачи сохранены', {variant:'success'});
+    }
+
+    const handleErrorTaskUpdate = (error) => {
+        enqueueSnackbar('Ошибка при сохранении параметров задачи', {variant:'error'});
+        console.log(error);
+    }
+
     const statusColor = React.useMemo(() => {
         switch (statusId) {
             case 1: return 'disabled';
@@ -145,12 +182,23 @@ const TaskCardForm = (props) => {
             <div className="task-card-form__header header">
                 <div className="header__main-info main-info">
                     <p className='main-info__id'>{id}</p>
-                    <OutlinedInput placeholder="Наименование задачи" sx={{width:'80%', height:'35px'}} value={taskName} onChange={(e) => onTaskNameChange(e)}/>
+                    <OutlinedInput placeholder="Наименование задачи" sx={{ width: '80%', height: '35px' }} value={taskName} onChange={(e) => onTaskNameChange(e)} />
                 </div>
                 <div className="header__additional-info additional-info">
                     <div className='additional-info__name'>
-                        <AccountBoxIcon sx={{ height: '100%', color: 'gray', marginRight: '5px' }} />
-                        <p>{assignedTo}</p>
+                        <AccountBoxIcon sx={{ height: '100%', color: 'gray' }} />
+                        <FormControl sx={{ m: 1, minWidth: 400, lineHeight: '50%', textAlign: 'start' }} size="small" disabled={isAttachedEmployeesLoading || !isAttachedEmployeesSuccess}>
+                            <InputLabel id="demo-select-small"></InputLabel>
+                            <Select
+                                labelId="demo-select-small"
+                                id="demo-select-small"
+                                value={`${taskInfo.assignedUserId}`}
+                                MenuProps={MenuProps}
+                                onChange={handleAssignedEmployeeChange}
+                            >
+                                {attachedEmployees.map(value => <MenuItem key={value.user_Id} value={value.user_Id}>{value.fullName}</MenuItem>)}
+                            </Select>
+                        </FormControl>
                     </div>
                     <div className='additional-info__tools'>
                         <Button size="small" sx={{ color: 'black' }} onClick={() => onTaskInfoSave()} ><SaveIcon sx={{ height: '100%' }} />Сохранить</Button>
@@ -181,7 +229,7 @@ const TaskCardForm = (props) => {
                     </div>
                     <div className='secondary-info__priority'>
                         <p>Приоритет:</p>
-                        <OutlinedInput sx={{width:'15%', height:'30px'}} value={priority} onChange={(e) => onPriorityChange(e)}/>
+                        <OutlinedInput sx={{ width: '15%', height: '30px' }} value={priority} onChange={(e) => onPriorityChange(e)} />
                     </div>
                 </div>
                 <div className='right-side'>
