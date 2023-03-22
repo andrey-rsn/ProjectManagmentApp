@@ -145,6 +145,7 @@ const TasksForm = (props) => {
         if (selectedRows?.length > 0) {
             selectedRows.forEach(id => deleteTaskByIdFetch(id).unwrap().then(()=>handleSuccessRowDeleting(id)).catch(err => handleErrorRowDeleting(id, err)));
             setTasks([]);
+            setSelectedRows([]);
             await updateData();
         }
     }
