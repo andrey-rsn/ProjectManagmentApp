@@ -17,6 +17,8 @@ import { formatTime } from '../../helpers/timeHelper/timeHelper';
 import Skeleton from '@mui/material/Skeleton';
 import { useMemo } from 'react';
 import { useSnackbar } from 'notistack';
+import { useSelector } from 'react-redux';
+import { selectCurrentUserId } from '../../features/auth/authSlice';
 
 
 const StyledMenu = styled((props) => (
@@ -105,12 +107,14 @@ const columns = [
 
 const TasksForm = (props) => {
     const {projectId} = props;
+    const userId = useSelector(selectCurrentUserId);
     const [selectedRows, setSelectedRows] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [allTasksFetch, { isLoading, error, isSuccess: isDataLoaded }] = useLazyGetTasksByProjectIdQuery();
     const [deleteTaskByIdFetch, {isLoading : isDeleting, isSuccess: isDeletingSuccess} ] = useDeleteTaskMutation();
     const {enqueueSnackbar} = useSnackbar();
     const [isEmptyData, setIsEmptyData] = useState(false);
+    const [filterValue, setFilterValue] = useState(1);
 
 
     let navigate = useNavigate();
@@ -124,6 +128,12 @@ const TasksForm = (props) => {
     useEffect(() => {
         updateData();
     }, []);
+
+    useEffect(() => {
+        if(filterValue === 2) {
+            setTasks(tasks.filter(value => value.assignedUserId === userId));
+        }
+    }, [filterValue])
 
     const setData = (data) => {
         setTasks(formatData(data));
@@ -173,6 +183,15 @@ const TasksForm = (props) => {
         }
     }
 
+    const onFilterChange = async (e) => {
+        const value = e.target.value;
+
+        if(value){
+            setFilterValue(value);
+            await updateData();
+        }
+    }
+
     const dataTableContent = useMemo(() => {
         return (isLoading || isDeleting || (!isDataLoaded && isEmptyData) || (isDeleting && !isDeletingSuccess) ?
             <Skeleton
@@ -201,7 +220,7 @@ const TasksForm = (props) => {
                 <p className='header__text'>Задачи</p>
             </div>
             <div className='tasks-form__filters filters'>
-                <CustomizedMenus />
+                <CustomizedMenus onFilterChange={(e) => onFilterChange(e)}/>
                 <Divider orientation="vertical" flexItem />
                 <div className='filters__button'>
                     <Button size="small" sx={{ color: 'black' }}><AddIcon />Создать задачу</Button>
@@ -218,7 +237,8 @@ const TasksForm = (props) => {
 }
 
 
-function CustomizedMenus() {
+function CustomizedMenus(props) {
+    const {onFilterChange} = props;
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [btnText, setBtnText] = React.useState("Назначено мне");
     const open = Boolean(anchorEl);
@@ -232,7 +252,7 @@ function CustomizedMenus() {
         if (text) {
             setBtnText(text);
         }
-
+        onFilterChange(event);
     };
 
     return (
@@ -259,10 +279,10 @@ function CustomizedMenus() {
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem onClick={handleClose} disableRipple>
+                <MenuItem onClick={handleClose} disableRipple value={1}>
                     Все
                 </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
+                <MenuItem onClick={handleClose} disableRipple value={2}>
                     Назначено мне
                 </MenuItem>
             </StyledMenu>
