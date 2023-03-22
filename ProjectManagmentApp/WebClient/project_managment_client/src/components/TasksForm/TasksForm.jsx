@@ -16,6 +16,7 @@ import './TasksForm.css';
 import { formatTime } from '../../helpers/timeHelper/timeHelper';
 import Skeleton from '@mui/material/Skeleton';
 import { useMemo } from 'react';
+import { useSnackbar } from 'notistack';
 
 
 const StyledMenu = styled((props) => (
@@ -107,8 +108,8 @@ const TasksForm = (props) => {
     const [selectedRows, setSelectedRows] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [allTasksFetch, { isLoading, error, isSuccess: isDataLoaded }] = useLazyGetAllTasksQuery();
-    const [deleteTaskByIdFetch, {isLoading : isDeleting} ] = useDeleteTaskMutation();
-    
+    const [deleteTaskByIdFetch, {isLoading : isDeleting, isSuccess: isDeletingSuccess} ] = useDeleteTaskMutation();
+    const {enqueueSnackbar} = useSnackbar();
 
 
     let navigate = useNavigate();
@@ -142,11 +143,20 @@ const TasksForm = (props) => {
     const onRowsDelete = async () => {
         console.log(selectedRows);
         if (selectedRows?.length > 0) {
-            selectedRows.forEach(id => deleteTaskByIdFetch(id).unwrap().catch(err => console.log(err)));
+            selectedRows.forEach(id => deleteTaskByIdFetch(id).unwrap().then(()=>handleSuccessRowDeleting(id)).catch(err => handleErrorRowDeleting(id, err)));
             setTasks([]);
             await updateData();
         }
     }
+
+    const handleSuccessRowDeleting = (id) => {
+        enqueueSnackbar(`Задача ${id} успешно удалена`, {variant:'success'});
+    }
+
+    const handleErrorRowDeleting = (id, error) => {
+        enqueueSnackbar(`При удалении задачи ${id} произошла ошибка`, {variant:'error'});
+        console.log(error);
+    } 
 
     const rowClickHandle = (e) => {
         if (e.id) {
@@ -155,7 +165,7 @@ const TasksForm = (props) => {
     }
 
     const dataTableContent = useMemo(() => {
-        return (isLoading || tasks.length === 0 || isDeleting || !isDataLoaded ?
+        return (isLoading || tasks.length === 0 || isDeleting || !isDataLoaded || (isDeleting && !isDeletingSuccess) ?
             <Skeleton
                 sx={{ height: 'auto', width: '100%' }}
                 variant='rounded'
@@ -181,14 +191,14 @@ const TasksForm = (props) => {
             <div className='tasks-form__header header'>
                 <p className='header__text'>Задачи</p>
             </div>
-            <div className='tasks-form__filters'>
+            <div className='tasks-form__filters filters'>
                 <CustomizedMenus />
                 <Divider orientation="vertical" flexItem />
-                <div>
+                <div className='filters__button'>
                     <Button size="small" sx={{ color: 'black' }}><AddIcon />Создать задачу</Button>
                 </div>
-                <div>
-                    <Button size="small" sx={{ color: 'black' }} onClick={(e) => onRowsDelete()}><DeleteIcon />Удалить выбранные</Button>
+                <div className='filters__button'>
+                    <Button size="small" sx={{ color: 'black' }} onClick={(e) => onRowsDelete()} disabled={selectedRows.length === 0}><DeleteIcon />Удалить выбранные</Button>
                 </div>
             </div>
             <div className='tasks-form__data-table'>
