@@ -208,7 +208,7 @@ const TaskCardForm = (props) => {
 
     const handleSuccesTaskCreate = (id) => {
         enqueueSnackbar('Задача создана', { variant: 'success' });
-        navigate(`../tasks/${id}`);
+        navigate(`../tasks`);
     }
 
     const handleErrorTaskCreate = (error) => {
