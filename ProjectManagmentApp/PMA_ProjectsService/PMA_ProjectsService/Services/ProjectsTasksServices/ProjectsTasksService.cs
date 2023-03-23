@@ -36,7 +36,7 @@ namespace PMA_ProjectsService.Services.ProjectsTasksServices
 
         public async Task<bool> DeleteByTaskId(int taskId)
         {
-            var projectsToDelete = await _projectsTasksRepository.GetAsync(x=>x.TaskId == taskId);
+            var projectsToDelete = await _projectsTasksRepository.GetAsync(x=>x.TaskId == taskId, null, null, true);
 
             if (projectsToDelete != null && projectsToDelete.Any())
             {
