@@ -8,6 +8,8 @@ import { useUpdateProjectMutation } from "../../features/projectsApi/projectsApi
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setProjectInfo } from "../../features/projectsApi/projectsSlice";
+import { selectCurrentUserRole } from "../../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const ProjectSettingsForm = () => {
 
@@ -16,8 +18,16 @@ const ProjectSettingsForm = () => {
     const [updateProjectFetch, {isLoading: isProjectUpdating, isSuccess: isProjectUpdateSuccess}] = useUpdateProjectMutation();
 
     const projectInfo = useSelector(state => state.projects);
+    const userRole = useSelector(selectCurrentUserRole);
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (userRole !== "PM") {
+            navigate("/forbid");
+        }
+    }, [])
 
     const onDescriptionChange = (e) => {
         setProjectInfoChanges({...projectInfoChanges, description: e.target.value})

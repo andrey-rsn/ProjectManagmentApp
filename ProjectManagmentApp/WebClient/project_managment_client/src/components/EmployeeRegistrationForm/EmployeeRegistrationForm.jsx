@@ -11,22 +11,31 @@ import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import { useLazyGetPositionsQuery, useRegisterMutation } from "../../features/auth/authApiSlice";
 import { useSnackbar } from 'notistack';
+import { useSelector } from "react-redux";
+import { selectCurrentUserRole } from "../../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeRegistrationForm = () => {
 
     const [registrationError, setRegistrationError] = useState();
     const [positions, setPositions] = useState([]);
     const { enqueueSnackbar } = useSnackbar();
+    const userRole = useSelector(selectCurrentUserRole);
+    const navigate = useNavigate();
 
-    const [getAllPositionsFetch, {isLoading: isPositionsLoading, isSuccess: isPositionsLoadingSuccess}] = useLazyGetPositionsQuery();
+    const [getAllPositionsFetch, { isLoading: isPositionsLoading, isSuccess: isPositionsLoadingSuccess }] = useLazyGetPositionsQuery();
     const [registrationFetch] = useRegisterMutation();
 
     useEffect(() => {
-        const loadDataAsync = async () => {
-            await loadData();
-        }
+        if (userRole === "PM") {
+            const loadDataAsync = async () => {
+                await loadData();
+            }
 
-        loadDataAsync();
+            loadDataAsync();
+        } else {
+            navigate("/forbid");
+        }
     }, [])
 
     const loadData = async () => {
@@ -71,13 +80,13 @@ const EmployeeRegistrationForm = () => {
 
     const formik = useFormik({
         initialValues: {
-            email:'',
-            login:'',
-            password:'',
-            firstName:'',
-            secondName:'',
-            patronymic:'',
-            role:'',
+            email: '',
+            login: '',
+            password: '',
+            firstName: '',
+            secondName: '',
+            patronymic: '',
+            role: '',
             PositionId: 0
         },
         validationSchema: validationSchema,
@@ -93,15 +102,15 @@ const EmployeeRegistrationForm = () => {
     }
 
     const handleSuccessRegistartion = () => {
-        enqueueSnackbar('Пользователь был успешно зарегистрирован', {variant:'success'});
+        enqueueSnackbar('Пользователь был успешно зарегистрирован', { variant: 'success' });
         formik.resetForm();
     }
 
     const handleErrorRegistration = (err) => {
-        if(err.status === 409) {
-            enqueueSnackbar(`Пользователь с таким Email или Логином уже существует`, {variant:'error'});
+        if (err.status === 409) {
+            enqueueSnackbar(`Пользователь с таким Email или Логином уже существует`, { variant: 'error' });
         } else {
-            enqueueSnackbar(`Ошибка при регистрации пользователя`, {variant:'error'});
+            enqueueSnackbar(`Ошибка при регистрации пользователя`, { variant: 'error' });
         }
     }
 
@@ -225,7 +234,7 @@ const EmployeeRegistrationForm = () => {
                         <p>Роль</p>
                     </div>
                     <div className="input-element__input-box">
-                        <FormControl sx={{ m: 1, width:'100%', textAlign:'start', margin:'0' }} size="medium">
+                        <FormControl sx={{ m: 1, width: '100%', textAlign: 'start', margin: '0' }} size="medium">
                             <InputLabel id="demo-select-small"></InputLabel>
                             <Select
                                 id="role"
@@ -245,7 +254,7 @@ const EmployeeRegistrationForm = () => {
                         <p>Должность</p>
                     </div>
                     <div className="input-element__input-box">
-                        <FormControl sx={{ m: 1, width:'100%', textAlign:'start', margin:'0' }} size="medium">
+                        <FormControl sx={{ m: 1, width: '100%', textAlign: 'start', margin: '0' }} size="medium">
                             <InputLabel id="demo-select-small"></InputLabel>
                             <Select
                                 id="PositionId"

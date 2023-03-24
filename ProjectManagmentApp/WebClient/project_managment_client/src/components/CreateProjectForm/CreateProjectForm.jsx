@@ -9,6 +9,9 @@ import { useSnackbar } from 'notistack';
 import { useCreateProjectMutation } from "../../features/projectsApi/projectsApiSlice";
 import { useSelector } from "react-redux";
 import { selectCurrentUserId } from "../../features/auth/authSlice";
+import { selectCurrentUserRole } from "../../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const CreateProjectForm = () => {
 
@@ -19,6 +22,14 @@ const CreateProjectForm = () => {
     const { enqueueSnackbar } = useSnackbar();
 
     const userId = useSelector(selectCurrentUserId);
+    const userRole = useSelector(selectCurrentUserRole);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (userRole !== "PM") {
+            navigate("/forbid");
+        }
+    },[])
 
     const validationSchema = yup.object({
         name: yup
