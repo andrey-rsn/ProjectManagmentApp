@@ -9,13 +9,18 @@ import MenuItem from '@mui/material/MenuItem';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Divider from '@mui/material/Divider';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 import { useNavigate } from 'react-router-dom';
-import { useLazyGetAllTasksQuery, useDeleteTaskMutation } from '../../features/tasksApi/tasksApiSlice';
+import { useLazyGetTasksByProjectIdQuery, useDeleteTaskMutation } from '../../features/tasksApi/tasksApiSlice';
 import './TasksForm.css';
 import { formatTime } from '../../helpers/timeHelper/timeHelper';
 import Skeleton from '@mui/material/Skeleton';
 import { useMemo } from 'react';
+import { useSnackbar } from 'notistack';
+import { useSelector } from 'react-redux';
+import { selectCurrentUserId } from '../../features/auth/authSlice';
 
 
 const StyledMenu = styled((props) => (
@@ -103,25 +108,43 @@ const columns = [
 ];
 
 const TasksForm = (props) => {
-    const {projectId} = props;
+    const { projectId } = props;
+    const userId = useSelector(selectCurrentUserId);
     const [selectedRows, setSelectedRows] = useState([]);
     const [tasks, setTasks] = useState([]);
-    const [allTasksFetch, { isLoading, error, isSuccess: isDataLoaded }] = useLazyGetAllTasksQuery();
-    const [deleteTaskByIdFetch, {isLoading : isDeleting} ] = useDeleteTaskMutation();
-    
+    const [allTasksFetch, { isLoading, error, isSuccess: isDataLoaded }] = useLazyGetTasksByProjectIdQuery();
+    const [deleteTaskByIdFetch, { isLoading: isDeleting, isSuccess: isDeletingSuccess }] = useDeleteTaskMutation();
+    const { enqueueSnackbar } = useSnackbar();
+    const [filterValue, setFilterValue] = useState(1);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
 
     let navigate = useNavigate();
 
     async function updateData() {
-            await allTasksFetch(50).unwrap().then(value => {
-                setData(value);
-            }).catch(err => console.log(err));
-        }
+        setIsRefreshing(true);
+        await allTasksFetch({ projectId: projectId, limit: 100 }).unwrap().then(value => {
+            setData(value);
+        }).catch(err => handleErrorTasksLoading(err));
+        setIsRefreshing(false);
+    }
 
     useEffect(() => {
         updateData();
     }, []);
+
+    useEffect(() => {
+        const update = async () => {
+            await updateData();
+        }
+
+        update().then(() => {
+            if (filterValue === 2) {
+                setTasks(tasks.filter(value => value.assignedUserId == userId));
+            }
+        });
+
+    }, [filterValue])
 
     const setData = (data) => {
         setTasks(formatData(data));
@@ -142,10 +165,24 @@ const TasksForm = (props) => {
     const onRowsDelete = async () => {
         console.log(selectedRows);
         if (selectedRows?.length > 0) {
-            selectedRows.forEach(id => deleteTaskByIdFetch(id).unwrap().catch(err => console.log(err)));
+            selectedRows.forEach(id => deleteTaskByIdFetch(id).unwrap().then(() => handleSuccessRowDeleting(id)).catch(err => handleErrorRowDeleting(id, err)));
             setTasks([]);
+            setSelectedRows([]);
             await updateData();
         }
+    }
+
+    const handleErrorTasksLoading = (error) => {
+        console.log(error);
+    }
+
+    const handleSuccessRowDeleting = (id) => {
+        enqueueSnackbar(`Задача ${id} успешно удалена`, { variant: 'success' });
+    }
+
+    const handleErrorRowDeleting = (id, error) => {
+        enqueueSnackbar(`При удалении задачи ${id} произошла ошибка`, { variant: 'error' });
+        console.log(error);
     }
 
     const rowClickHandle = (e) => {
@@ -154,102 +191,66 @@ const TasksForm = (props) => {
         }
     }
 
-    const dataTableContent = useMemo(() => {
-        return (isLoading || tasks.length === 0 || isDeleting || !isDataLoaded ?
-            <Skeleton
-                sx={{ height: 'auto', width: '100%' }}
-                variant='rounded'
-            />
-            :
-            <Box sx={{ height: 'auto', width: '100%' }}>
-                <DataGrid
-                    rows={tasks}
-                    columns={columns}
-                    pageSize={10}
-                    rowsPerPageOptions={[10]}
-                    checkboxSelection
-                    disableSelectionOnClick
-                    experimentalFeatures={{ newEditingApi: true }}
-                    onSelectionModelChange={e => setSelectedRows(e)}
-                    onRowClick={e => rowClickHandle(e)}
-                />
-            </Box>)
-    },[isLoading, tasks, isDeleting, isDataLoaded]);
+    const onFilterChange = async (e) => {
+        const value = e.target.value;
+
+        if (value) {
+            setFilterValue(value);
+        }
+    }
+
+    const onCreateTask = () => {
+        navigate("createTask");
+    }
 
     return (
         <div className='tasks-form'>
             <div className='tasks-form__header header'>
                 <p className='header__text'>Задачи</p>
             </div>
-            <div className='tasks-form__filters'>
-                <CustomizedMenus />
+            <div className='tasks-form__filters filters'>
+                <FormControl sx={{ m: 1, minWidth: 162, lineHeight: '50%', textAlign: 'start' }} size="small">
+                    <InputLabel id="demo-select-small"></InputLabel>
+                    <Select
+                        labelId="demo-select-small"
+                        id="demo-select-small"
+                        value={`${filterValue}`}
+                        onChange={onFilterChange}
+                    >
+                        <MenuItem value={1}>Все</MenuItem>
+                        <MenuItem value={2}>Назначено мне</MenuItem>
+                    </Select>
+                </FormControl>
                 <Divider orientation="vertical" flexItem />
-                <div>
-                    <Button size="small" sx={{ color: 'black' }}><AddIcon />Создать задачу</Button>
+                <div className='filters__button'>
+                    <Button size="small" sx={{ color: 'black' }} onClick={(e) => onCreateTask()}><AddIcon />Создать задачу</Button>
                 </div>
-                <div>
-                    <Button size="small" sx={{ color: 'black' }} onClick={(e) => onRowsDelete()}><DeleteIcon />Удалить выбранные</Button>
+                <div className='filters__button'>
+                    <Button size="small" sx={{ color: 'black' }} onClick={(e) => onRowsDelete()} disabled={selectedRows.length === 0}><DeleteIcon />Удалить выбранные</Button>
                 </div>
             </div>
             <div className='tasks-form__data-table'>
-                {dataTableContent}
+                <Box sx={{ height: 'auto', width: '100%' }}>
+                    <DataGrid
+                        rows={tasks}
+                        columns={columns}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        checkboxSelection
+                        disableSelectionOnClick
+                        experimentalFeatures={{ newEditingApi: true }}
+                        onSelectionModelChange={e => setSelectedRows(e)}
+                        onRowClick={e => rowClickHandle(e)}
+                        loading={isRefreshing}
+                        localeText={{noRowsLabel:"Данные отсутсвуют"}}
+                    />
+                </Box>
             </div>
         </div>
     );
 }
 
 
-function CustomizedMenus() {
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [btnText, setBtnText] = React.useState("Назначено мне");
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-
-    };
-    const handleClose = (event) => {
-        setAnchorEl(null);
-        const text = event.target.innerText;
-        if (text) {
-            setBtnText(text);
-        }
-
-    };
-
-    return (
-        <div>
-            <Button
-                id="demo-customized-button"
-                aria-controls={open ? 'demo-customized-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                variant="contained"
-                disableElevation
-                onClick={handleClick}
-                endIcon={<KeyboardArrowDownIcon />}
-                sx={{ minWidth: '190px', display: 'flex', justifyContent: 'space-between' }}
-            >
-                {btnText}
-            </Button>
-            <StyledMenu
-                id="demo-customized-menu"
-                MenuListProps={{
-                    'aria-labelledby': 'demo-customized-button',
-                }}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-            >
-                <MenuItem onClick={handleClose} disableRipple>
-                    Все
-                </MenuItem>
-                <MenuItem onClick={handleClose} disableRipple>
-                    Назначено мне
-                </MenuItem>
-            </StyledMenu>
-        </div>
-    );
-}
 
 
 export default TasksForm;

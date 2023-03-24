@@ -3,10 +3,10 @@ import { apiSlice } from "../../app/api/apiSlice";
 export const tasksApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         addTask: builder.mutation({
-            query: (task) => ({
+            query: (payload) => ({
                 url: `/api/v1/userTask`,
                 method: 'POST',
-                body: task
+                body: payload
             })
         }),
 
@@ -37,6 +37,13 @@ export const tasksApiSlice = apiSlice.injectEndpoints({
                 url: `/api/v1/userTask/${id}`,
                 method: 'GET'
             })
+        }),
+
+        getTasksByProjectId: builder.query({
+            query: (payload) => ({
+                url: `/api/v1/userTask/byProject?projectId=${payload.projectId}&limit=${payload.limit}`,
+                method: 'GET'
+            })
         })
 
     })
@@ -47,5 +54,6 @@ export const {
     useDeleteTaskMutation,
     useUpdateTaskMutation,
     useLazyGetAllTasksQuery,
-    useLazyGetTaskByIdQuery
+    useLazyGetTaskByIdQuery,
+    useLazyGetTasksByProjectIdQuery
 } = tasksApiSlice

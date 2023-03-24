@@ -34,6 +34,24 @@ namespace PMA_ProjectsService.Services.ProjectsTasksServices
             }
         }
 
+        public async Task<bool> DeleteByTaskId(int taskId)
+        {
+            var projectsToDelete = await _projectsTasksRepository.GetAsync(x=>x.TaskId == taskId, null, null, true);
+
+            if (projectsToDelete != null && projectsToDelete.Any())
+            {
+                foreach(var project in projectsToDelete)
+                {
+                    await _projectsTasksRepository.DeleteAsync(project);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public async Task<IEnumerable<ProjectsTasksDTO>> GetByProjectId(int ProjectId)
         {
             var Projects = await _projectsTasksRepository.GetAsync(x => x.ProjectId == ProjectId);

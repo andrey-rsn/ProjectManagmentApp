@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,11 +18,13 @@ namespace PMA_SagaService.Controllers
     {
         private readonly HttpClient _tasksClient;
         private readonly HttpClient _identityClient;
+        private readonly HttpClient _projectsClient;
         private readonly IMapper _mapper;
         public UserTaskController(IHttpClientFactory httpClientFactory, IMapper mapper)
         {
             _tasksClient = httpClientFactory.CreateClient("tasksServiceClient");
             _identityClient = httpClientFactory.CreateClient("identityServiceClient");
+            _projectsClient = httpClientFactory.CreateClient("projectsServiceClient");
             _mapper = mapper;
         }
 
@@ -104,6 +107,114 @@ namespace PMA_SagaService.Controllers
                         userTask.changedBy = changeByUser.FullName;
                     }
                     
+                }
+
+            }
+
+            return Ok(UserTaskViews);
+        }
+
+        // GET: api/v1/userTask/byProject?projectId={projectId}&limit={limit}
+        [HttpGet("byProject")]
+        public async Task<ActionResult<IEnumerable<UserTaskViewModel>>> GetTasksByProjectId(int projectId, int limit = 10)
+        {
+            _tasksClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+            _identityClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+            _projectsClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+
+            var projectsTasksRequest = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    _projectsClient.BaseAddress + $"api/projectsTasks/byProject/{projectId}");
+
+
+            var projectsTasksResponse = await _projectsClient.SendAsync(projectsTasksRequest);
+
+            if (!projectsTasksResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)projectsTasksResponse.StatusCode);
+            }
+
+            if ((int)projectsTasksResponse.StatusCode == 204)
+            {
+                return NoContent();
+            }
+
+            var projectTasks = JsonSerializer.Deserialize<List<ProjectsTasksViewModel>>(await projectsTasksResponse.Content.ReadAsStringAsync());
+
+
+            var tasksRequest = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    _tasksClient.BaseAddress + $"api/v1/userTaskView?limit={limit}");
+
+
+            var tasksResponse = await _tasksClient.SendAsync(tasksRequest);
+
+            if (!tasksResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)tasksResponse.StatusCode);
+            }
+
+            if ((int)tasksResponse.StatusCode == 204)
+            {
+                return NoContent();
+            }
+
+            var userTaskView = JsonSerializer.Deserialize<List<UserTaskViewModelIn>>(await tasksResponse.Content.ReadAsStringAsync());
+
+            var selectedTasks = userTaskView.Where(x=> projectTasks.Select(t=>t.taskId).Contains(x.id)).ToList();
+
+            var UserTaskViews = _mapper.Map<IEnumerable<UserTaskViewModel>>(selectedTasks);
+
+            foreach (var userTask in UserTaskViews)
+            {
+                if (userTask.assignedUserId != 0)
+                {
+                    var assignedUserRequest = new HttpRequestMessage(
+                         HttpMethod.Get,
+                        _identityClient.BaseAddress + $"api/v1/userInfo/{userTask.assignedUserId}");
+                    var assignedUserResponse = await _identityClient.SendAsync(assignedUserRequest);
+
+                    if (!assignedUserResponse.IsSuccessStatusCode)
+                    {
+                        return GetActionResultByStatusCode((int)assignedUserResponse.StatusCode);
+                    }
+
+                    if ((int)assignedUserResponse.StatusCode == 204)
+                    {
+                        userTask.assignedUserId = 0;
+                        userTask.assignedTo = "";
+                    }
+                    else
+                    {
+                        var assignedUser = JsonSerializer.Deserialize<UserInfoViewModel>(await assignedUserResponse.Content.ReadAsStringAsync());
+                        userTask.assignedTo = assignedUser.FullName;
+                    }
+
+                }
+
+                if (userTask.changedByUserId != 0)
+                {
+                    var changedByRequest = new HttpRequestMessage(
+                     HttpMethod.Get,
+                    _identityClient.BaseAddress + $"api/v1/userInfo/{userTask.changedByUserId}");
+                    var changedByResponse = await _identityClient.SendAsync(changedByRequest);
+
+                    if (!changedByResponse.IsSuccessStatusCode)
+                    {
+                        return GetActionResultByStatusCode((int)changedByResponse.StatusCode);
+                    }
+
+                    if ((int)changedByResponse.StatusCode == 204)
+                    {
+                        userTask.changedByUserId = 0;
+                        userTask.changedBy = "";
+                    }
+                    else
+                    {
+                        var changeByUser = JsonSerializer.Deserialize<UserInfoViewModel>(await changedByResponse.Content.ReadAsStringAsync());
+                        userTask.changedBy = changeByUser.FullName;
+                    }
+
                 }
 
             }
@@ -265,27 +376,18 @@ namespace PMA_SagaService.Controllers
 
         // POST api/v1/userTask
         [HttpPost]
-        public async Task<ActionResult> Add(UserTaskViewModelIn userTask)
+        public async Task<ActionResult> Add(UserTaskCreateViewModel userTask)
         {
-            var identityRequest = new HttpRequestMessage(
-            HttpMethod.Get,
-                    _identityClient.BaseAddress + $"api/v1/userInfo/{userTask.assignedUserId}");
-            _identityClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+            _tasksClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+            _projectsClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
 
-            var identityResponse = await _identityClient.SendAsync(identityRequest);
-
-            if (!identityResponse.IsSuccessStatusCode || (int)identityResponse.StatusCode == 204)
-            {
-                return GetActionResultByStatusCode((int)identityResponse.StatusCode);
-            }
-
+            var userTaskToAdd = _mapper.Map<UserTaskViewModelIn>(userTask);
             var tasksRequest = new HttpRequestMessage(
                     HttpMethod.Post,
                     _tasksClient.BaseAddress + $"api/v1/userTaskView");
 
-            tasksRequest.Content = new StringContent(JsonSerializer.Serialize(userTask), Encoding.UTF8, "application/json");
+            tasksRequest.Content = new StringContent(JsonSerializer.Serialize(userTaskToAdd), Encoding.UTF8, "application/json");
 
-            _tasksClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
 
             var tasksResponse = await _tasksClient.SendAsync(tasksRequest);
 
@@ -294,7 +396,24 @@ namespace PMA_SagaService.Controllers
                 return GetActionResultByStatusCode((int)tasksResponse.StatusCode);
             }
 
-            return Ok();
+            var createdTask = JsonSerializer.Deserialize<UserTaskViewModelIn>(await tasksResponse.Content.ReadAsStringAsync());
+
+            var projectsTasks = new ProjectsTasksViewModel() { taskId = createdTask.id, projectId = userTask.projectId };
+
+            var addProjectsTasksRequest = new HttpRequestMessage(
+            HttpMethod.Post,
+                    _projectsClient.BaseAddress + $"api/projectsTasks");
+
+            addProjectsTasksRequest.Content = new StringContent(JsonSerializer.Serialize(projectsTasks), Encoding.UTF8, "application/json");
+
+            var addProjectsTasksResponse = await _projectsClient.SendAsync(addProjectsTasksRequest);
+
+            if (!addProjectsTasksResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)addProjectsTasksResponse.StatusCode);
+            }
+
+            return Ok(createdTask.id);
 
         }
 
@@ -372,6 +491,7 @@ namespace PMA_SagaService.Controllers
         public async Task<ActionResult> DeleteById (int id)
         {
             _tasksClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
+            _projectsClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(HttpContext.Request.Headers.Authorization));
 
             var deleteTaskRequest = new HttpRequestMessage(
                     HttpMethod.Delete,
@@ -385,7 +505,20 @@ namespace PMA_SagaService.Controllers
                 return GetActionResultByStatusCode((int)deleteTaskResponse.StatusCode);
             }
 
+            var deleteProjectsTasksRequest = new HttpRequestMessage(
+            HttpMethod.Delete,
+                    _projectsClient.BaseAddress + $"api/projectsTasks/byTask/{id}");
+
+
+            var deleteProjectsTasksResponse = await _tasksClient.SendAsync(deleteProjectsTasksRequest);
+
+            if (!deleteProjectsTasksResponse.IsSuccessStatusCode)
+            {
+                return GetActionResultByStatusCode((int)deleteProjectsTasksResponse.StatusCode);
+            }
+
             return Ok();
+
         }
 
     }

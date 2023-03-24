@@ -1,12 +1,9 @@
-﻿using PMA_TasksService.Models.DTOs;
-
-namespace PMA_TasksService.Models
+﻿namespace PMA_SagaService.Models
 {
-    public class UserTaskViewModel
+    public class UserTaskCreateViewModel
     {
-        public int id { get; set; }
+        public int projectId { get; set; }
         public string name { get; set; }
-        public string? status { get; set; }
         public int statusId { get; set; }
         public DateTime changeDate { get; set; } = DateTime.UtcNow;
         public int assignedUserId { get; set; }
@@ -14,6 +11,6 @@ namespace PMA_TasksService.Models
         public string description { get; set; }
         public int changedByUserId { get; set; }
 
-        public IEnumerable<CommentDTO> comments { get; set; }
+        public IEnumerable<CommentViewModelIn> comments { get; set; }
     }
 }

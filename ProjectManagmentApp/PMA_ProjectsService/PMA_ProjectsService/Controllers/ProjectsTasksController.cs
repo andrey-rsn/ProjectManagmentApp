@@ -78,11 +78,27 @@ namespace PMA_ProjectsService.Controllers
             return BadRequest();
         }
 
-        // DELETE api/<ProjectsTasksController>/5
+        // DELETE api/projectsTasks/{id}
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteById(int id)
         {
             var result = await _projectsTasksService.DeleteById(id);
+
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        // DELETE api/projectsTasks/byTask/{taskId}
+        [HttpDelete("byTask/{taskId}")]
+        public async Task<ActionResult> DeleteByProjectId(int taskId)
+        {
+            var result = await _projectsTasksService.DeleteByTaskId(taskId);
 
             if (result)
             {

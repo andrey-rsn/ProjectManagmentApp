@@ -25,4 +25,10 @@
 
 .header__text {
   font-size: 150%;
+}
+
+.filters__button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }/*# sourceMappingURL=TasksForm.css.map */

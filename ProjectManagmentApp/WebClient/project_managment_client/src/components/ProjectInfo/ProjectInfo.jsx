@@ -3,7 +3,7 @@ import Divider from '@mui/material/Divider';
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import { useLazyGetEmployeesAttachedToProjectQuery } from '../../features/projectsApi/projectsApiSlice';
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Skeleton from '@mui/material/Skeleton';
 import { useSelector } from 'react-redux';
@@ -11,9 +11,9 @@ import { useSelector } from 'react-redux';
 
 
 const ProjectInfo = () => {
-    const {projectId} = useParams();
+    const { projectId } = useParams();
 
-    const[attachedEmployeesFetch, {isLoading: isAttachedEmployeesLoading, isSuccess: isAttachedEmployeesSuccess}] = useLazyGetEmployeesAttachedToProjectQuery();
+    const [attachedEmployeesFetch, { isLoading: isAttachedEmployeesLoading, isSuccess: isAttachedEmployeesSuccess }] = useLazyGetEmployeesAttachedToProjectQuery();
 
     const [employees, setEmployees] = useState([]);
 
@@ -21,14 +21,14 @@ const ProjectInfo = () => {
 
     useEffect(() => {
         loadData();
-    },[])
+    }, [])
 
     const loadData = async () => {
-        await attachedEmployeesFetch({projectId}).unwrap().then(data =>setEmployees(data)).catch(err => console.log(err));
+        await attachedEmployeesFetch({ projectId }).unwrap().then(data => setEmployees(data)).catch(err => console.log(err));
     }
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 90, hide:true},
+        { field: 'id', headerName: 'ID', width: 90, hide: true },
         {
             field: 'firstName',
             headerName: 'Имя',
@@ -79,11 +79,6 @@ const ProjectInfo = () => {
                         <p>Список сотрудников проекта :</p>
                     </div>
                     <div className="project-employees__empoyees-list">
-                        {isAttachedEmployeesLoading || !isAttachedEmployeesSuccess ? 
-                        <Skeleton
-                        sx={{ height: 371, width: '100%' }}
-                        variant='rounded'
-                        />:
                         <Box sx={{ height: 371, width: '100%' }}>
                             <DataGrid
                                 rows={employees}
@@ -92,8 +87,9 @@ const ProjectInfo = () => {
                                 pageSize={5}
                                 disableRowSelectionOnClick
                                 getRowId={(row) => row.user_Id}
+                                loading={isAttachedEmployeesLoading || !isAttachedEmployeesSuccess}
                             />
-                        </Box>}
+                        </Box>
                     </div>
                 </div>
             </div>

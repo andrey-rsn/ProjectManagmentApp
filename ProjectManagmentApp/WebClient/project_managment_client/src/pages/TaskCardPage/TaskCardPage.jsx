@@ -6,11 +6,12 @@ import './TaskCardPage.css';
 
 const TaskCardPage = (props) => {
     const params = useParams();
+    const {isNew} = props;
 
     
     return (
         <div className="task-card-page">
-            <TaskCardForm taskId={params?.taskId}/>
+            <TaskCardForm taskId={params?.taskId} isNew={isNew}/>
         </div>
     )
 }

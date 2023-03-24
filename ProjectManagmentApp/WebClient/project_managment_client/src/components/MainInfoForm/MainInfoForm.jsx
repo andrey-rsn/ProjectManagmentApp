@@ -23,18 +23,18 @@ import Skeleton from '@mui/material/Skeleton';
 const MainInfoForm = () => {
     const userRole = useSelector(selectCurrentUserRole);
     const userId = useSelector(selectCurrentUserId);
-    const[projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState([]);
 
     let navigate = useNavigate();
 
-    const[getPorjectsByIdFetch,{isLoading: isProjectsByUserIdLoading}] = useLazyGetProjectsByUserIdQuery();
+    const [getPorjectsByIdFetch, { isLoading: isProjectsByUserIdLoading }] = useLazyGetProjectsByUserIdQuery();
 
     useEffect(() => {
         loadData();
-    },[])
+    }, [])
 
     const loadData = async () => {
-        await getPorjectsByIdFetch(userId).unwrap().then(data=> setProjects(data)).catch(err => console.log(err));
+        await getPorjectsByIdFetch(userId).unwrap().then(data => setProjects(data)).catch(err => console.log(err));
     }
 
     const projectsColumns = [
@@ -79,7 +79,7 @@ const MainInfoForm = () => {
             )
         }
 
-    },[userRole])
+    }, [userRole])
 
     return (
         <div className="main-info-form">
@@ -93,7 +93,7 @@ const MainInfoForm = () => {
                             <p>Меню</p>
                         </div>
                         <div className='menu__menu-list'>
-                            <Paper sx={{ width: '90%', backgroundColor:'aliceblue'}}>
+                            <Paper sx={{ width: '90%', backgroundColor: 'aliceblue' }}>
                                 <MenuList>
                                     <NavLink to='workTime' style={{ textDecoration: 'none', color: 'black' }} relative='main'>
                                         <MenuItem>
@@ -118,8 +118,6 @@ const MainInfoForm = () => {
                         </div>
                         <div className="projects-list__list">
                             <Box sx={{ height: 371, width: '100%' }}>
-                                {isProjectsByUserIdLoading ? <Skeleton sx={{ height: '100%', width: '100%' }}/> 
-                                :
                                 <DataGrid
                                     rows={projects}
                                     columns={projectsColumns}
@@ -128,7 +126,8 @@ const MainInfoForm = () => {
                                     disableRowSelectionOnClick
                                     onRowClick={e => rowClickHandle(e)}
                                     getRowId={(row) => row.projectId}
-                                />}
+                                    loading={isProjectsByUserIdLoading}
+                                />
                             </Box>
                         </div>
                     </div>
