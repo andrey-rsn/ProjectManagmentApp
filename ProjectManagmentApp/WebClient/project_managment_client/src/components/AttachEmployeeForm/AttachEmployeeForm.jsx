@@ -10,6 +10,8 @@ import Skeleton from '@mui/material/Skeleton';
 import { useSelector } from 'react-redux';
 import { useAttachEmployeesMutation } from "../../features/projectsApi/projectsApiSlice";
 import { useSnackbar } from 'notistack';
+import { selectCurrentUserRole } from "../../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const AttachEmployeeForm = () => {
 
@@ -19,7 +21,7 @@ const AttachEmployeeForm = () => {
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const [attachEmployeesToProjectFetch, {isLoading: isAttaching, isSuccess: isSuccessAttaching}] = useAttachEmployeesMutation();
+    const [attachEmployeesToProjectFetch, { isLoading: isAttaching, isSuccess: isSuccessAttaching }] = useAttachEmployeesMutation();
     const [attachedEmployeesFetch, { isLoading: isAttachedEmployeesLoading, isSuccess: isAttachedEmployeesSuccess }] = useLazyGetEmployeesAttachedToProjectQuery();
     const [notAttachedEmployeesFetch, { isLoading: isNotAttachedEmployeesLoading, isSuccess: isNotAttachedEmployeesSuccess }] = useLazyGetEmployeesNotAttachedToProjectQuery();
 
@@ -28,8 +30,15 @@ const AttachEmployeeForm = () => {
     const [notAttachedEmployees, setNotAttachedEmployees] = useState([]);
     const projectInfo = useSelector(state => state.projects);
 
+    const userRole = useSelector(selectCurrentUserRole);
+    const navigate = useNavigate();
+
     useEffect(() => {
-        loadData();
+        if (userRole === "PM") {
+            loadData();
+        } else {
+            navigate("/forbid");
+        }
     }, [])
 
     const loadData = async () => {
@@ -65,18 +74,18 @@ const AttachEmployeeForm = () => {
             employeesIds: selectedRows
         }
 
-        await attachEmployeesToProjectFetch(requestData).unwrap().then(()=>handleSuccessAttach()).catch(err => handleErrorAttach(err));
+        await attachEmployeesToProjectFetch(requestData).unwrap().then(() => handleSuccessAttach()).catch(err => handleErrorAttach(err));
 
     }
 
     const handleSuccessAttach = async () => {
-        enqueueSnackbar('Пользователи успешно прикрепелены к проекту', {variant:'success'});
+        enqueueSnackbar('Пользователи успешно прикрепелены к проекту', { variant: 'success' });
         setSelectedRows([]);
         await loadData();
     }
 
     const handleErrorAttach = (error) => {
-        enqueueSnackbar(`Ошибка при прикреплении пользователя`, {variant:'error'});
+        enqueueSnackbar(`Ошибка при прикреплении пользователя`, { variant: 'error' });
         console.log(error);
     }
 

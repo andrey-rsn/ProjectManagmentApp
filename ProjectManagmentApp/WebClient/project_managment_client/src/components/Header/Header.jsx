@@ -15,6 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useDispatch } from 'react-redux';
 import { logOut } from '../../features/auth/authSlice';
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -67,6 +68,7 @@ const Header = () => {
     const settings = ['Профиль', 'Выйти'];
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleOpenUserMenu = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -78,7 +80,11 @@ const Header = () => {
 
     const onUserMenuParameterClick = (e) => {
         switch (e.target.innerHTML) {
-            case 'Выйти': dispatch(logOut());
+            case 'Выйти': 
+                dispatch(logOut());
+                navigate("/login");
+                break;
+
         }
     }
 

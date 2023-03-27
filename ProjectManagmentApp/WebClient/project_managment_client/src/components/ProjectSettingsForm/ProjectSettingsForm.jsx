@@ -8,6 +8,9 @@ import { useUpdateProjectMutation } from "../../features/projectsApi/projectsApi
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setProjectInfo } from "../../features/projectsApi/projectsSlice";
+import { selectCurrentUserRole } from "../../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
+import { useSnackbar } from 'notistack';
 
 const ProjectSettingsForm = () => {
 
@@ -15,9 +18,19 @@ const ProjectSettingsForm = () => {
 
     const [updateProjectFetch, {isLoading: isProjectUpdating, isSuccess: isProjectUpdateSuccess}] = useUpdateProjectMutation();
 
+    const { enqueueSnackbar } = useSnackbar();
+
     const projectInfo = useSelector(state => state.projects);
+    const userRole = useSelector(selectCurrentUserRole);
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (userRole !== "PM") {
+            navigate("/forbid");
+        }
+    }, [])
 
     const onDescriptionChange = (e) => {
         setProjectInfoChanges({...projectInfoChanges, description: e.target.value})
@@ -40,7 +53,18 @@ const ProjectSettingsForm = () => {
 
         dataToSave.projectId = projectInfo.projectId;
 
-        await updateProjectFetch(dataToSave).unwrap().then(data => dispatch(setProjectInfo(data))).then(setProjectInfoChanges({name:'', description:''})).catch(err => console.log(err));
+        await updateProjectFetch(dataToSave).unwrap().then(data => handleSuccessUpdateProject(data)).catch(err => handleErrorUpdateProject(err));
+    }
+
+    const handleSuccessUpdateProject = (data) => {
+        dispatch(setProjectInfo(data));
+        setProjectInfoChanges({name:'', description:''});
+        enqueueSnackbar('Настройки проекта успешно обновлены', { variant: 'success' });
+    }
+
+    const handleErrorUpdateProject = (error) => {
+        enqueueSnackbar(`Ошибка при сохранении настроек проекта`, { variant: 'error' });
+        console.log(error);
     }
 
     return (
