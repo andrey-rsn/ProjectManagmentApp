@@ -30,7 +30,7 @@ const DocumentationForm = () => {
         {
             field: 'documentDescription',
             headerName: 'Описание документа',
-            width: 150,
+            width: 400,
             editable: true,
         }
     ];
