@@ -27,7 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PMA_SagaService", "PMA_Saga
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PMA_ProjectsService", "PMA_ProjectsService", "{5F8DD7FA-3798-4572-981F-65A48F6E2913}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMA_ProjectsService", "PMA_ProjectsService\PMA_ProjectsService\PMA_ProjectsService.csproj", "{EEFC746E-2FF8-4977-B37D-3CCFD41C74A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PMA_ProjectsService", "PMA_ProjectsService\PMA_ProjectsService\PMA_ProjectsService.csproj", "{EEFC746E-2FF8-4977-B37D-3CCFD41C74A2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PMA_DocumentationService", "PMA_DocumentationService", "{BD406EF6-AA14-4E55-A633-DFB59B16CFD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMA_DocumentationService", "PMA_DocumentationService\PMA_DocumentationService\PMA_DocumentationService.csproj", "{649FB7FF-9EDD-40A6-A986-28A1546E1C98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +67,10 @@ Global
 		{EEFC746E-2FF8-4977-B37D-3CCFD41C74A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEFC746E-2FF8-4977-B37D-3CCFD41C74A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEFC746E-2FF8-4977-B37D-3CCFD41C74A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{649FB7FF-9EDD-40A6-A986-28A1546E1C98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{649FB7FF-9EDD-40A6-A986-28A1546E1C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{649FB7FF-9EDD-40A6-A986-28A1546E1C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{649FB7FF-9EDD-40A6-A986-28A1546E1C98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +82,7 @@ Global
 		{08F7CF86-FC9C-473A-AC0F-D524485B5931} = {E9B9D70E-9738-4C04-91F1-3E9D9442D5B0}
 		{8DFF570C-5F27-473A-AC51-4717FC5EAF88} = {A08C2AFA-EDF3-4E48-B357-DB76AF1FDE26}
 		{EEFC746E-2FF8-4977-B37D-3CCFD41C74A2} = {5F8DD7FA-3798-4572-981F-65A48F6E2913}
+		{649FB7FF-9EDD-40A6-A986-28A1546E1C98} = {BD406EF6-AA14-4E55-A633-DFB59B16CFD6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3E8BE9CF-A1E2-4CDA-A8CF-523FAA86B389}
