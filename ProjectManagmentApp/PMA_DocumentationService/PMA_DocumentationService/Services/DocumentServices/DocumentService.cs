@@ -17,7 +17,7 @@ namespace PMA_DocumentationService.Services.DocumentServices
             _appEnvironment = appEnvironment;
         }
 
-        public async Task<DocumentDTO> GetAllDocumentsById(int documentId)
+        public async Task<DocumentDTO> GetDocumentById(int documentId)
         {
             var document = await _documentRepository.GetByIdAsync(documentId);
 

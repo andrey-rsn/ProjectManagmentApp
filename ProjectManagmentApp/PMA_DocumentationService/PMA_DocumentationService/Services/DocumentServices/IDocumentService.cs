@@ -7,6 +7,6 @@ namespace PMA_DocumentationService.Services.DocumentServices
     {
         Task<DocumentDTO> UploadDocument(UploadDoucmentViewModel documentModel);
         Task<IEnumerable<DocumentDTO>> GetAllDocumentsByProjectId(int projectId);
-        Task<DocumentDTO> GetAllDocumentsById(int documentId);
+        Task<DocumentDTO> GetDocumentById(int documentId);
     }
 }
