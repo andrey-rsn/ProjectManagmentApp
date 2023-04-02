@@ -275,7 +275,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/v1/documents/{documentId}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "Get","Delete" ],
 
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

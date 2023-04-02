@@ -64,5 +64,31 @@ namespace PMA_DocumentationService.Services.DocumentServices
 
             return new DocumentDTO();
         }
+
+        public async Task<bool> DeleteById(int documentId)
+        {
+            var document = await _documentRepository.GetByIdAsync(documentId);
+
+            if(document != null)
+            {
+                var result = await _documentRepository.DeleteAsync(document);
+
+                if(result != null)
+                {
+                    string path = result.FileUrl.Replace(_applicationHost, _appEnvironment.WebRootPath);
+
+                    if ((System.IO.File.Exists(path)))
+                    {
+                        System.IO.File.Delete(path);
+                    }
+                }
+
+                return result != null;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

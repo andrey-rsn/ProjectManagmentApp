@@ -59,5 +59,21 @@ namespace PMA_DocumentationService.Controllers
             }
         }
 
+        // DELETE api/v1/documents/{documentId}
+        [HttpDelete("{documentId}")]
+        public async Task<ActionResult> UploadDocument(int documentId)
+        {
+            var result = await _documentService.DeleteById(documentId);
+
+            if (result)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }
