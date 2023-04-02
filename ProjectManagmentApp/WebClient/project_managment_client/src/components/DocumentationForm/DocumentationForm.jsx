@@ -14,37 +14,59 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useParams } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
-import { useUploadDocumentMutation } from "../../features/documentsApi/documentsApiSlice";
+import { useUploadDocumentMutation, useLazyGetDocumentsByProjectQuery } from "../../features/documentsApi/documentsApiSlice";
 import { useSnackbar } from 'notistack';
 
 const DocumentationForm = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { projectId } = useParams();
-    const rows = [
-        { id: 1, documentName: 'Snow', documentDescription: 'Jon', age: 35 },
-        { id: 2, documentName: 'Lannister', documentDescription: 'Cersei', age: 42 },
-        { id: 3, documentName: 'Lannister', documentDescription: 'Jaime', age: 45 },
-        { id: 4, documentName: 'Stark', documentDescription: 'Arya', age: 16 },
-        { id: 5, documentName: 'Targaryen', documentDescription: 'Daenerys', age: null },
-        { id: 6, documentName: 'Melisandre', documentDescription: null, age: 150 },
-        { id: 7, documentName: 'Clifford', documentDescription: 'Ferrara', age: 44 },
-        { id: 8, documentName: 'Frances', documentDescription: 'Rossini', age: 36 },
-        { id: 9, documentName: 'Roxie', documentDescription: 'Harvey', age: 65 },
-    ];
+    const [documents, setDocuments] = useState([]);
+    const [getDocumentsByProjectFetch, {isLoading: isDocumentsLoading}] = useLazyGetDocumentsByProjectQuery();
+
+    useEffect(() => {
+        const load = async () => {
+            await loadData();
+        }
+
+        load();
+    },[])
+
+    const loadData = async () => {
+        await getDocumentsByProjectFetch(projectId).unwrap().then(data => setDocuments(data)).catch(err => console.log(err));
+    }
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 90, hide: true },
         {
             field: 'documentName',
             headerName: 'Название документа',
-            width: 150,
+            width: 200,
             editable: false,
         },
         {
             field: 'documentDescription',
             headerName: 'Описание документа',
-            width: 400,
-            editable: true,
+            width: 300,
+            editable: false,
+        },
+        {
+            field: 'fileName',
+            headerName: 'Название файла документа',
+            width: 200,
+            editable: false,
+        },
+        {
+            field: 'fileUrl',
+            headerName: 'Ссылка на файл',
+            width: 100,
+            editable: false,
+            hide: true
+        },
+        {
+            field: 'UploadDate',
+            headerName: 'Дата загрузки',
+            width: 150,
+            editable: false,
         }
     ];
 
@@ -73,11 +95,12 @@ const DocumentationForm = () => {
             <div className="documentation-form__documents-list documents-list">
                 <Box sx={{ height: 371, width: '100%' }}>
                     <DataGrid
-                        rows={rows}
+                        rows={documents}
                         columns={columns}
                         rowsPerPageOptions={[5]}
                         pageSize={5}
                         disableRowSelectionOnClick
+                        loading={isDocumentsLoading}
                     />
                 </Box>
             </div>

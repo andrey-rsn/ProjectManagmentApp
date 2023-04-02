@@ -8,10 +8,17 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 formData: payload
             })
+        }),
+        getDocumentsByProject: builder.query({
+            query: (projectId) => ({
+                url: `/api/v1/documents/byProject/${projectId}`,
+                method: 'GET'
+            })
         })
     })
 })
 
 export const {
-    useUploadDocumentMutation
+    useUploadDocumentMutation,
+    useLazyGetDocumentsByProjectQuery
 } = documentsApiSlice;
