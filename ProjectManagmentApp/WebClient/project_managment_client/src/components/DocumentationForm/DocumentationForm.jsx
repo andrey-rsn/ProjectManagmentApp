@@ -141,7 +141,7 @@ function TransitionsModal(props) {
         const requestData = new FormData();
 
         requestData.append('documentName', values.documentName);
-        requestData.append('documentDescription', values.documentName);
+        requestData.append('documentDescription', values.documentDescription);
         requestData.append('projectId', Number(projectId));
         requestData.append('uploadedFile', uploadedFile);
 
