@@ -6,7 +6,7 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
             query: (payload) => ({
                 url: `/api/v1/documents`,
                 method: 'POST',
-                formData: payload
+                body: payload
             })
         }),
         getDocumentsByProject: builder.query({
