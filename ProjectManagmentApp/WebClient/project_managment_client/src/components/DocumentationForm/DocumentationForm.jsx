@@ -16,6 +16,7 @@ import { useParams } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
 import { useUploadDocumentMutation, useLazyGetDocumentsByProjectQuery } from "../../features/documentsApi/documentsApiSlice";
 import { useSnackbar } from 'notistack';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const DocumentationForm = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -78,6 +79,10 @@ const DocumentationForm = () => {
         setIsOpen(true);
     }
 
+    const handleDeleteClick = (e) => {
+        console.log(selectedDocuments);
+    }
+
     const rowClickHandle = (e) => {
         window.open(e.row.fileUrl, '_blank');
     }
@@ -97,6 +102,7 @@ const DocumentationForm = () => {
             <div className="documentation-form__form-actions form-actions">
                 <div className="form-actions__buttons">
                     <Button size="small" sx={{ color: 'black' }} onClick={e => handleUploadClick(e)}><FileUploadIcon />Загрузить документ</Button>
+                    <Button size="small" sx={{ color: 'black' }} onClick={e => handleDeleteClick(e)}><DeleteIcon />Удалить выбранные документы</Button>
                 </div>
             </div>
             <Divider />
