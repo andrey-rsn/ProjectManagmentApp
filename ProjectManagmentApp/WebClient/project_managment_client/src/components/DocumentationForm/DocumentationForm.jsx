@@ -14,6 +14,8 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useParams } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
+import { useUploadDocumentMutation } from "../../features/documentsApi/documentsApiSlice";
+import { useSnackbar } from 'notistack';
 
 const DocumentationForm = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -107,6 +109,10 @@ function TransitionsModal(props) {
         setOpen(false);
     };
 
+    const { enqueueSnackbar } = useSnackbar();
+
+    const [uploadDocumentFetch] = useUploadDocumentMutation();
+
     useEffect(() => {
         setOpen(isOpen);
     }, [isOpen])
@@ -135,9 +141,19 @@ function TransitionsModal(props) {
         const requestData = {
             documentName: values.documentName,
             documentDescription: values.documentName,
-            projectId : projectId,
+            projectId : Number(projectId),
             uploadedFile: uploadedFile
         }
+        await uploadDocumentFetch(requestData).unwrap().then(() => handleSuccessUploading()).catch(err => handleErrorUploading(err));
+    }
+
+    const handleSuccessUploading = () => {
+        enqueueSnackbar('Документ успешно загружен', {variant:'success'});
+        handleClose();
+    }
+
+    const handleErrorUploading = (error) => {
+        enqueueSnackbar('Ошибка при загрузке документа', {variant:'error'});
     }
 
     const handleFileBind = (e) => {
