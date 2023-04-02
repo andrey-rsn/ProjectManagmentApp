@@ -14,24 +14,26 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useParams } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
-import { useUploadDocumentMutation, useLazyGetDocumentsByProjectQuery } from "../../features/documentsApi/documentsApiSlice";
+import { useUploadDocumentMutation, useLazyGetDocumentsByProjectQuery, useDeleteDocumentByIdMutation } from "../../features/documentsApi/documentsApiSlice";
 import { useSnackbar } from 'notistack';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const DocumentationForm = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { projectId } = useParams();
-    const [selectedDocuments, setSelectedDocuments] = useState();
+    const [selectedDocuments, setSelectedDocuments] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [getDocumentsByProjectFetch] = useLazyGetDocumentsByProjectQuery();
+    const [deleteDocumentByIdFetch] = useDeleteDocumentByIdMutation();
     const [isDocumentsLoading, setIsDocumentsLoading] = useState(false);
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         const load = async () => {
             await loadData();
         }
         load();
-    },[isOpen])
+    }, [isOpen])
 
     const loadData = async () => {
         setIsDocumentsLoading(true);
@@ -78,8 +80,20 @@ const DocumentationForm = () => {
         setIsOpen(true);
     }
 
-    const handleDeleteClick = (e) => {
-        console.log(selectedDocuments);
+    const handleDeleteClick = async (e) => {
+        setIsDocumentsLoading(true);
+        selectedDocuments.forEach(async (id) => {
+            await deleteDocumentByIdFetch(id).unwrap().then(() => handleSuccessDeleting(id)).catch(err => handleErrorDeleting(err, id));
+        })
+        await loadData();
+    }
+
+    const handleSuccessDeleting = (id) => {
+        enqueueSnackbar(`Документ ${id} успешно удалён`, { variant: 'success' });
+    }
+
+    const handleErrorDeleting = (error, id) => {
+        enqueueSnackbar(`Ошибка при удалении документа ${id}`, { variant: 'error' });
     }
 
     const rowClickHandle = (e) => {
@@ -92,6 +106,25 @@ const DocumentationForm = () => {
         )
     }, [isOpen]);
 
+    const tableContent = useMemo(() => {
+        return (
+            <Box sx={{ height: 371, width: '100%' }}>
+                <DataGrid
+                    rows={documents}
+                    columns={columns}
+                    rowsPerPageOptions={[5]}
+                    pageSize={5}
+                    disableRowSelectionOnClick
+                    loading={isDocumentsLoading}
+                    onSelectionModelChange={e => setSelectedDocuments(e)}
+                    onRowClick={e => rowClickHandle(e)}
+                    checkboxSelection
+                    disableSelectionOnClick
+                />
+            </Box>
+        )
+    }, [isDocumentsLoading])
+
     return (
         <div className="documentation-form">
             {uploadPopup}
@@ -101,25 +134,12 @@ const DocumentationForm = () => {
             <div className="documentation-form__form-actions form-actions">
                 <div className="form-actions__buttons">
                     <Button size="small" sx={{ color: 'black' }} onClick={e => handleUploadClick(e)}><FileUploadIcon />Загрузить документ</Button>
-                    <Button size="small" sx={{ color: 'black' }} onClick={e => handleDeleteClick(e)}><DeleteIcon />Удалить выбранные документы</Button>
+                    <Button size="small" sx={{ color: 'black' }} onClick={e => handleDeleteClick(e)} disabled={selectedDocuments.length === 0}><DeleteIcon />Удалить выбранные документы</Button>
                 </div>
             </div>
             <Divider />
             <div className="documentation-form__documents-list documents-list">
-                <Box sx={{ height: 371, width: '100%' }}>
-                    <DataGrid
-                        rows={documents}
-                        columns={columns}
-                        rowsPerPageOptions={[5]}
-                        pageSize={5}
-                        disableRowSelectionOnClick
-                        loading={isDocumentsLoading}
-                        onSelectionModelChange={e => setSelectedDocuments(e)}
-                        onRowClick={e => rowClickHandle(e)}
-                        checkboxSelection
-                        disableSelectionOnClick
-                    />
-                </Box>
+                {tableContent}
             </div>
         </div>
     )
@@ -190,17 +210,17 @@ function TransitionsModal(props) {
     }
 
     const handleSuccessUploading = () => {
-        enqueueSnackbar('Документ успешно загружен', {variant:'success'});
+        enqueueSnackbar('Документ успешно загружен', { variant: 'success' });
         handleClose();
     }
 
     const handleErrorUploading = (error) => {
         console.log(error);
-        enqueueSnackbar('Ошибка при загрузке документа', {variant:'error'});
+        enqueueSnackbar('Ошибка при загрузке документа', { variant: 'error' });
     }
 
     const handleFileBind = (e) => {
-        if(e.target.files.length > 1){
+        if (e.target.files.length > 1) {
             alert("Для загрузки можно выбрать только 1 файл");
         }
         const file = e.target.files[0];
@@ -209,7 +229,7 @@ function TransitionsModal(props) {
 
     const canUpload = useMemo(() => {
         return formik.values.documentName.length !== 0 && formik.values.documentDescription.length !== 0 && uploadedFile;
-    },[formik.values, uploadedFile])
+    }, [formik.values, uploadedFile])
 
     return (
         <div>
@@ -279,7 +299,7 @@ function TransitionsModal(props) {
                                         <p>Файл</p>
                                     </div>
                                     <div className="input-element__input-box">
-                                        <input type="file" name="iIfile" id="iFile" onChange={e =>handleFileBind(e)}/>
+                                        <input type="file" name="iIfile" id="iFile" onChange={e => handleFileBind(e)} />
                                     </div>
                                 </div>
                             </div>

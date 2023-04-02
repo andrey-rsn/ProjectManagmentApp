@@ -14,11 +14,18 @@ export const documentsApiSlice = apiSlice.injectEndpoints({
                 url: `/api/v1/documents/byProject/${projectId}`,
                 method: 'GET'
             })
-        })
+        }),
+        deleteDocumentById: builder.mutation({
+            query: (documentId) => ({
+                url: `/api/v1/documents/${documentId}`,
+                method: 'DELETE'
+            })
+        }),
     })
 })
 
 export const {
     useUploadDocumentMutation,
-    useLazyGetDocumentsByProjectQuery
+    useLazyGetDocumentsByProjectQuery,
+    useDeleteDocumentByIdMutation
 } = documentsApiSlice;
