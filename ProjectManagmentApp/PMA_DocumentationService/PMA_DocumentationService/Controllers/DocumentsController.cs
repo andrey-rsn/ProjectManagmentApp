@@ -45,7 +45,7 @@ namespace PMA_DocumentationService.Controllers
 
         // POST api/v1/documents
         [HttpPost]
-        public async Task<ActionResult> UploadDocument([FromBody] UploadDoucmentViewModel document)
+        public async Task<ActionResult> UploadDocument([FromForm] UploadDoucmentViewModel document)
         {
             var result = await _documentService.UploadDocument(document);
 

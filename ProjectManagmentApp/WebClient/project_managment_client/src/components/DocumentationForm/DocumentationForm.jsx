@@ -138,12 +138,13 @@ function TransitionsModal(props) {
     });
 
     const onFormSubmit = async (values) => {
-        const requestData = {
-            documentName: values.documentName,
-            documentDescription: values.documentName,
-            projectId : Number(projectId),
-            uploadedFile: uploadedFile
-        }
+        const requestData = new FormData();
+
+        requestData.append('documentName', values.documentName);
+        requestData.append('documentDescription', values.documentName);
+        requestData.append('projectId', Number(projectId));
+        requestData.append('uploadedFile', uploadedFile);
+
         await uploadDocumentFetch(requestData).unwrap().then(() => handleSuccessUploading()).catch(err => handleErrorUploading(err));
     }
 
@@ -161,9 +162,7 @@ function TransitionsModal(props) {
             alert("Для загрузки можно выбрать только 1 файл");
         }
         const file = e.target.files[0];
-        let formData = new FormData();
-        formData.append('file', file);
-        setUploadedFile(formData);
+        setUploadedFile(file);
     }
 
     const canUpload = useMemo(() => {
