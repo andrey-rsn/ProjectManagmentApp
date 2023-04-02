@@ -27,4 +27,22 @@
   width: 100%;
   display: flex;
   align-items: start;
+}
+
+.upload-document-form {
+  display: flex;
+  flex-direction: column;
+}
+.upload-document-form__form-bottom {
+  display: flex;
+  justify-content: center;
+}
+
+.upload-form-body {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.input-element {
+  width: 100% !important;
 }/*# sourceMappingURL=DocumentationForm.css.map */

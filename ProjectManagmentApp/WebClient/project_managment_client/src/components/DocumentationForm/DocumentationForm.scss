@@ -30,3 +30,20 @@
     }
 }
 
+.upload-document-form{
+    display: flex;
+    flex-direction: column;
+    &__form-bottom{
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.upload-form-body{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.input-element{
+    width: 100% !important;
+}
