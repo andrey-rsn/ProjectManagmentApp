@@ -111,6 +111,8 @@ const DocumentationForm = () => {
                         loading={isDocumentsLoading}
                         onSelectionModelChange={e => setSelectedDocuments(e)}
                         onRowClick={e => rowClickHandle(e)}
+                        checkboxSelection
+                        disableSelectionOnClick
                     />
                 </Box>
             </div>
