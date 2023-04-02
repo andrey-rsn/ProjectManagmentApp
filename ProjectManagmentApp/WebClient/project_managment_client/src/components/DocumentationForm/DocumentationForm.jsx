@@ -20,8 +20,10 @@ import { useSnackbar } from 'notistack';
 const DocumentationForm = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { projectId } = useParams();
+    const [selectedDocuments, setSelectedDocuments] = useState();
     const [documents, setDocuments] = useState([]);
-    const [getDocumentsByProjectFetch, {isLoading: isDocumentsLoading}] = useLazyGetDocumentsByProjectQuery();
+    const [getDocumentsByProjectFetch] = useLazyGetDocumentsByProjectQuery();
+    const [isDocumentsLoading, setIsDocumentsLoading] = useState(false);
 
     useEffect(() => {
         const load = async () => {
@@ -32,7 +34,9 @@ const DocumentationForm = () => {
     },[])
 
     const loadData = async () => {
+        setIsDocumentsLoading(true);
         await getDocumentsByProjectFetch(projectId).unwrap().then(data => setDocuments(data)).catch(err => console.log(err));
+        setIsDocumentsLoading(false);
     }
 
     const columns = [
@@ -74,6 +78,10 @@ const DocumentationForm = () => {
         setIsOpen(true);
     }
 
+    const rowClickHandle = (e) => {
+        window.open(e.row.fileUrl, '_blank');
+    }
+
     const uploadPopup = useMemo(() => {
         return (
             <TransitionsModal isOpen={isOpen} setIsOpen={setIsOpen} projectId={projectId} />
@@ -101,6 +109,8 @@ const DocumentationForm = () => {
                         pageSize={5}
                         disableRowSelectionOnClick
                         loading={isDocumentsLoading}
+                        onSelectionModelChange={e => setSelectedDocuments(e)}
+                        onRowClick={e => rowClickHandle(e)}
                     />
                 </Box>
             </div>
@@ -177,6 +187,7 @@ function TransitionsModal(props) {
     }
 
     const handleErrorUploading = (error) => {
+        console.log(error);
         enqueueSnackbar('Ошибка при загрузке документа', {variant:'error'});
     }
 
