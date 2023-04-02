@@ -148,6 +148,7 @@ function TransitionsModal(props) {
     const handleClose = () => {
         setIsOpen(false);
         setOpen(false);
+        formik.resetForm();
     };
 
     const { enqueueSnackbar } = useSnackbar();
