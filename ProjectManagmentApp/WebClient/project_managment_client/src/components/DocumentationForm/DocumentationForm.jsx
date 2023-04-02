@@ -17,10 +17,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useUploadDocumentMutation, useLazyGetDocumentsByProjectQuery, useDeleteDocumentByIdMutation } from "../../features/documentsApi/documentsApiSlice";
 import { useSnackbar } from 'notistack';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useSelector } from "react-redux";
+import { selectCurrentUserRole } from "../../features/auth/authSlice";
+
 
 const DocumentationForm = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { projectId } = useParams();
+    const userRole = useSelector(selectCurrentUserRole);
+    const isUserPM = userRole === "PM";
     const [selectedDocuments, setSelectedDocuments] = useState([]);
     const [documents, setDocuments] = useState([]);
     const [getDocumentsByProjectFetch] = useLazyGetDocumentsByProjectQuery();
@@ -118,8 +123,8 @@ const DocumentationForm = () => {
                     loading={isDocumentsLoading}
                     onSelectionModelChange={e => setSelectedDocuments(e)}
                     onRowClick={e => rowClickHandle(e)}
-                    checkboxSelection
-                    disableSelectionOnClick
+                    checkboxSelection = {isUserPM}
+                    disableSelectionOnClick = {isUserPM}
                 />
             </Box>
         )
@@ -132,10 +137,14 @@ const DocumentationForm = () => {
                 <p>Документация проекта</p>
             </div>
             <div className="documentation-form__form-actions form-actions">
-                <div className="form-actions__buttons">
-                    <Button size="small" sx={{ color: 'black' }} onClick={e => handleUploadClick(e)}><FileUploadIcon />Загрузить документ</Button>
-                    <Button size="small" sx={{ color: 'black' }} onClick={e => handleDeleteClick(e)} disabled={selectedDocuments.length === 0}><DeleteIcon />Удалить выбранные документы</Button>
-                </div>
+                {isUserPM ?
+                    <div className="form-actions__buttons">
+                        <Button size="small" sx={{ color: 'black' }} onClick={e => handleUploadClick(e)} ><FileUploadIcon />Загрузить документ</Button>
+                        <Button size="small" sx={{ color: 'black' }} onClick={e => handleDeleteClick(e)} disabled={selectedDocuments.length === 0}><DeleteIcon />Удалить выбранные документы</Button>
+                    </div>
+                    : 
+                    null
+                }
             </div>
             <Divider />
             <div className="documentation-form__documents-list documents-list">
