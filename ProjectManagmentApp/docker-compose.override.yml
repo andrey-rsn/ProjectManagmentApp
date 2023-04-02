@@ -135,6 +135,7 @@ services:
         - documentation-service-db_data:/var/lib/postgresql/data/
 
   pma_documentationservice:
+    container_name: pma_documentationservice
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "ConnectionStrings:DocumentationServiceDatabase=Server=documentation-service-db;Port=5432;User ID=admin;Password=admin;Database=DocumentationServiceDb;"
