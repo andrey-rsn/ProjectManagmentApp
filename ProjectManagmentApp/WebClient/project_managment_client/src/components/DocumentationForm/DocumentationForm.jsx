@@ -30,9 +30,8 @@ const DocumentationForm = () => {
         const load = async () => {
             await loadData();
         }
-
         load();
-    },[])
+    },[isOpen])
 
     const loadData = async () => {
         setIsDocumentsLoading(true);
