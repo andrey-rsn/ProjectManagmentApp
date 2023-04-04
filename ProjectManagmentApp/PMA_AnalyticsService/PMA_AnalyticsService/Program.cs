@@ -9,6 +9,7 @@ var Configuration = builder.Configuration;
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
 builder.Services.AddScoped<ITasksAnalyticsService, TasksAnalyticsService>();
 builder.Services.AddHttpClient("authClient", c =>
 {

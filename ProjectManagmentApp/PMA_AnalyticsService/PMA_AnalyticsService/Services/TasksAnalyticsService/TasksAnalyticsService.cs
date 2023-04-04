@@ -8,15 +8,15 @@ namespace PMA_AnalyticsService.Services.TasksAnalyticsService
     public class TasksAnalyticsService : ITasksAnalyticsService
     {
         private readonly HttpClient _sagaClient;
-        private readonly HttpContext _httpContext;
-        public TasksAnalyticsService(IHttpClientFactory httpClientFactory, HttpContext httpContext)
+        private readonly IHttpContextAccessor _contextAccessor;
+        public TasksAnalyticsService(IHttpClientFactory httpClientFactory, IHttpContextAccessor contextAccessor)
         {
             _sagaClient = httpClientFactory.CreateClient("sagaServiceClient");
-            _httpContext = httpContext;
+            _contextAccessor= contextAccessor;
         }
         public async Task<int[]> GetTasksAnalyticsByProject(int projectId)
         {
-            _sagaClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(_httpContext.Request.Headers.Authorization));
+            _sagaClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(_contextAccessor.HttpContext.Request.Headers.Authorization));
 
             
 
