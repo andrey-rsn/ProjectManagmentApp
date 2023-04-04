@@ -12,13 +12,9 @@ builder.Services.AddHttpClient("authClient", c =>
 {
     c.BaseAddress = new Uri(Configuration.GetConnectionString("IdentityService"));
 });
-builder.Services.AddHttpClient("tasksServiceClient", c =>
+builder.Services.AddHttpClient("sagaServiceClient", c =>
 {
-    c.BaseAddress = new Uri(Configuration.GetConnectionString("TasksService"));
-});
-builder.Services.AddHttpClient("projectsServiceClient", c =>
-{
-    c.BaseAddress = new Uri(Configuration.GetConnectionString("ProjectsService"));
+    c.BaseAddress = new Uri(Configuration.GetConnectionString("SagaService"));
 });
 builder.Services.AddCors();
 
