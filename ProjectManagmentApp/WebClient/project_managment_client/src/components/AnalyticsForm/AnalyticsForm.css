@@ -1,5 +1,18 @@
 .analytics-form {
   width: 80%;
   display: flex;
+  flex-direction: column;
   justify-items: center;
+}
+.analytics-form__header {
+  font-size: 1.3em;
+  font-weight: 500;
+}
+
+.form-body {
+  display: flex;
+  justify-content: center;
+}
+.form-body__diagram {
+  width: 50%;
 }/*# sourceMappingURL=AnalyticsForm.css.map */
