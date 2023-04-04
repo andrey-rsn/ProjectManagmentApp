@@ -45,7 +45,6 @@ const ActionList = (props) => {
                     <Divider sx={{ backgroundColor: 'black', height: '0.2px' }} />
                     <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Задачи" linkTo={`/project/${projectId}/tasks`} image={<TaskAltIcon />} />
                     <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Документация" linkTo={`/project/${projectId}/documents`} image={<DescriptionIcon />} />
-                    <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Отчёты" linkTo={`/project/${projectId}/reports`} image={<SummarizeIcon />} />
                     <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Аналитика работы" linkTo={`/project/${projectId}/analytics`} image={<AssessmentIcon />} />
                     {isUserPM ? <ActionItem style={({ isActive }) => LinkStyle(isActive)} text="Параметры проекта" linkTo={`/project/${projectId}/projectSettings`} image={<SettingsIcon />} isHeaderDivider={true} /> : <div></div>}
                 </List>}
