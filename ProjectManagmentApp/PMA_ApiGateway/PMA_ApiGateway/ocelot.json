@@ -275,7 +275,7 @@
     },
     {
       "UpstreamPathTemplate": "/api/v1/documents/{documentId}",
-      "UpstreamHttpMethod": [ "Get","Delete" ],
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
 
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -311,6 +311,19 @@
         }
       ],
       "DownstreamPathTemplate": "/api/v1/documents"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/analytics/tasks/{projectId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_analyticsservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/analytics/tasks/{projectId}"
     }
   ],
   "GlobalConfiguration": {
