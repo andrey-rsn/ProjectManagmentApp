@@ -145,3 +145,14 @@ services:
     depends_on:
         - pma_identityservice
         - documentation-service-db
+
+  pma_analyticsservice:
+    container_name: pma_analyticsservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "8007:80"
+    depends_on:
+        - pma_identityservice
+        - pma_sagaservice
+
