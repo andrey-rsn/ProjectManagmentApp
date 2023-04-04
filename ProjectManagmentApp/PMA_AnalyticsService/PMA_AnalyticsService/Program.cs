@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using PMA_AnalyticsService.Middleware;
+using PMA_AnalyticsService.Services.TasksAnalyticsService;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
@@ -8,6 +9,7 @@ var Configuration = builder.Configuration;
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ITasksAnalyticsService, TasksAnalyticsService>();
 builder.Services.AddHttpClient("authClient", c =>
 {
     c.BaseAddress = new Uri(Configuration.GetConnectionString("IdentityService"));
