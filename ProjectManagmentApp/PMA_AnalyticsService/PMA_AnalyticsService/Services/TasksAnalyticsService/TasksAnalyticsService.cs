@@ -18,7 +18,7 @@ namespace PMA_AnalyticsService.Services.TasksAnalyticsService
         {
             _sagaClient.DefaultRequestHeaders.Add("Authorization", Convert.ToString(_httpContext.Request.Headers.Authorization));
 
-            var analyticsArray = CreateTemplateArray();
+            
 
             var projectTasksRequest = new HttpRequestMessage(
             HttpMethod.Get,
@@ -29,17 +29,19 @@ namespace PMA_AnalyticsService.Services.TasksAnalyticsService
 
             if (!projectTasksResponse.IsSuccessStatusCode || projectTasksResponse.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
-                return analyticsArray;
+                return new int[0];
             }
 
             var projectTasks = JsonSerializer.Deserialize<List<UserTaskViewModel>>(await projectTasksResponse.Content.ReadAsStringAsync());
 
             if(projectTasks == null || projectTasks.Count == 0)
             {
-                return analyticsArray;
+                return new int[0];
             }
 
-            foreach(TaskStatusEnum status in Enum.GetValues(typeof(TaskStatusEnum)))
+            var analyticsArray = CreateTemplateArray();
+
+            foreach (TaskStatusEnum status in Enum.GetValues(typeof(TaskStatusEnum)))
             {
                 analyticsArray[(int)status-1] = projectTasks.Where(t => t.statusId == (int)status).Count();
             }
