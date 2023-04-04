@@ -272,6 +272,45 @@
         }
       ],
       "DownstreamPathTemplate": "/api/v1/projects/attachEmployees"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/documents/{documentId}",
+      "UpstreamHttpMethod": [ "Get","Delete" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_documentationservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/documents/{documentId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/documents/byProject/{projectId}",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_documentationservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/documents/byProject/{projectId}"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/documents",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pma_documentationservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/v1/documents"
     }
   ],
   "GlobalConfiguration": {

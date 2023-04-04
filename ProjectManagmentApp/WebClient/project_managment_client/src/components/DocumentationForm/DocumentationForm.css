@@ -1,0 +1,48 @@
+.documentation-form {
+  width: 80%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.documentation-form__header {
+  font-size: 1.3em;
+  font-weight: 500;
+}
+
+.documents-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+.form-actions__buttons {
+  width: 100%;
+  display: flex;
+  align-items: start;
+}
+
+.upload-document-form {
+  display: flex;
+  flex-direction: column;
+}
+.upload-document-form__form-bottom {
+  display: flex;
+  justify-content: center;
+}
+
+.upload-form-body {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.input-element {
+  width: 100% !important;
+}/*# sourceMappingURL=DocumentationForm.css.map */

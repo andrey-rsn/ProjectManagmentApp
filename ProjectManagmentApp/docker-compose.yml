@@ -39,6 +39,9 @@ services:
   projects-service-db:
     image: postgres
 
+  documentation-service-db:
+    image: postgres
+
   pma_sagaservice:
     image: ${DOCKER_REGISTRY-}pmasagaservice
     build:
@@ -51,11 +54,19 @@ services:
       context: .
       dockerfile: PMA_ProjectsService/PMA_ProjectsService/Dockerfile
 
+  pma_documentationservice:
+    image: ${DOCKER_REGISTRY-}pmadocumentationservice
+    build:
+      context: .
+      dockerfile: PMA_DocumentationService/PMA_DocumentationService/Dockerfile
+
 volumes:
   task-service-db_data:
   identity-service-db_data:
   work-time-service-db_data:
   projects-service-db_data:
+  documentation-service-db_data:
   
+
 
 

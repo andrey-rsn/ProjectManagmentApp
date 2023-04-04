@@ -121,3 +121,27 @@ services:
         - "9005:5432"
     volumes:
         - projects-service-db_data:/var/lib/postgresql/data/
+
+  documentation-service-db:
+    container_name: documentation-service-db
+    environment: 
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=DocumentationServiceDb
+    restart: always
+    ports:
+        - "9006:5432"
+    volumes:
+        - documentation-service-db_data:/var/lib/postgresql/data/
+
+  pma_documentationservice:
+    container_name: pma_documentationservice
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DocumentationServiceDatabase=Server=documentation-service-db;Port=5432;User ID=admin;Password=admin;Database=DocumentationServiceDb;"
+      - "ConnectionStrings:IdentityService=http://pma_identityservice:80"
+    ports:
+      - "8006:80"
+    depends_on:
+        - pma_identityservice
+        - documentation-service-db

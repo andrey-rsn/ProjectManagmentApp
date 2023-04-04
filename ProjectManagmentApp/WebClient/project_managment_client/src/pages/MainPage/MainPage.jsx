@@ -16,6 +16,7 @@ import Skeleton from '@mui/material/Skeleton';
 import { useState } from 'react';
 import { setProjectInfo } from '../../features/projectsApi/projectsSlice';
 import { SnackbarProvider } from 'notistack';
+import DocumentationPage from '../DocumentationPage/DocumentationPage';
 
 
 const MainPage = () => {
@@ -81,6 +82,7 @@ const MainPage = () => {
                         <Route path="/tasks/createTask" element={<TaskCardPage isNew={true}/>} />
                         <Route path="/projectSettings" element={<ProjectSettingsPage />} />
                         <Route path="/projectSettings/attachEmployee" element={<AttachEmployeePage projectId={projectId} />} />
+                        <Route exact path="/documents" element={<DocumentationPage />} />
                     </Routes>
                 </SnackbarProvider>
             </div>
