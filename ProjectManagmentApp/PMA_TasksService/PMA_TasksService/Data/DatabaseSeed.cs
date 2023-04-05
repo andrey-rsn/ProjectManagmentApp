@@ -117,6 +117,17 @@ namespace PMA_TasksService.Data
                     priority=2,
                     taskName="Тестовая задача",
                     changedByUserId= 1
+                },
+                new UserTask
+                {
+                    taskId = 2,
+                    userTaskStatusId= 1,
+                    assignedUserId= 1,
+                    changeDate= DateTime.UtcNow,
+                    description="Тестовая задача, протестировать задачу.",
+                    priority=2,
+                    taskName="Тестовая задача 2",
+                    changedByUserId= 1
                 }
             };
         }
