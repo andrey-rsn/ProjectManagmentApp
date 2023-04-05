@@ -52,6 +52,23 @@ const AnalyticsForm = () => {
         ],
     };
 
+    const emptyData = {
+        labels: ['Данные отсутствуют'],
+        datasets: [
+            {
+                label: '',
+                data: [1],
+                backgroundColor: [
+                    'rgb(125, 125, 125, 0.2)'
+                ],
+                borderColor: [
+                    'rgb(125, 125, 125, 1)'
+                ],
+                borderWidth: 1,
+            },
+        ],
+    };
+
     return (
         <div className="analytics-form">
             <div className="analytics-form__header">
@@ -59,7 +76,7 @@ const AnalyticsForm = () => {
             </div>
             <div className="analytics-form__form-body form-body">
                 <div className="form-body__diagram">
-                    {isTasksAnalyticsLoading || !isTasksAnalyticsLoaded ? <p>Данные отсутсвуют</p> : <Pie data={data} style={{ marginBottom: '20px' }} />}
+                    <Pie data={isTasksAnalyticsLoading || !isTasksAnalyticsLoaded? emptyData:data} style={{ marginBottom: '20px' }} />
                     Статусы задач проекта
                 </div>
             </div>
