@@ -331,6 +331,7 @@ const TaskCardForm = (props) => {
                                 sx={{ width: '70%' }}
                                 defaultValue=''
                                 onChange={commentTextChangeHandle}
+                                value={commentText}
                             />
                         </div>
                         <div className='comments__list'>
