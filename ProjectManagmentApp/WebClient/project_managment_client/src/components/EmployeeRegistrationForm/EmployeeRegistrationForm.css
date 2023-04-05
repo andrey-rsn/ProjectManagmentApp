@@ -9,7 +9,7 @@
 }
 
 .input-element {
-  width: 90%;
+  width: 90% !important;
 }
 .input-element__element-text {
   text-align: start;
