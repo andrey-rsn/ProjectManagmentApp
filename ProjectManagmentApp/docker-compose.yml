@@ -60,6 +60,12 @@ services:
       context: .
       dockerfile: PMA_DocumentationService/PMA_DocumentationService/Dockerfile
 
+  pma_analyticsservice:
+    image: ${DOCKER_REGISTRY-}pmaanalyticsservice
+    build:
+      context: .
+      dockerfile: PMA_AnalyticsService/PMA_AnalyticsService/Dockerfile
+
 volumes:
   task-service-db_data:
   identity-service-db_data:
@@ -67,6 +73,7 @@ volumes:
   projects-service-db_data:
   documentation-service-db_data:
   
+
 
 
 

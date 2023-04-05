@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { setProjectInfo } from '../../features/projectsApi/projectsSlice';
 import { SnackbarProvider } from 'notistack';
 import DocumentationPage from '../DocumentationPage/DocumentationPage';
+import AnalyticsPage from '../AnalyticsPage/AnalyticsPage';
 
 
 const MainPage = () => {
@@ -80,6 +81,7 @@ const MainPage = () => {
                         <Route path="/tasks" element={<TasksPage projectId={projectId} />} />
                         <Route path="/tasks/:taskId" element={<TaskCardPage />} />
                         <Route path="/tasks/createTask" element={<TaskCardPage isNew={true}/>} />
+                        <Route path="/analytics" element={<AnalyticsPage />} />
                         <Route path="/projectSettings" element={<ProjectSettingsPage />} />
                         <Route path="/projectSettings/attachEmployee" element={<AttachEmployeePage projectId={projectId} />} />
                         <Route exact path="/documents" element={<DocumentationPage />} />
