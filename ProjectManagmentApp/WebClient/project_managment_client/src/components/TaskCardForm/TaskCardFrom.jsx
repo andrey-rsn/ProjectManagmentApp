@@ -102,7 +102,7 @@ const TaskCardForm = (props) => {
 
     const CommentsElements = React.useMemo(() => {
         if (comments?.length > 0) {
-            return comments.map((value, index) => <CommentElement key={index} name={value.author} img={value.img} creationDate={formatTime(value.creationDate)} text={value.commentText} />)
+            return comments.map((value, index) => <CommentElement key={index} name={value.author} img={value.img} creationDate={formatTime(value.creationDate)} text={value.commentText} />).reverse();
         }
     }, [comments]);
 
