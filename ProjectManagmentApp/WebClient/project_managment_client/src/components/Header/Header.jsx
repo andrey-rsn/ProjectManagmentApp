@@ -1,11 +1,9 @@
 import './Header.css'
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
@@ -14,12 +12,9 @@ import MenuItem from '@mui/material/MenuItem';
 import { logOut } from '../../features/auth/authSlice';
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useLazyGetUserInfoQuery } from '../../features/auth/authApiSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCurrentUserId } from '../../features/auth/authSlice';
-import { useEffect } from 'react';
 import { useMemo } from 'react';
-import { setUserInfo } from '../../features/auth/authSlice';
+
 
 
 
@@ -29,7 +24,6 @@ const Header = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const userInfo = useSelector(state => state.auth.userInfo);
-    const userId = useSelector(selectCurrentUserId);
 
 
     const handleOpenUserMenu = (event) => {
@@ -77,7 +71,7 @@ const Header = () => {
                         <p style={{ marginRight: '15px' }}>{userShortNameText}</p>
                         <Tooltip title="Профиль">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt={userInfo.firstName} src="" />
+                                <Avatar alt={userInfo.firstName} src="/static/images/avatar/2.jpg" />
                             </IconButton>
                         </Tooltip>
                         <Menu
