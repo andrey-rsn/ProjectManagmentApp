@@ -19,7 +19,7 @@ import { useMemo } from 'react';
 
 
 const Header = () => {
-    const settings = ['Настройки', 'Выйти'];
+    const settings = ['Выйти'];
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
