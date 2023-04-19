@@ -4,8 +4,11 @@ import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 const initialState = {
-    user_name: null,
-    user_id: null
+    userInfo:{
+        firstName:"",
+        secondName:"",
+        patronymic:""
+    }
 }
 
 const authSlice = createSlice({
@@ -27,11 +30,29 @@ const authSlice = createSlice({
         logOut: (state,action) => {
             cookies.remove('access_token', { path: '/' });
             cookies.remove('refresh_token', { path: '/' });
+            localStorage.removeItem('firstName');
+            localStorage.removeItem('secondName');
+            localStorage.removeItem('patronymic');
+        },
+        setUserInfo: (state, action) => {
+            const {firstName, secondName, patronymic} = action.payload;
+
+            localStorage.removeItem('firstName');
+            localStorage.removeItem('secondName');
+            localStorage.removeItem('patronymic');
+
+            localStorage.setItem('firstName', firstName) ;
+            localStorage.setItem('secondName', secondName);
+            localStorage.setItem('patronymic', patronymic);
+
+            state.userInfo.firstName = localStorage.getItem('firstName');
+            state.userInfo.secondName = localStorage.getItem('secondName');
+            state.userInfo.patronymic = localStorage.getItem('patronymic');
         }
     }
 })
 
-export const {setCredentials, logOut} = authSlice.actions;
+export const {setCredentials, logOut, setUserInfo} = authSlice.actions;
 
 export default authSlice.reducer;
 

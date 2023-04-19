@@ -54,6 +54,18 @@ namespace PMA_TasksService.Data
                 changedByUserId=1
             });
 
+            modelBuilder.Entity<UserTask>().HasData(new UserTask
+            {
+                taskId = 2,
+                userTaskStatusId = 1,
+                assignedUserId = 1,
+                changeDate = DateTime.UtcNow,
+                description = "Тестовая задача 2",
+                priority = 1,
+                taskName = "Тестовая задача 2",
+                changedByUserId = 1
+            });
+
         }
     }
 }

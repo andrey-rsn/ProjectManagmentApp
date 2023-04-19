@@ -21,8 +21,7 @@ const ActionList = (props) => {
     const { projectId, projectName, isLoading } = props;
     const userRole = useSelector(selectCurrentUserRole);
 
-
-
+    const projectNameShort = projectName.length > 29 ? projectName.slice(0,26) + "..."  : projectName;
 
     const LinkStyle = (isActive) => {
         return {
@@ -39,7 +38,7 @@ const ActionList = (props) => {
             {isLoading ?
                 <Skeleton sx={{height:'100%', width: '100%', display:"flex"}}/> :
                 <List className='action-list'>
-                    <ActionItem style={({ isActive }) => LinkStyle(isActive)} text={`${projectName}`} linkTo={`/project/${projectId}`} image={<ArticleIcon />}
+                    <ActionItem style={({ isActive }) => LinkStyle(isActive)} text={`${projectNameShort}`} linkTo={`/project/${projectId}`} image={<ArticleIcon />}
                         listItemStyle={{ backgroundColor: 'rgb(148, 148, 148)' }}
                     />
                     <Divider sx={{ backgroundColor: 'black', height: '0.2px' }} />
